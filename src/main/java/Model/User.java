@@ -8,6 +8,9 @@ import java.util.UUID;
 
 public class User {
 
+    /**
+     * The user's unique ID
+     */
     private String userID;
 
     /**
