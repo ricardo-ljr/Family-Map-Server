@@ -4,21 +4,45 @@ package Model;
  * A person
  */
 public class Person {
-    
+
+    /**
+     * The person's unique ID
+     */
     private String personID;
-    
+
+    /**
+     * The person's associated username
+     */
     private String associatedUsername;
 
+    /**
+     * The person's first name
+     */
     private String firstName;
 
+    /**
+     * The person's last name
+     */
     private String lastName;
 
+    /**
+     * The person's gender
+     */
     private String gender;
 
+    /**
+     * The person's unique identifier for a father
+     */
     private String fatherID;
 
+    /**
+     * The person's unique identifier for a mother
+     */
     private String motherID;
 
+    /**
+     * The person's unique identifier for a spouse
+     */
     private String spouseID;
 
     /**
