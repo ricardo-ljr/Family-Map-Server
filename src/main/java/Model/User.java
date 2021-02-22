@@ -5,7 +5,6 @@ import java.util.UUID;
 /**
  * A user
  */
-
 public class User {
 
     /**
