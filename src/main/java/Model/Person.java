@@ -1,5 +1,7 @@
 package Model;
 
+import java.util.UUID;
+
 /**
  * A person
  */
@@ -46,6 +48,11 @@ public class Person {
     private String spouseID;
 
     /**
+     * Empty constructor for a person
+     */
+    public Person() {}
+
+    /**
      * Creates a person
      *
      * @param personID Person's unique identifier
@@ -57,8 +64,8 @@ public class Person {
      * @param motherID Person's unique identifier for a mother
      * @param spouseID Person's unique identifier for a spouse
      */
-    public Person(String personID, String associatedUsername, String firstName, String lastName, String gender, String fatherID, String motherID, String spouseID) {
-        this.personID = personID;
+    public Person(String associatedUsername, String firstName, String lastName, String gender, String fatherID, String motherID, String spouseID) {
+        this.personID = UUID.randomUUID().toString();
         this.associatedUsername = associatedUsername;
         this.firstName = firstName;
         this.lastName = lastName;

@@ -1,6 +1,6 @@
 package Model;
 
-import java.util.Objects;
+import java.util.UUID;
 
 /**
  * An event
@@ -53,6 +53,11 @@ public class Event {
     private String personID;
 
     /**
+     * Empty constructor for an event
+     */
+    public Event() {}
+
+    /**
      * Creates an event
      *
      * @param eventID Event's unique identifier
@@ -66,7 +71,7 @@ public class Event {
      * @param personID Event's unique personID associated with
      */
     public Event(String eventID, String associatedUsername, float latitude, float longitude, String country, String city, String eventType, int year, String personID) {
-        this.eventID = eventID;
+        this.eventID = UUID.randomUUID().toString();
         this.associatedUsername = associatedUsername;
         this.latitude = latitude;
         this.longitude = longitude;

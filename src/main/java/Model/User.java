@@ -47,6 +47,9 @@ public class User {
      */
     private String personID;
 
+    /**
+     * Empty constructor for a user
+     */
     public User() {}
 
     /**
@@ -61,7 +64,7 @@ public class User {
      * @param gender User's gender
      * @param personID User's unique personID associated with
      */
-    public User(String userID, String userName, String password, String email, String firstName, String lastName, String gender, String personID) {
+    public User(String userName, String password, String email, String firstName, String lastName, String gender, String personID) {
         this.userID = UUID.randomUUID().toString();
         this.userName = userName;
         this.password = password;
