@@ -41,8 +41,8 @@ CREATE TABLE IF NOT EXISTS Events (
 )
 
 CREATE TABLE IF NOT EXISTS AuthorizationTokens (
-    authtoken VARCHAR(255) NOT NULL UNIQUE,
+    authToken VARCHAR(255) NOT NULL UNIQUE,
     associatedUsername VARCHAR(255) NOT NULL,
-    PRIMARY KEY (authtoken)
+    PRIMARY KEY (authToken)
 
 )
