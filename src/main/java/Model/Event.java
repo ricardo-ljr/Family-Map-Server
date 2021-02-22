@@ -60,7 +60,6 @@ public class Event {
     /**
      * Creates an event
      *
-     * @param eventID Event's unique identifier
      * @param associatedUsername Event's associated username
      * @param latitude Latitude of event's location
      * @param longitude Longitude of event's location
@@ -70,7 +69,7 @@ public class Event {
      * @param year The year in which the event occurred
      * @param personID Event's unique personID associated with
      */
-    public Event(String eventID, String associatedUsername, float latitude, float longitude, String country, String city, String eventType, int year, String personID) {
+    public Event(String associatedUsername, float latitude, float longitude, String country, String city, String eventType, int year, String personID) {
         this.eventID = UUID.randomUUID().toString();
         this.associatedUsername = associatedUsername;
         this.latitude = latitude;

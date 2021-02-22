@@ -55,7 +55,6 @@ public class User {
     /**
      * Creates a user
      *
-     * @param userID User's unique identifier
      * @param userName User's unique username
      * @param password User's password
      * @param email User's email
