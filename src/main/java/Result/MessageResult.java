@@ -5,7 +5,7 @@ package Result;
  */
 public class MessageResult {
 
-    private String Message;
+    private String message;
 
     /**
      * Initializes empty constructor
@@ -18,14 +18,14 @@ public class MessageResult {
      * @param message Message of success or error
      */
     public MessageResult(String message) {
-        Message = message;
+        this.message = message;
     }
 
     public String getMessage() {
-        return Message;
+        return message;
     }
 
     public void setMessage(String message) {
-        Message = message;
+        this.message = message;
     }
 }
