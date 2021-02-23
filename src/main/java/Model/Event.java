@@ -58,7 +58,7 @@ public class Event {
     public Event() {}
 
     /**
-     * Creates an event
+     * Creates an event for a person
      *
      * @param associatedUsername Event's associated username
      * @param latitude Latitude of event's location

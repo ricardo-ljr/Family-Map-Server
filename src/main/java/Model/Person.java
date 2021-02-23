@@ -64,7 +64,7 @@ public class Person {
      * @param motherID Person's unique identifier for a mother
      * @param spouseID Person's unique identifier for a spouse
      */
-    public Person(String associatedUsername, String firstName, String lastName, String gender, String fatherID, String motherID, String spouseID) {
+    public Person(String personID, String associatedUsername, String firstName, String lastName, String gender, String fatherID, String motherID, String spouseID) {
         this.personID = UUID.randomUUID().toString();
         this.associatedUsername = associatedUsername;
         this.firstName = firstName;
