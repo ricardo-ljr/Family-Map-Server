@@ -1,11 +1,12 @@
-package Model;
+package Result;
 
-import java.util.UUID;
+import java.util.Objects;
 
 /**
- * An event
+ * This class is responsible for handling the results
+ * of querying a single event by id
  */
-public class Event {
+public class EventByIdResult {
 
     /**
      * The event's unique identifier
@@ -53,13 +54,14 @@ public class Event {
     private String personID;
 
     /**
-     * Empty constructor for an event
+     * Initializes and empty constructor
      */
-    public Event() {}
+    public EventByIdResult() {}
 
     /**
-     * Creates an event for a person
+     * This is a non-empty constructor for each event result
      *
+     * @param eventID A unique identifies for an event
      * @param associatedUsername Event's associated username
      * @param latitude Latitude of event's location
      * @param longitude Longitude of event's location
@@ -69,8 +71,8 @@ public class Event {
      * @param year The year in which the event occurred
      * @param personID Event's unique personID associated with
      */
-    public Event(String associatedUsername, float latitude, float longitude, String country, String city, String eventType, int year, String personID) {
-        this.eventID = UUID.randomUUID().toString();
+    public EventByIdResult(String eventID, String associatedUsername, float latitude, float longitude, String country, String city, String eventType, int year, String personID) {
+        this.eventID = eventID;
         this.associatedUsername = associatedUsername;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -153,18 +155,13 @@ public class Event {
         this.personID = personID;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Event event = (Event) o;
-        return Float.compare(event.latitude, latitude) == 0 &&
-                Float.compare(event.longitude, longitude) == 0 &&
-                year == event.year && eventID.equals(event.eventID) &&
-                associatedUsername.equals(event.associatedUsername) &&
-                country.equals(event.country) && city.equals(event.city) &&
-                eventType.equals(event.eventType) &&
-                personID.equals(event.personID);
+        EventByIdResult that = (EventByIdResult) o;
+        return Float.compare(that.latitude, latitude) == 0 && Float.compare(that.longitude, longitude) == 0 && year == that.year && eventID.equals(that.eventID) && associatedUsername.equals(that.associatedUsername) && country.equals(that.country) && city.equals(that.city) && eventType.equals(that.eventType) && personID.equals(that.personID);
     }
 
 }

@@ -1,11 +1,11 @@
-package Model;
+package Result;
 
-import java.util.UUID;
+import java.util.Objects;
 
 /**
- * A person
+ * This class is responsible for handling results associated with a single person by its ID
  */
-public class Person {
+public class PersonByIdResult extends MessageResult {
 
     /**
      * The person's unique ID
@@ -48,12 +48,12 @@ public class Person {
     private String spouseID;
 
     /**
-     * Empty constructor for a person
+     * Initializes an empty constructor
      */
-    public Person() {}
+    public PersonByIdResult() {}
 
     /**
-     * Creates a person
+     * Constructor for persons by id results
      *
      * @param personID Person's unique identifier
      * @param associatedUsername Person's associated username
@@ -64,8 +64,8 @@ public class Person {
      * @param motherID Person's unique identifier for a mother
      * @param spouseID Person's unique identifier for a spouse
      */
-    public Person(String personID, String associatedUsername, String firstName, String lastName, String gender, String fatherID, String motherID, String spouseID) {
-        this.personID = UUID.randomUUID().toString();
+    public PersonByIdResult(String personID, String associatedUsername, String firstName, String lastName, String gender, String fatherID, String motherID, String spouseID) {
+        this.personID = personID;
         this.associatedUsername = associatedUsername;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -74,6 +74,7 @@ public class Person {
         this.motherID = motherID;
         this.spouseID = spouseID;
     }
+
 
     public String getPersonID() {
         return personID;
@@ -143,15 +144,9 @@ public class Person {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Person person = (Person) o;
-        return personID.equals(person.personID) &&
-                associatedUsername.equals(person.associatedUsername) &&
-                firstName.equals(person.firstName) &&
-                lastName.equals(person.lastName) &&
-                gender.equals(person.gender) &&
-                fatherID.equals(person.fatherID) &&
-                motherID.equals(person.motherID) &&
-                spouseID.equals(person.spouseID);
+        PersonByIdResult that = (PersonByIdResult) o;
+        return personID.equals(that.personID) && associatedUsername.equals(that.associatedUsername) && firstName.equals(that.firstName) && lastName.equals(that.lastName) && gender.equals(that.gender) && Objects.equals(fatherID, that.fatherID) && Objects.equals(motherID, that.motherID) && Objects.equals(spouseID, that.spouseID);
     }
+
 
 }
