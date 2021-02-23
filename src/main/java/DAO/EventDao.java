@@ -1,52 +1,50 @@
 package DAO;
 
-import Model.Person;
+import Model.Event;
 import java.sql.*;
 
 /**
- * This class is used to access a person's information in the database
+ * This class is used to access an event's information in the database and its related user
  */
-public class PersonDao {
+public class EventDao {
 
     private Connection connection;
 
     /**
      * Initializing empty constructor for class
      */
-    public PersonDao() {}
+    public EventDao() {}
 
     /**
      * Initializing constructor for class with a connection argument
      *
      * @param connection Links connection with database
      */
-    public PersonDao(Connection connection) {
+    public EventDao(Connection connection) {
         this.connection = connection;
     }
 
     /**
-     * Creates a new person in the database
+     * Creates a new event in the database
      *
-     * @param newPerson Person that is going to be added
+     * @param newEvent Event that is going to be added
      * @throws SQLException An exception that provides information on a database access error or other errors
      */
-    public void addPerson(Person newPerson) throws SQLException {}
+    public void addEvent(Event newEvent) throws SQLException {}
 
     /**
-     * Finds a new person in the database
+     * Finds a new event in the database
      *
-     * @param personID Finding the person through its unique identifier
-     * @return Null for now, but it will return the person
+     * @param eventID Finding the event through its unique identifier
+     * @return Null for now, but it will return the event
      * @throws SQLException An exception that provides information on a database access error or other errors
      */
-    public Person findPerson(String personID) throws SQLException {
-        return null;
-    }
+    public Event findEvent(String eventID) throws SQLException {}
 
     /**
-     * Clears all data from a person in the database
+     * Clears all data from an event in the database
      *
      * @throws SQLException An exception that provides information on a database access error or other errors
      */
-    public void clearPerson() throws SQLException {}
+    public void clearEvent() throws SQLException {}
 }
