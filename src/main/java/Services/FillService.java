@@ -1,5 +1,7 @@
 package Services;
 
+import Result.MessageResult;
+
 import java.sql.*;
 
 /**
@@ -23,5 +25,13 @@ public class FillService {
         this.connection = connection;
     }
 
-
+    /**
+     * Fills database and returns a message of success or failure
+     *
+     * @param request Takes in the request to fill in database
+     * @return null for now, but it will return message of success or failure
+     */
+    public MessageResult fill(Boolean request) {
+        return null;
+    }
 }
