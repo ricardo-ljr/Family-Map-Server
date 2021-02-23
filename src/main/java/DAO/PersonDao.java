@@ -1,54 +1,52 @@
 package DAO;
 
-import Model.User;
+import Model.Person;
 import java.sql.*;
 
 /**
- * This class is used to access the user's table in the database, providing methods to add a new user,
- * querying a user's information and clearing user's information from the database
+ * This class is used to access a person's information in the database
  */
-public class UserDao {
+public class PersonDao {
 
     private Connection connection;
 
     /**
      * Initializing empty constructor for class
      */
-    public UserDao() {}
+    public PersonDao() {}
 
     /**
      * Initializing constructor for class with a connection argument
      *
      * @param connection Links connection with database
      */
-    public UserDao(Connection connection) {
+    public PersonDao(Connection connection) {
         this.connection = connection;
     }
 
-
     /**
-     * Creates a new user in the database
+     * Creates a new person in the database
      *
-     * @param newUser User that is going to be added
+     * @param newPerson Person that is going to be added
      * @throws SQLException An exception that provides information on a database access error or other errors
      */
-    public void registerUser(User newUser) throws SQLException {}
+    public void addPerson(Person newPerson) throws SQLException {}
 
     /**
-     * Finds a new user in the database
+     * Finds a new person in the database
      *
-     * @param username Finding the user through its username
+     * @param personID Finding the person through its unique identifier
      * @return Null for now, but it will return the user
      * @throws SQLException An exception that provides information on a database access error or other errors
      */
-    public User findUser(String username) throws SQLException {
+    public Person findPerson(String personID) throws SQLException {
         return null;
     }
 
     /**
-     * Clears all data from a user in the database
+     * Clears all data from a person in the database
      *
      * @throws SQLException An exception that provides information on a database access error or other errors
      */
-    public void clearUser() throws SQLException {}
+    public void clearPerson() throws SQLException {}
 }
