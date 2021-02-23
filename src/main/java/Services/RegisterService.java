@@ -1,5 +1,8 @@
 package Services;
 
+import Request.RegisterRequest;
+import Result.RegisterResult;
+
 import java.sql.*;
 
 /**
@@ -23,4 +26,13 @@ public class RegisterService {
         this.connection = connection;
     }
 
+    /**
+     * Registers a new user
+     *
+     * @param request Takes in the request to create a new user
+     * @return Null for now, but it will return new user
+     */
+    public RegisterResult register(RegisterRequest request) {
+        return null;
+    }
 }

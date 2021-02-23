@@ -22,4 +22,11 @@ public class ClearService {
     public ClearService(Connection connection) {
         this.connection = connection;
     }
+
+    /**
+     * Clears database
+     */
+    public void clearResult() {
+
+    }
 }

@@ -1,5 +1,8 @@
 package Services;
 
+import Request.LoginRequest;
+import Result.LoginResult;
+
 import java.sql.*;
 
 /**
@@ -21,5 +24,15 @@ public class LoginService {
      */
     public LoginService(Connection connection) {
         this.connection = connection;
+    }
+
+    /**
+     * Logs a user in
+     *
+     * @param request Takes in the request to login a user
+     * @return Null for now, but it will return the user requesting login
+     */
+    public LoginResult login(LoginRequest request) {
+        return null;
     }
 }
