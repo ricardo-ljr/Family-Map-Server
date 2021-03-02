@@ -18,9 +18,9 @@ public class Database {
      * A method to open a connection with a database
      *
      * @return A connection to the database
-     * @throws DatabaseException An exception to handle errors in the database
+     * @throws DataAccessException An exception to handle errors in the database
      */
-    public Connection openConnection() throws DatabaseException {
+    public Connection openConnection() throws DataAccessException {
         try {
             //The Structure for this Connection is driver:language:path
             //The path assumes you start in the root of your project unless given a non-relative path
@@ -33,7 +33,7 @@ public class Database {
             conn.setAutoCommit(false);
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new DatabaseException("Unable to open connection to database");
+            throw new DataAccessException("Unable to open connection to database");
         }
 
         return conn;
@@ -43,9 +43,9 @@ public class Database {
      * A method that gets a connection to the database
      *
      * @return Connection to database
-     * @throws DatabaseException An exception to handle errors in the database
+     * @throws DataAccessException An exception to handle errors in the database
      */
-    public Connection getConnection() throws DatabaseException {
+    public Connection getConnection() throws DataAccessException {
         if(conn == null) {
             return openConnection();
         } else {
@@ -65,9 +65,9 @@ public class Database {
      * A method to close a connection with a database
      *
      * @param commit Boolean returns whether connection was successful or not
-     * @throws DatabaseException An exception to handle errors in the database
+     * @throws DataAccessException An exception to handle errors in the database
      */
-    public void closeConnection(boolean commit) throws DatabaseException {
+    public void closeConnection(boolean commit) throws DataAccessException {
         try {
             if (commit) {
                 //This will commit the changes to the database
@@ -82,16 +82,16 @@ public class Database {
             conn = null;
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new DatabaseException("Unable to close database connection");
+            throw new DataAccessException("Unable to close database connection");
         }
     }
 
     /**
      * This method clears the tables in the database
      *
-     * @throws DatabaseException An exception to handle errors in the database
+     * @throws DataAccessException An exception to handle errors in the database
      */
-    public void clearTables() throws DatabaseException
+    public void clearTables() throws DataAccessException
     {
 
         try (Statement stmt = conn.createStatement()){
@@ -101,7 +101,7 @@ public class Database {
                          "DELETE FROM AuthorizationTokens";
             stmt.executeUpdate(sql);
         } catch (SQLException e) {
-            throw new DatabaseException("SQL Error encountered while clearing tables");
+            throw new DataAccessException("SQL Error encountered while clearing tables");
         }
     }
 }
