@@ -32,7 +32,23 @@ public class UserDao {
      * @param newUser User that is going to be added
      * @throws SQLException An exception that provides information on a database access error or other errors
      */
-    public void registerUser(User newUser) throws SQLException {}
+    public void registerUser(User newUser) throws DatabaseException {
+        String sql = "INSERT INTO User(username, password, email, firstName, lastName, gender, personID) VALUES(?,?,?,?,?,?,?);";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, newUser.getUserName());
+            stmt.setString(2, newUser.getPassword());
+            stmt.setString(3, newUser.getEmail());
+            stmt.setString(4, newUser.getFirstName());
+            stmt.setString(5, newUser.getLastName());
+            stmt.setString(6, newUser.getGender());
+            stmt.setString(7, newUser.getPersonID());
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new DatabaseException("Error encountered while intersting into database");
+        }
+    }
 
     /**
      * Finds a new user in the database
