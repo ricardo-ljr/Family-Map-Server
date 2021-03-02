@@ -5,8 +5,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.xml.crypto.Data;
-
 import java.sql.Connection;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -54,7 +52,16 @@ class PersonDaoTest {
 
         pDao.addPerson(person);
 
+        DataAccessException exception = assertThrows(DataAccessException.class, ()-> {
+            pDao.addPerson(person);
+        });
+
         assertThrows(DataAccessException.class, ()->pDao.addPerson(person));
+
+        String expectedMessage = "Error encountered while inserting person into database";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
     }
 
     @Test

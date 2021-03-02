@@ -23,7 +23,7 @@ public class Database {
         try {
             //The Structure for this Connection is driver:language:path
             //The path assumes you start in the root of your project unless given a non-relative path
-            final String CONNECTION_URL = "jdbc:sqlite:family-map2.sqlite";
+            final String CONNECTION_URL = "jdbc:sqlite:family-map2.db";
 
             // Open a database connection to the file given in the path
             conn = DriverManager.getConnection(CONNECTION_URL);
@@ -82,66 +82,6 @@ public class Database {
         } catch (SQLException e) {
             e.printStackTrace();
             throw new DataAccessException("Unable to close database connection");
-        }
-    }
-
-    public void createTables() throws DataAccessException {
-
-        try (Statement stmt = conn.createStatement()){
-
-            String sql =
-                    "CREATE TABLE IF NOT EXISTS User " +
-                    "(" +
-                    "    username VARCHAR(255) NOT NULL UNIQUE," +
-                    "    password VARCHAR(255) NOT NULL," +
-                    "    email VARCHAR(255) NOT NULL," +
-                    "    firstName VARCHAR(255) NOT NULL," +
-                    "    lastName VARCHAR(255) NOT NULL," +
-                    "    gender CHAR(1) CHECK(gender in ('f', 'm')) NOT NULL," +
-                    "    personID VARCHAR(255) NOT NULL," +
-                    "    FOREIGN KEY (personID) REFERENCES Persons(personID)," +
-                    "    PRIMARY KEY (username)" +
-                    ");" +
-
-                    "CREATE TABLE IF NOT EXISTS Persons" +
-                    "(" +
-                    "    personID VARCHAR(255) NOT NULL," +
-                    "    associatedUsername VARCHAR(255)," +
-                    "    firstName VARCHAR(255)," +
-                    "    lastName VARCHAR(255)," +
-                    "    gender CHAR(1) CHECK(gender in ('f', 'm')) NOT NULL," +
-                    "    fatherID VARCHAR(255)," +
-                    "    motherID VARCHAR(255)," +
-                    "    spouseID VARCHAR(255)," +
-                    "    PRIMARY KEY (personID)" +
-                    ");" +
-
-                    "CREATE TABLE IF NOT EXISTS Events " +
-                    "(" +
-                    "    eventID VARCHAR(255) NOT NULL," +
-                    "    associatedUsername VARCHAR(255)," +
-                    "    latitude float(15) NOT NULL," +
-                    "    longitude float(15) NOT NULL," +
-                    "    country VARCHAR(255) NOT NULL," +
-                    "    city VARCHAR(255) NOT NULL," +
-                    "    eventType VARCHAR(255) NOT NULL," +
-                    "    year INT NOT NULL," +
-                    "    personID VARCHAR(255) NOT NULL," +
-                    "    FOREIGN KEY (personID) REFERENCES Persons(personID)," +
-                    "    PRIMARY KEY (eventID)" +
-                    ");" +
-
-                    "CREATE TABLE IF NOT EXISTS AuthorizationTokens" +
-                    "(" +
-                    "    authToken VARCHAR(255) NOT NULL UNIQUE," +
-                    "    associatedUsername VARCHAR(255) NOT NULL," +
-                    "    PRIMARY KEY (authToken)" +
-                    ");";
-
-
-            stmt.executeUpdate(sql);
-        } catch (SQLException e) {
-            throw new DataAccessException("Error encountered while creating tables");
         }
     }
 

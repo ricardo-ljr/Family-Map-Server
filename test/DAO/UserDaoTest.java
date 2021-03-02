@@ -1,13 +1,11 @@
 package DAO;
 
-import Model.Person;
 import Model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,7 +21,7 @@ class UserDaoTest {
         db = new Database();
 
         user = new User("12345", "person_1",
-                "Ricardo@email.com", "Ricardo", "Leite","m", "person_1");
+                "Ricardo@email.com", "Ricardo", "Leite","m", "12345");
 
         Connection connection = db.openConnection();
 
@@ -33,7 +31,7 @@ class UserDaoTest {
     }
 
     @AfterEach
-    void tearDown() throws Exception {
+    void tearDown() throws DataAccessException {
 
         db.closeConnection(true);
     }
@@ -54,7 +52,16 @@ class UserDaoTest {
     void registerUserFail() throws DataAccessException{
         uDao.registerUser(user);
 
+        DataAccessException exception = assertThrows(DataAccessException.class, ()-> {
+            uDao.registerUser(user);
+        });
+
         assertThrows(DataAccessException.class, ()->uDao.registerUser(user));
+
+        String expectedMessage = "Error encountered while inserting into database";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
     }
 
     @Test
