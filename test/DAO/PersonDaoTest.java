@@ -1,24 +1,88 @@
 package DAO;
 
+import Model.Person;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import javax.xml.crypto.Data;
+
+import java.sql.Connection;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class PersonDaoTest {
+    private Database db;
+    private Person person;
+    PersonDao pDao;
 
-    @Test
-    void testAddPerson() {
+    @BeforeEach
+    void setUp() throws DataAccessException {
 
-        //assertEquals("fred", obj.getValue());
-        //assertFalse
-        //assertThrows
+        db = new Database();
+
+        person = new Person("12345", "person_1",
+                "Ricardo", "Leite", "m",
+                "father_1", "mother_1", "spouse_1");
+
+        Connection connection = db.openConnection();
+
+        db.clearTables();
+
+        pDao = new PersonDao(connection);
+    }
+
+    @AfterEach
+    public void tearDown() throws DataAccessException {
+        db.closeConnection(true);
     }
 
     @Test
-    void testFindPerson() {
+    void testAddPerson() throws DataAccessException{
+
+        pDao.addPerson(person);
+
+        Person compareTest = pDao.findPerson(person.getPersonID());
+
+        assertNotNull(compareTest);
+
+        assertEquals(person, compareTest);
     }
 
     @Test
-    void testClearPerson() {
+    void testAddPersonFail() throws DataAccessException {
+
+        pDao.addPerson(person);
+
+        assertThrows(DataAccessException.class, ()->pDao.addPerson(person));
+    }
+
+    @Test
+    void testFindPerson() throws DataAccessException{
+        pDao.addPerson(person);
+
+        Person compareTest = pDao.findPerson(person.getPersonID());
+
+        assertNotNull(compareTest);
+
+        assertEquals(person, compareTest);
+    }
+
+    @Test
+    void testFindPersonFail() throws DataAccessException {
+        Person compareTest = pDao.findPerson(person.getPersonID());
+        assertNull(compareTest);
+    }
+
+    @Test
+    void testClearPerson() throws DataAccessException{
+        pDao.addPerson(person);
+
+        Person find = pDao.findPerson(person.getPersonID());
+        pDao.clearPerson();
+
+        Person clear = pDao.findPerson(person.getPersonID());
+        assertNotNull(find);
+        assertNull(clear);
     }
 }

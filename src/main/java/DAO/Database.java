@@ -1,14 +1,13 @@
 package DAO;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import javax.xml.crypto.Data;
+import java.sql.*;
 
 /**
  * This class connects to the Database
  */
 public class Database {
+
     private Connection conn;
 
     //Whenever we want to make a change to our database we will have to open a connection and use
@@ -24,7 +23,7 @@ public class Database {
         try {
             //The Structure for this Connection is driver:language:path
             //The path assumes you start in the root of your project unless given a non-relative path
-            final String CONNECTION_URL = "jdbc:sqlite:familymap.sqlite";
+            final String CONNECTION_URL = "jdbc:sqlite:family-map2.sqlite";
 
             // Open a database connection to the file given in the path
             conn = DriverManager.getConnection(CONNECTION_URL);
@@ -86,19 +85,78 @@ public class Database {
         }
     }
 
+    public void createTables() throws DataAccessException {
+
+        try (Statement stmt = conn.createStatement()){
+
+            String sql =
+                    "CREATE TABLE IF NOT EXISTS User " +
+                    "(" +
+                    "    username VARCHAR(255) NOT NULL UNIQUE," +
+                    "    password VARCHAR(255) NOT NULL," +
+                    "    email VARCHAR(255) NOT NULL," +
+                    "    firstName VARCHAR(255) NOT NULL," +
+                    "    lastName VARCHAR(255) NOT NULL," +
+                    "    gender CHAR(1) CHECK(gender in ('f', 'm')) NOT NULL," +
+                    "    personID VARCHAR(255) NOT NULL," +
+                    "    FOREIGN KEY (personID) REFERENCES Persons(personID)," +
+                    "    PRIMARY KEY (username)" +
+                    ");" +
+
+                    "CREATE TABLE IF NOT EXISTS Persons" +
+                    "(" +
+                    "    personID VARCHAR(255) NOT NULL," +
+                    "    associatedUsername VARCHAR(255)," +
+                    "    firstName VARCHAR(255)," +
+                    "    lastName VARCHAR(255)," +
+                    "    gender CHAR(1) CHECK(gender in ('f', 'm')) NOT NULL," +
+                    "    fatherID VARCHAR(255)," +
+                    "    motherID VARCHAR(255)," +
+                    "    spouseID VARCHAR(255)," +
+                    "    PRIMARY KEY (personID)" +
+                    ");" +
+
+                    "CREATE TABLE IF NOT EXISTS Events " +
+                    "(" +
+                    "    eventID VARCHAR(255) NOT NULL," +
+                    "    associatedUsername VARCHAR(255)," +
+                    "    latitude float(15) NOT NULL," +
+                    "    longitude float(15) NOT NULL," +
+                    "    country VARCHAR(255) NOT NULL," +
+                    "    city VARCHAR(255) NOT NULL," +
+                    "    eventType VARCHAR(255) NOT NULL," +
+                    "    year INT NOT NULL," +
+                    "    personID VARCHAR(255) NOT NULL," +
+                    "    FOREIGN KEY (personID) REFERENCES Persons(personID)," +
+                    "    PRIMARY KEY (eventID)" +
+                    ");" +
+
+                    "CREATE TABLE IF NOT EXISTS AuthorizationTokens" +
+                    "(" +
+                    "    authToken VARCHAR(255) NOT NULL UNIQUE," +
+                    "    associatedUsername VARCHAR(255) NOT NULL," +
+                    "    PRIMARY KEY (authToken)" +
+                    ");";
+
+
+            stmt.executeUpdate(sql);
+        } catch (SQLException e) {
+            throw new DataAccessException("Error encountered while creating tables");
+        }
+    }
+
     /**
      * This method clears the tables in the database
      *
      * @throws DataAccessException An exception to handle errors in the database
      */
-    public void clearTables() throws DataAccessException
-    {
+    public void clearTables() throws DataAccessException {
 
         try (Statement stmt = conn.createStatement()){
-            String sql = "DELETE FROM Events" +
-                         "DELETE FROM Persons" +
-                         "DELETE FROM User" +
-                         "DELETE FROM AuthorizationTokens";
+            String sql = "DELETE FROM User;" +
+                         "DELETE FROM Persons;" +
+                         "DELETE FROM Events;" +
+                         "DELETE FROM AuthorizationTokens;";
             stmt.executeUpdate(sql);
         } catch (SQLException e) {
             throw new DataAccessException("SQL Error encountered while clearing tables");

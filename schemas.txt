@@ -1,5 +1,4 @@
 CREATE TABLE IF NOT EXISTS User (
-    userID VARCHAR(255) NOT NULL,
     username VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
@@ -8,12 +7,11 @@ CREATE TABLE IF NOT EXISTS User (
     gender CHAR(1) CHECK(gender in ('f', 'm')) NOT NULL,
     personID VARCHAR(255) NOT NULL,
     FOREIGN KEY (personID) REFERENCES Persons(personID),
-    PRIMARY KEY (userID)
-
+    PRIMARY KEY (username)
 )
 
 CREATE TABLE IF NOT EXISTS Persons (
-    personID VARCHAR(255) NOT NULL,
+    personID VARCHAR(255) NOT NULL UNIQUE,
     associatedUsername VARCHAR(255),
     firstName VARCHAR(255),
     lastName VARCHAR(255),
@@ -22,7 +20,6 @@ CREATE TABLE IF NOT EXISTS Persons (
     motherID VARCHAR(255),
     spouseID VARCHAR(255),
     PRIMARY KEY (personID)
-
 )
 
 CREATE TABLE IF NOT EXISTS Events (
@@ -37,12 +34,10 @@ CREATE TABLE IF NOT EXISTS Events (
 	personID VARCHAR(255) NOT NULL,
     FOREIGN KEY (personID) REFERENCES Persons(personID),
     PRIMARY KEY (eventID)
-
 )
 
 CREATE TABLE IF NOT EXISTS AuthorizationTokens (
     authToken VARCHAR(255) NOT NULL UNIQUE,
     associatedUsername VARCHAR(255) NOT NULL,
     PRIMARY KEY (authToken)
-
 )

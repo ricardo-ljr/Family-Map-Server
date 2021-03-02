@@ -63,8 +63,7 @@ public class User {
      * @param gender User's gender
      * @param personID User's unique personID associated with
      */
-    public User(String userID,  String userName, String password, String email, String firstName, String lastName, String gender, String personID) {
-        this.userID = UUID.randomUUID().toString();
+    public User(String userName, String password, String email, String firstName, String lastName, String gender, String personID) {
         this.userName = userName;
         this.password = password;
         this.email = email;
@@ -72,14 +71,6 @@ public class User {
         this.lastName = lastName;
         this.gender = gender;
         this.personID = personID;
-    }
-
-    public String getUserID() {
-        return userID;
-    }
-
-    public void setUserID(String userID) {
-        this.userID = userID;
     }
 
     public String getUserName() {

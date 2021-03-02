@@ -61,10 +61,10 @@ public class PersonDao {
     public Person findPerson(String personID) throws DataAccessException {
         Person person;
         ResultSet rs = null;
-        String sql = "SELECT * FROM User WHERE personID = ?";
+        String sql = "SELECT * FROM Persons WHERE personID = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, personID);
-            stmt.executeQuery();
+            rs = stmt.executeQuery();
             if (rs.next()) {
                 person = new Person(rs.getString("personID"),
                         rs.getString("associatedUsername"),
@@ -78,7 +78,7 @@ public class PersonDao {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new DataAccessException("Error encountered while finding event");
+            throw new DataAccessException("Error encountered while finding person");
         } finally {
             if(rs != null) {
                 try {

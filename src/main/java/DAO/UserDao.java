@@ -63,9 +63,9 @@ public class UserDao {
         String sql = "SELECT * FROM User WHERE username = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, username);
-            stmt.executeQuery();
+            rs = stmt.executeQuery();
             if (rs.next()) {
-                user = new User(rs.getString("userID"),
+                user = new User(
                         rs.getString("username"),
                         rs.getString("password"),
                         rs.getString("email"),
@@ -77,7 +77,7 @@ public class UserDao {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new DataAccessException("Error encountered while finding event");
+            throw new DataAccessException("Error encountered while finding user");
         } finally {
             if(rs != null) {
                 try {

@@ -8,10 +8,16 @@ public class DataAccessException extends Exception {
     /**
      * Initializes constructor for class
      *
-     * @param e Message that will be displayed
+     * @param message Message that will be displayed
      */
-    public DataAccessException(String e) {
-        super(e);
+    public DataAccessException(String message) {
+
+        super(message);
+    }
+
+    DataAccessException()
+    {
+        super();
     }
 
 }
