@@ -9,7 +9,7 @@ import java.util.ArrayList;
  */
 public class EventsResult {
 
-    private ArrayList<Event> events;
+    private ArrayList<Event> data;
 
     /**
      * Initializes empty constructor
@@ -22,14 +22,14 @@ public class EventsResult {
      * @param events
      */
     public EventsResult(ArrayList<Event> events) {
-        this.events = events;
+        this.data = events;
     }
 
     public ArrayList<Event> getEvents() {
-        return events;
+        return data;
     }
 
     public void setEvents(ArrayList<Event> events) {
-        this.events = events;
+        this.data = events;
     }
 }

@@ -7,7 +7,7 @@ public class RegisterRequest {
     /**
      * The user's unique username
      */
-    private String userName;
+    private String username;
 
     /**
      * The user's password
@@ -42,15 +42,15 @@ public class RegisterRequest {
     /**
      * Register a new user
      *
-     * @param userName User's unique username
+     * @param username User's unique username
      * @param password User's password
      * @param email User's email
      * @param firstName User's first name
      * @param lastName User's last name
      * @param gender User's gender
      */
-    public RegisterRequest(String userName, String password, String email, String firstName, String lastName, String gender) {
-        this.userName = userName;
+    public RegisterRequest(String username, String password, String email, String firstName, String lastName, String gender) {
+        this.username = username;
         this.password = password;
         this.email = email;
         this.firstName = firstName;
@@ -59,11 +59,11 @@ public class RegisterRequest {
     }
 
     public String getUserName() {
-        return userName;
+        return username;
     }
 
     public void setUserName(String userName) {
-        this.userName = userName;
+        this.username = userName;
     }
 
     public String getPassword() {
