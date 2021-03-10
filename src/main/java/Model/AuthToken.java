@@ -27,8 +27,8 @@ public class AuthToken {
      *
      * @param associatedUsername
      */
-    public AuthToken(String associatedUsername) {
-        this.authToken = UUID.randomUUID().toString();
+    public AuthToken(String authToken, String associatedUsername) {
+        this.authToken = authToken;
         this.associatedUsername = associatedUsername;
     }
 
