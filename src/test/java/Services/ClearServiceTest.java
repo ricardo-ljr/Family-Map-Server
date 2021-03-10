@@ -14,4 +14,11 @@ class ClearServiceTest {
         MessageResult expected = new MessageResult("Cleared database successfully.");
         assertEquals(myResult.getMessage(), expected.getMessage());
     }
+
+    @Test
+    void clearResult2() {
+        ClearService clearService = new ClearService();
+        MessageResult myResult = clearService.clearResult();
+        assertNotNull(myResult);
+    }
 }
