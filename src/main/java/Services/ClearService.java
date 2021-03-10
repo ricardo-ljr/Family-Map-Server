@@ -1,5 +1,9 @@
 package Services;
 
+import DAO.DataAccessException;
+import DAO.Database;
+import Result.MessageResult;
+
 import java.sql.*;
 
 /**
@@ -24,9 +28,23 @@ public class ClearService {
     }
 
     /**
-     * Clears database
+     * Clears database and returns message if successful
      */
-    public void clearResult() {
-
+    public MessageResult clearResult() {
+        Database db = new Database();
+        try {
+            db.openConnection();
+            db.clearTables();
+            db.closeConnection(true);
+            return new MessageResult("Cleared database successfully.");
+        } catch (DataAccessException d) {
+            try {
+                db.closeConnection(false);
+            } catch (DataAccessException e) {
+                e.printStackTrace();
+            }
+            return new MessageResult("Internal server error");
+        }
     }
 }
+

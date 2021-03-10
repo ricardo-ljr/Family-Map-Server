@@ -30,9 +30,9 @@ public class UserDao {
      * Creates a new user in the database
      *
      * @param newUser User that is going to be added
-     * @throws DatabaseException An exception that provides information on a database access error or other errors
+     * @throws DataAccessException An exception that provides information on a database access error or other errors
      */
-    public void registerUser(User newUser) throws DatabaseException {
+    public void registerUser(User newUser) throws DataAccessException {
         String sql = "INSERT INTO User(username, password, email, firstName, lastName, gender, personID) VALUES(?,?,?,?,?,?,?)";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -46,7 +46,7 @@ public class UserDao {
 
             stmt.executeUpdate();
         } catch (SQLException e) {
-            throw new DatabaseException("Error encountered while intersting into database");
+            throw new DataAccessException("Error encountered while inserting into database");
         }
     }
 
@@ -55,17 +55,17 @@ public class UserDao {
      *
      * @param username Finding the user through its username
      * @return Return the user
-     * @throws DatabaseException An exception that provides information on a database access error or other errors
+     * @throws DataAccessException An exception that provides information on a database access error or other errors
      */
-    public User findUser(String username) throws DatabaseException {
+    public User findUser(String username) throws DataAccessException {
         User user;
         ResultSet rs = null;
-        String sql = "SELECT * FROM User WHERE username = ?;";
+        String sql = "SELECT * FROM User WHERE username = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, username);
-            stmt.executeQuery();
+            rs = stmt.executeQuery();
             if (rs.next()) {
-                user = new User(rs.getString("userID"),
+                user = new User(
                         rs.getString("username"),
                         rs.getString("password"),
                         rs.getString("email"),
@@ -77,7 +77,7 @@ public class UserDao {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new DatabaseException("Error encountered while finding event");
+            throw new DataAccessException("Error encountered while finding user");
         } finally {
             if(rs != null) {
                 try {
@@ -95,12 +95,12 @@ public class UserDao {
      *
      * @throws SQLException An exception that provides information on a database access error or other errors
      */
-    public void clearUser() throws DatabaseException {
+    public void clearUser() throws DataAccessException {
         try (Statement stmt = connection.createStatement()){
             String sql = "DELETE FROM User";
             stmt.executeUpdate(sql);
         } catch (SQLException e) {
-            throw new DatabaseException("SQL Error encountered while clearing tables");
+            throw new DataAccessException("SQL Error encountered while clearing tables");
         }
     }
 }

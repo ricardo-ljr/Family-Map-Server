@@ -7,7 +7,7 @@ public class LoginRequest {
     /**
      * The user's unique username
      */
-    private String userName;
+    private String username;
 
     /**
      * The user's password
@@ -22,20 +22,20 @@ public class LoginRequest {
     /**
      * Contrusctor that handles the request to login an existing user
      *
-     * @param userName Username of user requesting login access
+     * @param username Username of user requesting login access
      * @param password Password of user requesting login access
      */
-    public LoginRequest(String userName, String password) {
-        this.userName = userName;
+    public LoginRequest(String username, String password) {
+        this.username = username;
         this.password = password;
     }
 
     public String getUserName() {
-        return userName;
+        return username;
     }
 
     public void setUserName(String userName) {
-        this.userName = userName;
+        this.username = userName;
     }
 
     public String getPassword() {

@@ -10,7 +10,7 @@ import java.util.ArrayList;
  */
 public class PersonsResult {
 
-    private ArrayList<Person> person;
+    private ArrayList<Person> data;
 
     /**
      * Initializes an empty constructor
@@ -23,14 +23,14 @@ public class PersonsResult {
      * @param person Parameter to access family members of person
      */
     public PersonsResult(ArrayList<Person> person) {
-        this.person = person;
+        this.data = person;
     }
 
     public ArrayList<Person> getPerson() {
-        return person;
+        return data;
     }
 
     public void setPerson(ArrayList<Person> person) {
-        this.person = person;
+        this.data = person;
     }
 }

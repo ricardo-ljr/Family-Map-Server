@@ -69,8 +69,8 @@ public class Event {
      * @param year The year in which the event occurred
      * @param personID Event's unique personID associated with
      */
-    public Event(String associatedUsername, float latitude, float longitude, String country, String city, String eventType, int year, String personID) {
-        this.eventID = UUID.randomUUID().toString();
+    public Event(String eventID, String associatedUsername, float latitude, float longitude, String country, String city, String eventType, int year, String personID) {
+        this.eventID = eventID;
         this.associatedUsername = associatedUsername;
         this.latitude = latitude;
         this.longitude = longitude;

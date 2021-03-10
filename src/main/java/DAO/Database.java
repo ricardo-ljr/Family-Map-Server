@@ -1,14 +1,13 @@
 package DAO;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import javax.xml.crypto.Data;
+import java.sql.*;
 
 /**
  * This class connects to the Database
  */
 public class Database {
+
     private Connection conn;
 
     //Whenever we want to make a change to our database we will have to open a connection and use
@@ -18,13 +17,13 @@ public class Database {
      * A method to open a connection with a database
      *
      * @return A connection to the database
-     * @throws DatabaseException An exception to handle errors in the database
+     * @throws DataAccessException An exception to handle errors in the database
      */
-    public Connection openConnection() throws DatabaseException {
+    public Connection openConnection() throws DataAccessException {
         try {
             //The Structure for this Connection is driver:language:path
             //The path assumes you start in the root of your project unless given a non-relative path
-            final String CONNECTION_URL = "jdbc:sqlite:familymap.sqlite";
+            final String CONNECTION_URL = "jdbc:sqlite:family-map2.db";
 
             // Open a database connection to the file given in the path
             conn = DriverManager.getConnection(CONNECTION_URL);
@@ -33,7 +32,7 @@ public class Database {
             conn.setAutoCommit(false);
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new DatabaseException("Unable to open connection to database");
+            throw new DataAccessException("Unable to open connection to database");
         }
 
         return conn;
@@ -43,9 +42,9 @@ public class Database {
      * A method that gets a connection to the database
      *
      * @return Connection to database
-     * @throws DatabaseException An exception to handle errors in the database
+     * @throws DataAccessException An exception to handle errors in the database
      */
-    public Connection getConnection() throws DatabaseException {
+    public Connection getConnection() throws DataAccessException {
         if(conn == null) {
             return openConnection();
         } else {
@@ -65,9 +64,9 @@ public class Database {
      * A method to close a connection with a database
      *
      * @param commit Boolean returns whether connection was successful or not
-     * @throws DatabaseException An exception to handle errors in the database
+     * @throws DataAccessException An exception to handle errors in the database
      */
-    public void closeConnection(boolean commit) throws DatabaseException {
+    public void closeConnection(boolean commit) throws DataAccessException {
         try {
             if (commit) {
                 //This will commit the changes to the database
@@ -82,26 +81,25 @@ public class Database {
             conn = null;
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new DatabaseException("Unable to close database connection");
+            throw new DataAccessException("Unable to close database connection");
         }
     }
 
     /**
      * This method clears the tables in the database
      *
-     * @throws DatabaseException An exception to handle errors in the database
+     * @throws DataAccessException An exception to handle errors in the database
      */
-    public void clearTables() throws DatabaseException
-    {
+    public void clearTables() throws DataAccessException {
 
         try (Statement stmt = conn.createStatement()){
-            String sql = "DELETE FROM Events" +
-                         "DELETE FROM Persons" +
-                         "DELETE FROM User" +
-                         "DELETE FROM AuthorizationTokens";
+            String sql = "DELETE FROM User;" +
+                         "DELETE FROM Persons;" +
+                         "DELETE FROM Events;" +
+                         "DELETE FROM AuthorizationTokens;";
             stmt.executeUpdate(sql);
         } catch (SQLException e) {
-            throw new DatabaseException("SQL Error encountered while clearing tables");
+            throw new DataAccessException("SQL Error encountered while clearing tables");
         }
     }
 }
