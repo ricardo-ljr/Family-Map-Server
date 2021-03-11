@@ -15,6 +15,7 @@ public class DefaultHandler implements HttpHandler {
      *
      * @param exchange Contains the request
      */
+
     @Override
     public void handle(HttpExchange exchange) throws IOException {}
 
@@ -34,9 +35,11 @@ public class DefaultHandler implements HttpHandler {
         if(result.getMessage() != null) {
             gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
         }
+
         else {
             gson = new GsonBuilder().setPrettyPrinting().create();
         }
+
         String jsonString = gson.toJson(result);
         OutputStreamWriter outputWriter = new OutputStreamWriter(output);
         BufferedWriter bufferedWriter = new BufferedWriter(outputWriter);
