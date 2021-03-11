@@ -3,7 +3,7 @@ package Result;
 /**
  * This class handle the register request result, sends a message and data
  */
-public class RegisterResultSuccess extends SuccessMessageResult {
+public class RegisterResultSuccess extends ResultBool {
 
     private String message;
 
@@ -30,10 +30,11 @@ public class RegisterResultSuccess extends SuccessMessageResult {
      * @param personID Unique person identifier for user
      * @param username Username user used to register
      */
-    public RegisterResultSuccess(String authToken, String personID, String username) {
+    public RegisterResultSuccess(String authToken,  String username, String personID) {
         this.authToken = authToken;
         this.personID = personID;
         this.username = username;
+        success = true;
     }
 
 

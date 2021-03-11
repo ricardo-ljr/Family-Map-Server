@@ -5,14 +5,18 @@ import Model.AuthToken;
 import Model.Person;
 import Model.User;
 import Request.RegisterRequest;
+import Result.ErrorMessageResult;
 import Result.RegisterResultSuccess;
+import Result.ResultBool;
+import Result.SuccessMessageResult;
 
 import java.sql.*;
+import java.util.UUID;
 
 /**
  * This class is responsible for registering a new user to the database
  */
-public class RegisterService {
+public class RegisterService extends Service {
 
     private Connection connection;
 
@@ -36,65 +40,35 @@ public class RegisterService {
      * @param request Takes in the request to create a new user
      * @return Null for now, but it will return new user
      */
-    public RegisterResultSuccess register(RegisterRequest request) {
-        Database db = new Database();
+    public ResultBool register(RegisterRequest request) {
+        setUp();
 
+        if (connection == null)
+            return new ErrorMessageResult("Error registering a new user");
+
+        PersonDao personDAO = new PersonDao(connection);
+        String id = UUID.randomUUID().toString();
+        User newUser = new User(request.getUserName(), request.getPassword(), request.getEmail(),
+                request.getFirstName(), request.getLastName(), request.getGender(), id);
         try {
-            Connection connection = db.openConnection();
-            UserDao userDao = new UserDao(connection);
-            User reqUser = userDao.findUser(request.getUserName());
+            UserDao uDao = new UserDao(connection);
+            uDao.registerUser(newUser);
 
-            if (reqUser != null) {
-                db.closeConnection(false);
-                return new RegisterResultSuccess("Username already taken by another user");
-            }
-
-            PersonDao personDAO = new PersonDao(connection);
-
+            return new RegisterResultSuccess(new AuthTokenDao(connection).addToken(newUser).getAuthToken(), newUser.getUserName(), id);
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            return new ErrorMessageResult("Error registering the new user");
+        } finally {
             try {
-                Person newPerson = new Person(request.getUserName(),
-                        request.getFirstName(),
-                        request.getLastName(),
-                        request.getGender());
-                personDAO.addPerson(newPerson);
-
-                User newUser = new User(request.getUserName(),
-                        request.getPassword(),
-                        request.getEmail(),
-                        request.getFirstName(),
-                        request.getLastName(),
-                        request.getGender(),
-                        newPerson.getPersonID());
-
-                userDao.registerUser(newUser);
-
-                AuthTokenDao authTokenDao = new AuthTokenDao(connection);
-
-                AuthToken newToken = new AuthToken(newUser.getUserName());
-
-                authTokenDao.addToken(newToken);
-
                 db.closeConnection(true);
 
-                return new RegisterResultSuccess(newToken.getAuthToken(), newUser.getUserName(), newUser.getPersonID());
+                FillService fill = new FillService();
+                fill.fill(newUser.getUserName(), 4);
 
-            } catch (DataAccessException e) {
-                System.out.println(e.getMessage());
-                try {
-                    db.closeConnection(false);
-                } catch (DataAccessException d) {
-                    d.printStackTrace();
-                }
-                return new RegisterResultSuccess("Error registering the user");
+            } catch (DataAccessException dataAccessException) {
+                dataAccessException.printStackTrace();
             }
-        }catch (DataAccessException e) {
-            try {
-                db.closeConnection(false);
-
-            } catch (DataAccessException d) {
-                d.printStackTrace();
-            }
-            return new RegisterResultSuccess("Internal server error");
         }
     }
+
 }

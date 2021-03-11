@@ -1,5 +1,6 @@
 package Handler;
 
+import Result.ResultBool;
 import Result.SuccessMessageResult;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -8,7 +9,12 @@ import com.sun.net.httpserver.HttpHandler;
 
 import java.io.*;
 
-public class DefaultHandler implements HttpHandler {
+public abstract class DefaultHandler implements HttpHandler {
+
+    abstract protected ResultBool workWithService(String requestURI, String reqData);
+    String getOrPost;
+    Boolean authenticate;
+    String authToken;
 
     /**
      * Handles the request and returns response

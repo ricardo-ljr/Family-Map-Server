@@ -80,6 +80,28 @@ public class AuthTokenDao {
     }
 
     /**
+     * Authenticates your token
+     * @param auth
+     * @return
+     * @throws DataAccessException
+     */
+    public boolean authenticate(AuthToken auth) throws DataAccessException {
+        String sql = "SELECT token " +
+                "FROM authtokens " +
+                "WHERE token=\'" + auth.getAuthToken() + "\'";
+
+        boolean result = false;
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            ResultSet rs = stmt.executeQuery();
+            result = rs.next();
+        } catch (SQLException e) {
+            throw new DataAccessException("Error encountered while authenticating your token");
+        }
+        return result;
+    }
+
+    /**
      * Find username given auth token
      *
      * @param authtoken Authorization token to give
