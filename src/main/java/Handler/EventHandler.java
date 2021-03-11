@@ -1,15 +1,21 @@
 package Handler;
 
+import Result.ResultBool;
 import Services.EventsByIdService;
 import Services.EventsResult;
 
 public class EventHandler extends DefaultHandler{
+
+    /**
+     * Type of event
+     */
     public EventHandler() {
         getOrPost = "get";
         authenticate = true;
     }
+
     @Override
-    protected Response workWithService(String requestURI, String reqData) {
+    protected ResultBool workWithService(String requestURI, String reqData) {
         System.out.println(reqData);
 
         String[] commands = requestURI.split("/");

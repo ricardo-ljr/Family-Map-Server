@@ -1,7 +1,8 @@
 package Services;
 
-import DAO.DataAccessException;
-import DAO.Database;
+import DAO.*;
+import Result.ErrorMessageResult;
+import Result.ResultBool;
 import Result.SuccessMessageResult;
 
 import java.sql.*;
@@ -9,7 +10,7 @@ import java.sql.*;
 /**
  * This class is responsible for deleting data from the database
  */
-public class ClearService {
+public class ClearService extends Service {
 
     private Connection connection;
 
@@ -30,20 +31,37 @@ public class ClearService {
     /**
      * Clears database and returns message if successful
      */
-    public SuccessMessageResult clearResult() {
-        Database db = new Database();
+    public ResultBool clearResult() {
+        setUp();
+
         try {
-            db.openConnection();
-            db.clearTables();
+            AuthTokenDao tDao= new AuthTokenDao(connection);
+            tDao.clearAuthToken();
             db.closeConnection(true);
-            return new SuccessMessageResult("Cleared database successfully.");
-        } catch (DataAccessException d) {
+            connection = db.openConnection();
+            EventDao eventDAO = new EventDao(connection);
+            eventDAO.clearEvent();
+            db.closeConnection(true);
+            connection = db.openConnection();
+            PersonDao personDAO = new PersonDao(connection);
+            personDAO.clearPerson();
+            db.closeConnection(true);
+            connection = db.openConnection();
+            UserDao userDAO = new UserDao(connection);
+            userDAO.clearUser();
+
+            return new SuccessMessageResult("clear succeeded");
+        } catch (DataAccessException e) {
+
+            e.printStackTrace();
+            return new ErrorMessageResult("failed to clear");
+        } finally {
+
             try {
-                db.closeConnection(false);
+                db.closeConnection(true);
             } catch (DataAccessException e) {
                 e.printStackTrace();
             }
-            return new SuccessMessageResult("Internal server error");
         }
     }
 }
