@@ -5,7 +5,7 @@ import java.util.Objects;
 /**
  * This class handle the register request result, sends a message and data
  */
-public class LoginResult {
+public class LoginResult extends ResultBool{
 
     private String message;
 
@@ -18,16 +18,15 @@ public class LoginResult {
     /**
      * Constructor to handle login result for user
      *
-     * @param message Message to let user know if authenticated correctly or not
      * @param authToken Authorization token assigned to the user
      * @param personID Person unique identifier assigned to
      * @param username Username of user that logged in
      */
-    public LoginResult(String message, String authToken, String personID, String username) {
-        this.message = message;
+    public LoginResult(String authToken, String personID, String username) {
         this.authToken = authToken;
         this.personID = personID;
         this.username = username;
+        this.success = true;
     }
 
     public String getMessage() {

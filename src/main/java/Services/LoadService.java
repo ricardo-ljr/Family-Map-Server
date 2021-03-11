@@ -1,13 +1,22 @@
 package Services;
 
+import DAO.DataAccessException;
+import DAO.EventDao;
+import DAO.PersonDao;
+import DAO.UserDao;
+import Model.Event;
+import Model.Person;
+import Model.User;
 import Request.LoadRequest;
+import Result.ErrorMessageResult;
+import Result.ResultBool;
 import Result.SuccessMessageResult;
 
 /**
  * This class is responsible for handling loading users, persons
  * and events through a post method to the database
  */
-public class LoadService {
+public class LoadService extends Service {
 
     /**
      * Initialize empty constructor
@@ -23,7 +32,46 @@ public class LoadService {
      * @return Null for now, it will return a message if the operation
      * was successful or not
      */
-    public SuccessMessageResult load(LoadRequest request) {
-        return null;
+    public ResultBool load(LoadRequest request) {
+        try {
+            db.clearTables();
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            return new ErrorMessageResult("Error clearing tables for load.");
+        }
+
+        int users = 0;
+        int persons = 0;
+        int events = 0;
+        UserDao uDao = new UserDao(connection);
+        PersonDao pDao = new PersonDao(connection);
+        EventDao eDao = new EventDao(connection);
+        try {
+            for (User u : request.getUsers()) {
+                uDao.registerUser(u);
+                users++;
+            }
+            for (Person p : request.getPersons()) {
+                pDao.addPerson(p);
+                persons++;
+            }
+            for (Event e : request.getEvents()) {
+                eDao.addEvent(e);
+                events++;
+            }
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            return new ErrorMessageResult("Error inserting user, person, or event.");
+        } finally {
+            try {
+                db.closeConnection(true);
+            } catch (DataAccessException dataAccessException) {
+                dataAccessException.printStackTrace();
+            }
+        }
+
+        return new SuccessMessageResult("Successfully added " + users + " users, " + persons + " persons, and " + events + " events");
     }
+
 }
+

@@ -40,7 +40,7 @@ public class EventsResult extends Service {
             return result;
         } catch (DataAccessException e) {
             e.printStackTrace();
-            return new ErrorMessageResult("Error while getting events");
+            return new ErrorMessageResult("Error when getting all events");
         } finally {
             try {
                 db.closeConnection(true);

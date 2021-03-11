@@ -1,6 +1,7 @@
 package DAO;
 
 import Model.AuthToken;
+import Model.User;
 
 import java.sql.*;
 
@@ -31,16 +32,18 @@ public class AuthTokenDao {
      * @param newToken Token that is going to be added
      * @throws SQLException An exception that provides information on a database access error or other errors
      */
-    public void addToken(AuthToken newToken) throws DataAccessException {
+    public AuthToken addToken(User newToken) throws DataAccessException {
+        AuthToken token = new AuthToken();
         String sql = "INSERT INTO AuthorizationTokens(authToken,associatedUsername) VALUES(?,?);";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, newToken.getAuthToken());
-            stmt.setString(2, newToken.getAssociatedUsername());
+            stmt.setString(1, token.getAuthToken());
+            stmt.setString(2, token.getAssociatedUsername());
 
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new DataAccessException("Error when adding new token");
         }
+        return token;
     }
 
     /**
