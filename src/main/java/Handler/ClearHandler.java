@@ -11,18 +11,18 @@ import java.net.HttpURLConnection;
 
 public class ClearHandler extends DefaultHandler {
 
-        public ClearHandler() {
-            getOrPost = "post";
-            authenticate = false;
-        }
+    /**
+     * Type of HTTP request
+     */
+    public ClearHandler() {
+        getOrPost = "post";
+        authenticate = false;
+    }
 
-        @Override
-        protected ResultBool workWithService (String requestURI, String reqData) {
-            System.out.println(reqData);
-
-            ClearService service = new ClearService();
-
-            return service.clearResult();
-        }
+    @Override
+    protected ResultBool workWithService (String requestURI, String reqData) {
+        ClearService service = new ClearService();
+        return service.clearResult();
+    }
 }
 

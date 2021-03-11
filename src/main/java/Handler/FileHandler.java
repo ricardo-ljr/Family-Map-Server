@@ -16,7 +16,6 @@ public class FileHandler implements HttpHandler  {
         boolean success = false;
 
         try {
-
             if (exchange.getRequestMethod().toLowerCase().equals("get")) {
 
                 String urlPath = exchange.getRequestURI().toString();
@@ -37,6 +36,7 @@ public class FileHandler implements HttpHandler  {
 
                     respBody.close();
                 }
+
                 else {
                     exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
 
@@ -45,18 +45,14 @@ public class FileHandler implements HttpHandler  {
 
                     respBody.close();
                 }
-
-
                 success = true;
             }
             if (!success) {
-
                 exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
                 exchange.getResponseBody().close();
             }
         }
         catch (IOException e) {
-
             exchange.sendResponseHeaders(HttpURLConnection.HTTP_SERVER_ERROR, 0);
             exchange.getResponseBody().close();
 

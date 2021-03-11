@@ -7,7 +7,7 @@ import Services.EventsResult;
 public class EventHandler extends DefaultHandler{
 
     /**
-     * Type of event
+     * Type of HTTP request
      */
     public EventHandler() {
         getOrPost = "get";

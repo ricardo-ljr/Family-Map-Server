@@ -6,6 +6,9 @@ import Services.PersonsService;
 
 public class PersonHandler extends DefaultHandler{
 
+    /**
+     * Type of HTTP request
+     */
     public PersonHandler() {
         getOrPost = "get";
         authenticate = true;

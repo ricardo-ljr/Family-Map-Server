@@ -6,6 +6,9 @@ import com.google.gson.Gson;
 
 public class FillHandler extends DefaultHandler {
 
+    /**
+     * Type of HTTP request
+     */
     public FillHandler() {
         getOrPost = "post";
         authenticate = false;

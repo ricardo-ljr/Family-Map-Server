@@ -11,9 +11,6 @@ public class Server {
     private HttpServer server;
 
     private void run(String portNumber) {
-
-        System.out.println("Initializing Server");
-
         try {
             server = HttpServer.create(
                     new InetSocketAddress(Integer.parseInt(portNumber)),
@@ -26,8 +23,6 @@ public class Server {
 
         server.setExecutor(null);
 
-        System.out.println("Creating contexts");
-
         server.createContext("/user/register", new RegisterHandler());
         server.createContext("/user/login", new LoginHandler());
         server.createContext("/clear", new ClearHandler());
@@ -39,12 +34,13 @@ public class Server {
 
         server.start();
 
-        System.out.println("Server started");
+        System.out.println("Server running on port 8000!");
     }
 
     public static void main(String[] args) {
         String portNumber = args[0];
         new Server().run(portNumber);
     }
+
 }
 

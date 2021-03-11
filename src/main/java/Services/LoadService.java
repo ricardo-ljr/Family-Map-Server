@@ -43,9 +43,11 @@ public class LoadService extends Service {
         int users = 0;
         int persons = 0;
         int events = 0;
+
         UserDao uDao = new UserDao(connection);
         PersonDao pDao = new PersonDao(connection);
         EventDao eDao = new EventDao(connection);
+
         try {
             for (User u : request.getUsers()) {
                 uDao.registerUser(u);
@@ -59,6 +61,7 @@ public class LoadService extends Service {
                 eDao.addEvent(e);
                 events++;
             }
+
         } catch (DataAccessException e) {
             e.printStackTrace();
             return new ErrorMessageResult("Error inserting user, person, or event.");

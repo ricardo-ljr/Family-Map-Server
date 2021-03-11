@@ -14,6 +14,9 @@ import java.net.HttpURLConnection;
 
 public class RegisterHandler extends DefaultHandler{
 
+    /**
+     * Type of HTTP request
+     */
     public RegisterHandler() {
         getOrPost = "post";
         authenticate = false;

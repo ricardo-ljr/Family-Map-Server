@@ -7,6 +7,9 @@ import com.google.gson.Gson;
 
 public class LoginHandler extends DefaultHandler {
 
+    /**
+     * Type of HTTP request
+     */
     public LoginHandler() {
         getOrPost = "post";
         authenticate = false;

@@ -63,7 +63,7 @@ public class RegisterService extends Service {
                 db.closeConnection(true);
 
                 FillService fill = new FillService();
-                fill.fill(newUser.getUserName(), 4);
+                fill.fill(newUser.getUserName(), 4); // default generations are 4
 
             } catch (DataAccessException dataAccessException) {
                 dataAccessException.printStackTrace();
