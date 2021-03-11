@@ -3,21 +3,20 @@ package Result;
 /**
  * This class is responsible for sending messages to request that don't require unique implementations
  */
-public class MessageResult {
+public class SuccessMessageResult extends ResultBool{
 
     private String message;
 
     /**
-     * Initializes empty constructor
-     */
-    public MessageResult (){}
-
-    /**
      * Load in a message for generalized result requests
      *
-     * @param message Message of success or error
      */
-    public MessageResult(String message) {
+    public SuccessMessageResult() {
+        this.success = true;
+    }
+
+    public SuccessMessageResult(String message) {
+        this.success = true;
         this.message = message;
     }
 

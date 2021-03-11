@@ -5,7 +5,7 @@ import java.util.Objects;
 /**
  * This class is responsible for handling results associated with a single person by its ID
  */
-public class PersonByIdResult extends MessageResult {
+public class PersonByIdResultSuccess extends SuccessMessageResult {
 
     /**
      * The person's unique ID
@@ -50,7 +50,7 @@ public class PersonByIdResult extends MessageResult {
     /**
      * Initializes an empty constructor
      */
-    public PersonByIdResult() {}
+    public PersonByIdResultSuccess() {}
 
     /**
      * Constructor for persons by id results
@@ -64,7 +64,7 @@ public class PersonByIdResult extends MessageResult {
      * @param motherID Person's unique identifier for a mother
      * @param spouseID Person's unique identifier for a spouse
      */
-    public PersonByIdResult(String personID, String associatedUsername, String firstName, String lastName, String gender, String fatherID, String motherID, String spouseID) {
+    public PersonByIdResultSuccess(String personID, String associatedUsername, String firstName, String lastName, String gender, String fatherID, String motherID, String spouseID) {
         this.personID = personID;
         this.associatedUsername = associatedUsername;
         this.firstName = firstName;
@@ -144,7 +144,7 @@ public class PersonByIdResult extends MessageResult {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PersonByIdResult that = (PersonByIdResult) o;
+        PersonByIdResultSuccess that = (PersonByIdResultSuccess) o;
         return personID.equals(that.personID) && associatedUsername.equals(that.associatedUsername) && firstName.equals(that.firstName) && lastName.equals(that.lastName) && gender.equals(that.gender) && Objects.equals(fatherID, that.fatherID) && Objects.equals(motherID, that.motherID) && Objects.equals(spouseID, that.spouseID);
     }
 

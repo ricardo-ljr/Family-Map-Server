@@ -1,6 +1,6 @@
 package Handler;
 
-import Result.MessageResult;
+import Result.SuccessMessageResult;
 import Services.ClearService;
 import com.sun.net.httpserver.HttpExchange;
 
@@ -22,7 +22,7 @@ public class ClearHandler extends DefaultHandler {
                 System.out.println(reqData);
 
                 ClearService serviceObject = new ClearService();
-                MessageResult newResult = serviceObject.clearResult();
+                SuccessMessageResult newResult = serviceObject.clearResult();
                 exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
                 OutputStream respBody = exchange.getResponseBody();
                 generate(newResult, respBody);

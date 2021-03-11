@@ -32,7 +32,7 @@ public class AuthTokenDao {
      * @throws SQLException An exception that provides information on a database access error or other errors
      */
     public void addToken(AuthToken newToken) throws DataAccessException {
-        String sql = "INSERT INTO AuthorizationTokens(authToken, associatedUsername) VALUES(?,?);";
+        String sql = "INSERT INTO AuthorizationTokens(authToken,associatedUsername) VALUES(?,?);";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, newToken.getAuthToken());
             stmt.setString(2, newToken.getAssociatedUsername());
@@ -58,7 +58,7 @@ public class AuthTokenDao {
             stmt.setString(1, authToken);
             rs = stmt.executeQuery();
             if (rs.next()) {
-                token = new AuthToken(rs.getString("authToken"), rs.getString("associatedUsername"));
+                token = new AuthToken(rs.getString("authToken"),rs.getString("associatedUsername"));
                 return token;
             }
         } catch (SQLException e) {
@@ -74,6 +74,29 @@ public class AuthTokenDao {
             }
         }
         return null;
+    }
+
+    /**
+     * Find username given auth token
+     *
+     * @param authtoken Authorization token to give
+     * @return
+     * @throws DataAccessException Exception throws
+     */
+    public String getUsernameForAuthtoken(String authtoken) throws DataAccessException {
+        String sql = "SELECT username " +
+                "FROM authtokens " +
+                "WHERE token=\'" + authtoken + "\'";
+
+        String result;
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            ResultSet rs = stmt.executeQuery();
+            result = rs.getString(1);
+        } catch (SQLException e) {
+            throw new DataAccessException("Error encountered while querying in the database");
+        }
+        return result;
     }
 
     /**

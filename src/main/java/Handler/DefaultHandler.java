@@ -1,6 +1,6 @@
 package Handler;
 
-import Result.MessageResult;
+import Result.SuccessMessageResult;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
@@ -30,8 +30,9 @@ public class DefaultHandler implements HttpHandler {
         return sb.toString();
     }
 
-    protected void generate(MessageResult result, OutputStream output) throws IOException {
+    protected void generate(SuccessMessageResult result, OutputStream output) throws IOException {
         Gson gson;
+
         if(result.getMessage() != null) {
             gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
         }

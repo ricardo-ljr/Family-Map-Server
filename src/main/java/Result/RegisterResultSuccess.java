@@ -3,7 +3,7 @@ package Result;
 /**
  * This class handle the register request result, sends a message and data
  */
-public class RegisterResult {
+public class RegisterResultSuccess extends SuccessMessageResult {
 
     private String message;
 
@@ -16,22 +16,26 @@ public class RegisterResult {
     /**
      * Initializes empty constructor
      */
-    public RegisterResult() {}
+    public RegisterResultSuccess() {}
+
+    public RegisterResultSuccess(String message) {
+        this.message = message;
+    }
 
     /**
      * Sends the result back after registering a new user
      *
-     * @param message Message of success if user successfully registered or not
+     *
      * @param authToken Authorization token for the user
      * @param personID Unique person identifier for user
      * @param username Username user used to register
      */
-    public RegisterResult(String message, String authToken, String personID, String username) {
-        this.message = message;
+    public RegisterResultSuccess(String authToken, String personID, String username) {
         this.authToken = authToken;
         this.personID = personID;
         this.username = username;
     }
+
 
     public String getMessage() {
         return message;

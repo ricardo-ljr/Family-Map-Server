@@ -32,6 +32,15 @@ public class AuthToken {
         this.associatedUsername = associatedUsername;
     }
 
+    /**
+     * Constructor to return token for specific user
+     *
+     * @param userName
+     */
+    public AuthToken(String userName) {
+        this.authToken = userName;
+    }
+
     public String getAuthToken() {
         return authToken;
     }

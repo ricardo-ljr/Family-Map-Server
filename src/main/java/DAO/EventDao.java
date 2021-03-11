@@ -32,18 +32,19 @@ public class EventDao {
      * @throws DataAccessException An exception that provides information on a database access error or other errors
      */
     public void addEvent(Event newEvent) throws DataAccessException{
-        String sql = "INSERT INTO Events (eventID, associatedUsername, latitude, longitude, " +
-                "country, city, eventType, year, personID) VALUES(?,?,?,?,?,?,?,?,?);";
+        String sql = "INSERT INTO Events (eventID, associatedUsername, personID, latitude, longitude, " +
+                "country, city, eventType, year) VALUES(?,?,?,?,?,?,?,?,?);";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, newEvent.getEventID());
             stmt.setString(2, newEvent.getAssociatedUsername());
-            stmt.setDouble(3, newEvent.getLatitude());
-            stmt.setDouble(4, newEvent.getLongitude());
-            stmt.setString(5, newEvent.getCountry());
-            stmt.setString(6, newEvent.getCity());
-            stmt.setString(7, newEvent.getEventType());
-            stmt.setInt(8, newEvent.getYear());
-            stmt.setString(9, newEvent.getPersonID());
+            stmt.setString(3, newEvent.getPersonID());
+            stmt.setFloat(4, newEvent.getLatitude());
+            stmt.setFloat(5, newEvent.getLongitude());
+            stmt.setString(6, newEvent.getCountry());
+            stmt.setString(7, newEvent.getCity());
+            stmt.setString(8, newEvent.getEventType());
+            stmt.setInt(9, newEvent.getYear());
+
             stmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -68,13 +69,13 @@ public class EventDao {
             if (rs.next()) {
                 event = new Event(rs.getString("eventID"),
                         rs.getString("associatedUsername"),
+                        rs.getString("personID"),
                         rs.getFloat("latitude"),
                         rs.getFloat("longitude"),
                         rs.getString("country"),
                         rs.getString("city"),
                         rs.getString("eventType"),
-                        rs.getInt("year"),
-                        rs.getString("personID"));
+                        rs.getInt("year"));
                 return event;
             }
         } catch (SQLException e) {
@@ -104,13 +105,14 @@ public class EventDao {
             while (rs.next()) {
                 event = new Event(rs.getString("eventID"),
                         rs.getString("associatedUsername"),
+                        rs.getString("personID"),
                         rs.getFloat("latitude"),
                         rs.getFloat("longitude"),
                         rs.getString("country"),
                         rs.getString("city"),
                         rs.getString("eventType"),
-                        rs.getInt("year"),
-                        rs.getString("personID"));
+                        rs.getInt("year"));
+
                 events.add(event);
             }
             return events;

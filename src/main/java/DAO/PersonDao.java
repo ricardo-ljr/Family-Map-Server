@@ -91,6 +91,14 @@ public class PersonDao {
         return null;
     }
 
+    public void clearPersonUsername(String username) throws DataAccessException {
+        try(PreparedStatement statement = connection.prepareStatement("DELETE FROM persons WHERE username = \""+ username + "\";")){
+            statement.execute();
+        } catch (SQLException e) {
+            throw new DataAccessException("Error when trying to clear person given username");
+        }
+    }
+
     /**
      * Clears all data from a person in the database
      *

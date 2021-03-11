@@ -76,6 +76,17 @@ public class Person {
         this.spouseID = spouseID;
     }
 
+    public Person(String associatedUsername, String firstName, String lastName, String gender) {
+        this.personID = UUID.randomUUID().toString();
+        this.associatedUsername = associatedUsername;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.gender = gender;
+        this.fatherID = null;
+        this.motherID = null;
+        this.spouseID = null;
+    }
+
     public String getPersonID() {
         return personID;
     }

@@ -1,7 +1,7 @@
 package Services;
 
 import Request.LoadRequest;
-import Result.MessageResult;
+import Result.SuccessMessageResult;
 
 /**
  * This class is responsible for handling loading users, persons
@@ -23,7 +23,7 @@ public class LoadService {
      * @return Null for now, it will return a message if the operation
      * was successful or not
      */
-    public MessageResult load(LoadRequest request) {
+    public SuccessMessageResult load(LoadRequest request) {
         return null;
     }
 }
