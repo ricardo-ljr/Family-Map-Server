@@ -37,7 +37,7 @@ public class AuthTokenDao {
         String sql = "INSERT INTO AuthorizationTokens(authToken,associatedUsername) VALUES(?,?);";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, token.getAuthToken());
-            stmt.setString(2, token.getAssociatedUsername());
+            stmt.setString(2, newToken.getUserName());
 
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -47,48 +47,15 @@ public class AuthTokenDao {
     }
 
     /**
-     * Finds a new token in the database
-     *
-     * @param authToken Finding the authToken through its unique identifier
-     * @return Null for now, but it will return the authToken
-     * @throws SQLException An exception that provides information on a database access error or other errors
-     */
-    public AuthToken findToken(String authToken) throws DataAccessException {
-        AuthToken token;
-        ResultSet rs = null;
-        String sql = "SELECT * FROM AuthorizationTokens WHERE authToken = ?;";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, authToken);
-            rs = stmt.executeQuery();
-            if (rs.next()) {
-                token = new AuthToken(rs.getString("authToken"),rs.getString("associatedUsername"));
-                return token;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new DataAccessException("Error encountered when finding auth token");
-        } finally {
-            if (rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return null;
-    }
-
-    /**
      * Authenticates your token
      * @param auth
      * @return
      * @throws DataAccessException
      */
     public boolean authenticate(AuthToken auth) throws DataAccessException {
-        String sql = "SELECT token " +
-                "FROM authtokens " +
-                "WHERE token=\'" + auth.getAuthToken() + "\'";
+        String sql = "SELECT authToken " +
+                "FROM AuthorizationTokens " +
+                "WHERE authToken=\'" + auth.getAuthToken() + "\'";
 
         boolean result = false;
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {

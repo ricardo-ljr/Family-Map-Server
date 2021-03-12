@@ -45,46 +45,36 @@ class AuthTokenDaoTest {
 
     @Test
     void addTokenFail() throws DataAccessException {
-//        authTokenDao.addToken(authToken);
-//
-//        DataAccessException exception = assertThrows(DataAccessException.class, ()-> {
-//            authTokenDao.addToken(authToken);
-//        });
-//
-//        assertThrows(DataAccessException.class, ()->authTokenDao.addToken(authToken));
-//
-//        String expectedMessage = "Error when adding new token";
-//        String actualMessage = exception.getMessage();
-//
-//        assertTrue(actualMessage.contains(expectedMessage));
+        AuthToken token = tDao.addToken(newUser);
+        AuthToken falseToken = new AuthToken();
+        assertFalse(tDao.authenticate(falseToken));
     }
 
     @Test
     void findToken() throws DataAccessException {
-//        authTokenDao.addToken(authToken);
-//
-//        AuthToken compareTest = authTokenDao.findToken(authToken.getAuthToken());
-//
-//        assertNotNull(compareTest);
-//
-//        assertEquals(authToken, compareTest);
+        AuthToken token = tDao.addToken(newUser);
+        assertTrue(tDao.authenticate(token));
     }
 
     @Test
-    void findTokenFail() throws DataAccessException {
-//        AuthToken compareTest = authTokenDao.findToken(authToken.getAuthToken());
-//        assertNull(compareTest);
+    void findTokenFails() throws DataAccessException {
+        AuthToken token = tDao.addToken(newUser);
+        AuthToken falseToken = new AuthToken();
+        assertFalse(tDao.authenticate(falseToken));
     }
+
 
     @Test
     void clearAuthToken() throws DataAccessException {
-//        authTokenDao.addToken(authToken);
-//
-//        AuthToken find = authTokenDao.findToken(authToken.getAuthToken());
-//        authTokenDao.clearAuthToken();
-//
-//        AuthToken clear = authTokenDao.findToken(authToken.getAuthToken());
-//        assertNotNull(find);
-//        assertNull(clear);
+        AuthToken token = tDao.addToken(newUser);
+        AuthToken sectoken = tDao.addToken(newUser);
+        User newUser2 = new User("username", "password", "address@email.com",
+                "firstname", "lastname", "f", "id12345");
+        AuthToken token2 = tDao.addToken(newUser2);
+
+        tDao.clearAuthToken();
+        assertFalse(tDao.authenticate(sectoken));
+        assertFalse(tDao.authenticate(token2));
+
     }
 }

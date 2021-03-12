@@ -44,9 +44,8 @@ public class RegisterService extends Service {
         setUp();
 
         if (connection == null)
-            return new ErrorMessageResult("Error registering a new user");
+            return new ErrorMessageResult("Error registering the user - Connection Error");
 
-        PersonDao personDAO = new PersonDao(connection);
         String id = UUID.randomUUID().toString();
         User newUser = new User(request.getUserName(), request.getPassword(), request.getEmail(),
                 request.getFirstName(), request.getLastName(), request.getGender(), id);
@@ -57,18 +56,21 @@ public class RegisterService extends Service {
             return new RegisterResultSuccess(new AuthTokenDao(connection).addToken(newUser).getAuthToken(), newUser.getUserName(), id);
         } catch (DataAccessException e) {
             e.printStackTrace();
-            return new ErrorMessageResult("Error registering the new user");
+            return new ErrorMessageResult("Error registering the user - Service Error");
         } finally {
             try {
                 db.closeConnection(true);
 
                 FillService fill = new FillService();
-                fill.fill(newUser.getUserName(), 4); // default generations are 4
+                fill.fill(newUser.getUserName(), 4);
 
             } catch (DataAccessException dataAccessException) {
                 dataAccessException.printStackTrace();
             }
         }
+
     }
 
 }
+
+
