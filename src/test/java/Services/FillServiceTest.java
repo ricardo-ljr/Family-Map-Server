@@ -51,7 +51,7 @@ class FillServiceTest {
 
         FillResult response1 = fillService.fill(newUser.getUserName(), 0);
 
-        assertEquals(response1.getMessage(), "Successfully added");
+        assertEquals(response1.getMessage(), "Successfully added persons and events to the database! ");
 
     }
 }

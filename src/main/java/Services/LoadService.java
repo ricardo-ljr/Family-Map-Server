@@ -22,11 +22,8 @@ public class LoadService {
      * Initialize empty constructor
      */
     public LoadService() {
-        db = new Database();
-    }
 
-    public LoadService(Connection connection) {
-        this.connection = connection;
+        db = new Database();
     }
 
     /**
@@ -47,14 +44,16 @@ public class LoadService {
         int events = 0;
 
         try {
+
             db.openConnection();
+            db.clearTables();
 
             UserDao uDao = new UserDao(db.getConnection());
             PersonDao pDao = new PersonDao(db.getConnection());
             EventDao eDao = new EventDao(db.getConnection());
 
-            for (User u : request.getUsers()) {
-                uDao.registerUser(u);
+            for (int i = 0; i < request.getUsers().length; i++) {
+                uDao.registerUser(request.getUsers()[i]);
                 users++;
             }
             for (Person p : request.getPersons()) {
@@ -72,13 +71,13 @@ public class LoadService {
             db.closeConnection(true);
 
         } catch (DataAccessException e) {
-            e.printStackTrace();
+            response.setSuccess(false);
             response.setMessage("Internal server error - Load Service");
-        } finally {
+
             try {
-                db.closeConnection(true);
-            } catch (DataAccessException dataAccessException) {
-                dataAccessException.printStackTrace();
+                db.closeConnection(false);
+            } catch (DataAccessException f) {
+                f.printStackTrace();
             }
         }
 

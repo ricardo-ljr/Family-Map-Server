@@ -49,8 +49,9 @@ public class FillService {
             EventDao eDao = new EventDao(db.getConnection());
             PersonDao pDao = new PersonDao(db.getConnection());
 
-            if(uDao.userExists(username)) {
+            if(uDao.userExists(username) && generations >= 0) {
 
+                User user = uDao.findUser(username);
 
                 pDao.clearPersonUsername(username);
                 eDao.deleteAllEvents(username);

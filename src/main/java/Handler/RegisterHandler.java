@@ -21,10 +21,12 @@ public class RegisterHandler implements HttpHandler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
+
         try {
             if (exchange.getRequestMethod().toUpperCase().equals("POST")) {
 
                 RegisterService registerService = new RegisterService();
+
                 RegisterResult response = new RegisterResult();
 
                 InputStream reqBody = exchange.getRequestBody();

@@ -6,6 +6,7 @@ import Result.*;
 import com.google.gson.Gson;
 
 public class Serializer {
+
     public static String serialize(ClearResult returnType) {
         return (new Gson()).toJson(returnType);
     }
