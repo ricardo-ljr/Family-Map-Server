@@ -43,6 +43,7 @@ public class FillService {
 
 
         try {
+
             db.openConnection();
             UserDao uDao = new UserDao(db.getConnection());
             EventDao eDao = new EventDao(db.getConnection());

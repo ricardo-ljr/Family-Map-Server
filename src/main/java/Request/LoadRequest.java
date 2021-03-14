@@ -11,11 +11,11 @@ import java.util.ArrayList;
  */
 public class LoadRequest {
 
-    private ArrayList<User> users;
+    private User[] users;
 
-    private ArrayList<Person> persons;
+    private Person[] persons;
 
-    private ArrayList<Event> events;
+    private Event[] events;
 
     /**
      * Initialize empty constructor
@@ -30,33 +30,33 @@ public class LoadRequest {
      * @param persons List of persons
      * @param events List of events
      */
-    public LoadRequest(ArrayList<User> users, ArrayList<Person> persons, ArrayList<Event> events) {
+    public LoadRequest(User[] users, Person[] persons, Event[] events) {
         this.users = users;
         this.persons = persons;
         this.events = events;
     }
 
-    public ArrayList<User> getUsers() {
+    public User[] getUsers() {
         return users;
     }
 
-    public void setUsers(ArrayList<User> users) {
+    public void setUsers(User[] users) {
         this.users = users;
     }
 
-    public ArrayList<Person> getPersons() {
+    public Person[] getPersons() {
         return persons;
     }
 
-    public void setPersons(ArrayList<Person> persons) {
+    public void setPersons(Person[] persons) {
         this.persons = persons;
     }
 
-    public ArrayList<Event> getEvents() {
+    public Event[] getEvents() {
         return events;
     }
 
-    public void setEvents(ArrayList<Event> events) {
+    public void setEvents(Event[] events) {
         this.events = events;
     }
 }
