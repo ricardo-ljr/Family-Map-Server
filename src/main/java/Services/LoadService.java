@@ -25,6 +25,10 @@ public class LoadService {
         db = new Database();
     }
 
+    public LoadService(Connection connection) {
+        this.connection = connection;
+    }
+
     /**
      * This method will take the array of users, persons
      * and events and load it into the database. It will return
@@ -38,22 +42,13 @@ public class LoadService {
 
         LoadResult response = new LoadResult();
 
-        try {
-            db.clearTables();
-        } catch (DataAccessException e) {
-            e.printStackTrace();
-            response.setMessage("Error clearing tables for load.");
-        }
-
         int users = 0;
         int persons = 0;
         int events = 0;
 
-
-
         try {
             db.openConnection();
-            db.clearTables();
+
             UserDao uDao = new UserDao(db.getConnection());
             PersonDao pDao = new PersonDao(db.getConnection());
             EventDao eDao = new EventDao(db.getConnection());
@@ -71,7 +66,7 @@ public class LoadService {
                 events++;
             }
 
-            response.setMessage("Successfully added " + users + " users, " + persons + " persons, and " + events + " events");
+            response.setMessage("Successfully added " + users + " users, " + persons + " persons, and " + events + " events - Load Service");
 
             response.setSuccess(true);
             db.closeConnection(true);
