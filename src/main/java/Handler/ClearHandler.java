@@ -1,11 +1,12 @@
 package Handler;
 
 
+import Result.ClearResult;
 import Result.ResultBool;
 import Services.ClearService;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import SerializeDeserialize.*;
+import JSONReader.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,7 +21,7 @@ public class ClearHandler implements HttpHandler {
             if(exchange.getRequestMethod().toUpperCase().equals("POST")) {
 
                 ClearService clearService = new ClearService();
-                ResultBool response = clearService.clearResult();
+                ClearResult response = clearService.clearResult();
 
 
                 if(response.isSuccess()) {

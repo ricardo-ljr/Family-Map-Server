@@ -3,6 +3,7 @@ package DAO;
 import Model.Person;
 import Model.User;
 
+import javax.xml.crypto.Data;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -90,6 +91,33 @@ public class PersonDao {
             }
         }
         return null;
+    }
+
+    public boolean personExists(String personID) throws DataAccessException {
+        ResultSet rs = null;
+        String sql = "SELECT * FROM Persons WHERE personID = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, personID);
+            rs = stmt.executeQuery();
+
+            if (!rs.next())
+                return false;
+            else
+                return true;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     /**

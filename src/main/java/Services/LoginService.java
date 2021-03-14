@@ -1,7 +1,10 @@
 package Services;
 
+import DAO.AuthTokenDao;
+import DAO.DataAccessException;
 import DAO.Database;
 import DAO.UserDao;
+import Model.AuthToken;
 import Request.LoginRequest;
 import Result.LoginResult;
 
@@ -38,13 +41,15 @@ public class LoginService {
      * @param request Takes in the request to login a user
      * @return Null for now, but it will return the user requesting login
      */
-    public LoginResult login(LoginRequest request) {
+    public LoginResult login(LoginRequest request) throws DataAccessException {
 
         LoginResult response = new LoginResult();
-        UserDao uDao = new UserDao(connection);
+
 
         try {
             db.openConnection();
+            UserDao uDao = new UserDao(db.getConnection());
+            AuthTokenDao tDao = new AuthTokenDao(db.getConnection());
 
             String userName = request.getUserName();
             String password = request.getPassword();
@@ -53,20 +58,12 @@ public class LoginService {
             if (uDao.userExists(userName)) {
 
                 String newAuthID = UUID.randomUUID().toString();
-                String oldPersonID = db.getUserDao().selectUser(userName).getPersonID();
 
-
-                if(db.getAuthDao().doesUserNameExist(userName)) {
-                    db.getAuthDao().updateAuthToken(newAuthID, userName);
-                } else {
-                    AuthToken newAT = new AuthToken(newAuthID, userName, oldPersonID);
-                    db.getAuthDao().insertAuthToken(newAT);
-                }
-
+                AuthToken newAuthToken = new AuthToken(newAuthID, userName);
+                tDao.addToken(newAuthToken);
 
                 response.setAuthToken(newAuthID);
-                response.setUserName(userName);
-                response.setPersonID(oldPersonID);
+                response.setUsername(userName);
 
                 response.setSuccess(true);
                 db.closeConnection(true);

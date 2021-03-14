@@ -40,27 +40,19 @@ public class FillService {
     public FillResult fill(String username, int generations){
 
         FillResult response = new FillResult();
-        UserDao uDao = new UserDao(connection);
-        EventDao eDao = new EventDao(connection);
-        PersonDao pDao = new PersonDao(connection);
+
 
         try {
             db.openConnection();
+            UserDao uDao = new UserDao(db.getConnection());
+            EventDao eDao = new EventDao(db.getConnection());
+            PersonDao pDao = new PersonDao(db.getConnection());
 
             if(uDao.userExists(username)) {
 
-                User currentUser = uDao.findUser(username);
 
                 pDao.clearPersonUsername(username);
                 eDao.deleteAllEvents(username);
-
-//                if(numGenerations == 101) {
-//                    eDao.generateRoot(currentUser, currentUser.getPersonID(),
-//                            4, db.getEventDao());
-//                } else {
-//                    db.getPersonDao().generateRoot(currentUser, currentUser.getPersonID(),
-//                            numGenerations, db.getEventDao());
-//                }
 
                 response.setMessage("Successfully added persons and events to the database!");
 

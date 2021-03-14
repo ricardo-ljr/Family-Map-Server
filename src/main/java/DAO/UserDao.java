@@ -100,7 +100,7 @@ public class UserDao {
     public boolean userExists(String userName) throws DataAccessException {
 
         ResultSet rs = null;
-        String sql = "SELECT * FROM User WHERE username = ?";
+        String sql = "SELECT * FROM User WHERE username = ?;";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, userName);

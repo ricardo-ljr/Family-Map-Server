@@ -49,11 +49,15 @@ public class LoadService {
         int persons = 0;
         int events = 0;
 
-        UserDao uDao = new UserDao(connection);
-        PersonDao pDao = new PersonDao(connection);
-        EventDao eDao = new EventDao(connection);
+
 
         try {
+            db.openConnection();
+            db.clearTables();
+            UserDao uDao = new UserDao(db.getConnection());
+            PersonDao pDao = new PersonDao(db.getConnection());
+            EventDao eDao = new EventDao(db.getConnection());
+
             for (User u : request.getUsers()) {
                 uDao.registerUser(u);
                 users++;

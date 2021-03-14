@@ -1,5 +1,6 @@
 package Handler;
 
+import DAO.DataAccessException;
 import JSONReader.Deserializer;
 import JSONReader.ReadWrite;
 import JSONReader.Serializer;
@@ -49,7 +50,7 @@ public class RegisterHandler implements HttpHandler {
             }
 
             exchange.getResponseBody().close();
-        } catch (IOException e) {
+        } catch (IOException | DataAccessException e) {
             exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
             exchange.getResponseBody().close();
             e.printStackTrace();

@@ -34,7 +34,7 @@ public class Serializer {
         return (new Gson()).toJson(returnType);
     }
 
-    public static String serialize(PersonByIdResultSuccess returnType) {
+    public static String serialize(PersonByIdResult returnType) {
         return (new Gson()).toJson(returnType);
     }
 

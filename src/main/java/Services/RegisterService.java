@@ -42,14 +42,15 @@ public class RegisterService {
      * @param request Takes in the request to create a new user
      * @return Null for now, but it will return new user
      */
-    public RegisterResult register(RegisterRequest request) {
+    public RegisterResult register(RegisterRequest request) throws DataAccessException {
 
         RegisterResult response = new RegisterResult();
-        UserDao uDao = new UserDao(connection);
-        AuthTokenDao tDao = new AuthTokenDao(connection);
+
 
         try {
             db.openConnection();
+            UserDao uDao = new UserDao(db.getConnection());
+            AuthTokenDao tDao = new AuthTokenDao(db.getConnection());
 
             boolean validUsername = !request.getUserName().isEmpty();
             boolean validPassword = !request.getPassword().isEmpty();
@@ -60,9 +61,13 @@ public class RegisterService {
 
 
             if(validUsername && validPassword && validEmail && validFirstName && validLastName && validGender) {
-                if(!uDao.userExists(request.getUserName())) {
+                if (uDao.userExists(request.getUserName())) {
+                    response.setSuccess(false);
+                    response.setMessage("Error username already exists - Register Service");
+                    db.closeConnection(false);
+                } else { // if user does not exist
 
-                    String newPersonID = UUID.randomUUID().toString();
+                    String newPersonID = UUID.randomUUID().toString(); // set PersonID as random id
 
                     User user = new User(
                             request.getUserName(),
@@ -77,7 +82,7 @@ public class RegisterService {
 //                    db.getPersonDao().generateRoot(user, newPersonID, 4, db.getEventDao());
 
 
-                    String newAuthID = UUID.randomUUID().toString();
+                    String newAuthID = UUID.randomUUID().toString(); // random authToken
                     AuthToken authToken = new AuthToken(newAuthID, user.getUserName());
                     tDao.addToken(authToken);
 
@@ -89,10 +94,6 @@ public class RegisterService {
                     response.setSuccess(true);
                     db.closeConnection(true);
 
-                } else {
-                    response.setSuccess(false);
-                    response.setMessage("Error username already exists - Register Service");
-                    db.closeConnection(false);
                 }
             } else {
                 response.setSuccess(false);

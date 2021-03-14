@@ -5,6 +5,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import javax.xml.crypto.Data;
 import java.sql.Connection;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -13,6 +14,7 @@ class UserDaoTest {
 
     private Database db;
     private User user;
+    private User user2;
     UserDao uDao;
 
     @BeforeEach
@@ -22,6 +24,8 @@ class UserDaoTest {
 
         user = new User("12345", "person_1",
                 "Ricardo@email.com", "Ricardo", "Leite","m", "12345");
+        user2 = new User("123456", "person_2",
+                "leite@email.com", "Leite", "Ricardo","m", "123456");
 
         Connection connection = db.openConnection();
 
@@ -79,6 +83,15 @@ class UserDaoTest {
     void findUserFail() throws DataAccessException {
         User compareTest = uDao.findUser(user.getUserName());
         assertNull(compareTest);
+    }
+
+    @Test
+    void userExists() throws DataAccessException {
+        uDao.registerUser(user);
+        uDao.registerUser(user2);
+
+        assertTrue(uDao.userExists(user.getUserName()));
+        assertTrue(uDao.userExists(user2.getUserName()));
     }
 
     @Test

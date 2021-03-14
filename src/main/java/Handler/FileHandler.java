@@ -13,50 +13,32 @@ public class FileHandler implements HttpHandler  {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        boolean success = false;
 
-        try {
-            if (exchange.getRequestMethod().toLowerCase().equals("get")) {
+        if (exchange.getRequestMethod().toUpperCase().equals("GET")) {
 
-                String urlPath = exchange.getRequestURI().toString();
-                System.out.println("->" + urlPath + "<-");
+            String urlPath = exchange.getRequestURI().toString();
 
-                if (urlPath == null || urlPath.equals("/") || urlPath.isEmpty()) {
-                    urlPath = "/index.html";
-                }
-
-                String filePath = "web" + urlPath;
-                File actualFile = new File(filePath);
-
-                if (!actualFile.exists()){
-                    exchange.sendResponseHeaders(HttpURLConnection.HTTP_NOT_FOUND, 0);
-
-                    OutputStream respBody = exchange.getResponseBody();
-                    Files.copy(new File("web/HTML/404.html").toPath(), respBody);
-
-                    respBody.close();
-                }
-
-                else {
-                    exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-
-                    OutputStream respBody = exchange.getResponseBody();
-                    Files.copy(actualFile.toPath(), respBody);
-
-                    respBody.close();
-                }
-                success = true;
+            if (exchange.getRequestURI().toString().equals("/") || exchange.getRequestURI() == null) {
+                urlPath = "/index.html";
             }
-            if (!success) {
-                exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
-                exchange.getResponseBody().close();
+
+            String filePath = "web" + urlPath;
+            File foundFile = new File(filePath);
+            File notFoundFile = new File("web/HTML/404.html");
+
+            if(foundFile.exists()) {
+                exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+                OutputStream respBody = exchange.getResponseBody();
+                Files.copy(foundFile.toPath(), respBody);
+                exchange.close();
+            } else {
+                exchange.sendResponseHeaders(HttpURLConnection.HTTP_NOT_FOUND, 0);
+                OutputStream respBody = exchange.getResponseBody();
+                Files.copy(notFoundFile.toPath(), respBody);
+                exchange.close();
             }
-        }
-        catch (IOException e) {
-            exchange.sendResponseHeaders(HttpURLConnection.HTTP_SERVER_ERROR, 0);
+
             exchange.getResponseBody().close();
-
-            e.printStackTrace();
         }
     }
 }

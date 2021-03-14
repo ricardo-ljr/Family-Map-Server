@@ -8,6 +8,8 @@ import Model.Event;
 import Result.EventByIdResult;
 import Result.ResultBool;
 
+import java.sql.Connection;
+
 /**
  * This class is responsible for returning data for an event by its id
  */
