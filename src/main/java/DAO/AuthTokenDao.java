@@ -34,6 +34,7 @@ public class AuthTokenDao {
      */
     public void addToken(AuthToken newToken) throws DataAccessException {
 //        AuthToken token = new AuthToken();
+
         String sql = "INSERT INTO AuthorizationTokens(authToken,associatedUsername) VALUES(?,?);";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, newToken.getAuthToken());
@@ -80,6 +81,13 @@ public class AuthTokenDao {
         }
     }
 
+    /**
+     * Function to check whether toke exists or not, return a boolean value
+     *
+     * @param auth
+     * @return
+     * @throws DataAccessException
+     */
     public boolean authTokenExists(String auth) throws DataAccessException {
         ResultSet rs = null;
         String sql = "SELECT * FROM AuthorizationTokens WHERE authToken = ?;";

@@ -11,6 +11,7 @@ public class Location {
 
     /**
      * Constructor for Location Class
+     *
      * @param country Country
      * @param city City
      * @param latitude Latitude

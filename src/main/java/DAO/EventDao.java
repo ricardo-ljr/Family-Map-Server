@@ -174,6 +174,12 @@ public class EventDao {
         }
     }
 
+    /**
+     * Function to delete event giver username
+     *
+     * @param userName
+     * @throws DataAccessException
+     */
     public void deleteAllEvents(String userName) throws DataAccessException {
         String sql = "DELETE FROM Events WHERE associatedUsername = ?;";
 
