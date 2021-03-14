@@ -1,5 +1,7 @@
 package Model;
 
+import java.security.SecureRandom;
+import java.util.Base64;
 import java.util.UUID;
 
 /**
@@ -7,6 +9,8 @@ import java.util.UUID;
  */
 public class AuthToken {
 
+    private static final SecureRandom secureRandom = new SecureRandom(); //threadsafe
+    private static final Base64.Encoder base64Encoder = Base64.getUrlEncoder(); //threadsafe
     /**
      * AuthToken unique identifier
      */
@@ -17,19 +21,18 @@ public class AuthToken {
      */
     private String associatedUsername;
 
-    /**
-     * Empty constructor for AuthToken
-     */
-    public AuthToken() {}
+   public AuthToken(String authToken, String associatedUsername) {
+       this.authToken = authToken;
+       this.associatedUsername = associatedUsername;
+   }
 
     /**
-     * Creates an authorization token associated with a user
+     * Constructor to return token for specific user
      *
-     * @param associatedUsername
+     * @param userName
      */
-    public AuthToken(String authToken, String associatedUsername) {
-        this.authToken = authToken;
-        this.associatedUsername = associatedUsername;
+    public AuthToken(String userName) {
+        this.authToken = userName;
     }
 
     public String getAuthToken() {

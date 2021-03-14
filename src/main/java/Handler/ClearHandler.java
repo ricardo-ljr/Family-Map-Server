@@ -1,42 +1,48 @@
 package Handler;
 
-import Result.MessageResult;
+
+import Result.ClearResult;
+import Result.ResultBool;
 import Services.ClearService;
 import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import JSONReader.*;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 
-public class ClearHandler extends DefaultHandler {
+public class ClearHandler implements HttpHandler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         try {
-            if (exchange.getRequestMethod().toUpperCase().equals("POST")) {
+            if(exchange.getRequestMethod().toUpperCase().equals("POST")) {
 
-                InputStream reqBody = exchange.getRequestBody();
-                String reqData = readString(reqBody);
+                ClearService clearService = new ClearService();
+                ClearResult response = clearService.clearResult();
 
-                System.out.println(reqData);
 
-                ClearService serviceObject = new ClearService();
-                MessageResult newResult = serviceObject.clearResult();
-                exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-                OutputStream respBody = exchange.getResponseBody();
-                generate(newResult, respBody);
-                respBody.flush();
-                respBody.close();
+                if(response.isSuccess()) {
+                    exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+                } else {
+                    exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
+                }
 
-            }
-            else {
+                String json = Serializer.serialize(response);
+                OutputStream os = exchange.getResponseBody();
+                ReadWrite.writeString(json, os);
+
+            } else {
                 exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
             }
-        } catch (IOException io) {
+
+            exchange.getResponseBody().close();
+        } catch (IOException e) {
             exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
-            io.printStackTrace();
+            exchange.getResponseBody().close();
+            e.printStackTrace();
         }
-        exchange.getResponseBody().close();
     }
 }

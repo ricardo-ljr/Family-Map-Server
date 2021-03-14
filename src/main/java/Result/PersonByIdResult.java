@@ -5,7 +5,7 @@ import java.util.Objects;
 /**
  * This class is responsible for handling results associated with a single person by its ID
  */
-public class PersonByIdResult extends MessageResult {
+public class PersonByIdResult extends ResultBool {
 
     /**
      * The person's unique ID
@@ -64,7 +64,7 @@ public class PersonByIdResult extends MessageResult {
      * @param motherID Person's unique identifier for a mother
      * @param spouseID Person's unique identifier for a spouse
      */
-    public PersonByIdResult(String personID, String associatedUsername, String firstName, String lastName, String gender, String fatherID, String motherID, String spouseID) {
+    public PersonByIdResult(String associatedUsername, String personID, String firstName, String lastName, String gender, String fatherID, String motherID, String spouseID) {
         this.personID = personID;
         this.associatedUsername = associatedUsername;
         this.firstName = firstName;

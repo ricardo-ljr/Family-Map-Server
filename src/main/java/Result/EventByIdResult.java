@@ -6,7 +6,7 @@ import java.util.Objects;
  * This class is responsible for handling the results
  * of querying a single event by id
  */
-public class EventByIdResult {
+public class EventByIdResult extends ResultBool {
 
     /**
      * The event's unique identifier
@@ -54,11 +54,6 @@ public class EventByIdResult {
     private String personID;
 
     /**
-     * Initializes and empty constructor
-     */
-    public EventByIdResult() {}
-
-    /**
      * This is a non-empty constructor for each event result
      *
      * @param eventID A unique identifies for an event
@@ -71,16 +66,20 @@ public class EventByIdResult {
      * @param year The year in which the event occurred
      * @param personID Event's unique personID associated with
      */
-    public EventByIdResult(String eventID, String associatedUsername, float latitude, float longitude, String country, String city, String eventType, int year, String personID) {
-        this.eventID = eventID;
+    public EventByIdResult(String associatedUsername, String eventID, String personID,  float latitude, float longitude, String country, String city, String eventType, int year) {
         this.associatedUsername = associatedUsername;
+        this.eventID = eventID;
+        this.personID = personID;
         this.latitude = latitude;
         this.longitude = longitude;
         this.country = country;
         this.city = city;
         this.eventType = eventType;
         this.year = year;
-        this.personID = personID;
+    }
+
+    public EventByIdResult() {
+        success = true;
     }
 
     public String getEventID() {

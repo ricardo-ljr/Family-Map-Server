@@ -1,5 +1,7 @@
 package Model;
 
+import DAO.Database;
+
 import java.util.UUID;
 
 /**
@@ -69,16 +71,17 @@ public class Event {
      * @param year The year in which the event occurred
      * @param personID Event's unique personID associated with
      */
-    public Event(String eventID, String associatedUsername, float latitude, float longitude, String country, String city, String eventType, int year, String personID) {
+    public Event(String eventID, String associatedUsername, String personID, float latitude, float longitude, String country, String city, String eventType, int year) {
         this.eventID = eventID;
         this.associatedUsername = associatedUsername;
+        this.personID = personID;
         this.latitude = latitude;
         this.longitude = longitude;
         this.country = country;
         this.city = city;
         this.eventType = eventType;
         this.year = year;
-        this.personID = personID;
+
     }
 
     public String getEventID() {
@@ -98,7 +101,7 @@ public class Event {
     }
 
     public float getLatitude() {
-        return latitude;
+        return (float) latitude;
     }
 
     public void setLatitude(float latitude) {
@@ -106,7 +109,7 @@ public class Event {
     }
 
     public float getLongitude() {
-        return longitude;
+        return (float) longitude;
     }
 
     public void setLongitude(float longitude) {
@@ -158,8 +161,8 @@ public class Event {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Event event = (Event) o;
-        return Float.compare(event.latitude, latitude) == 0 &&
-                Float.compare(event.longitude, longitude) == 0 &&
+        return Double.compare(event.latitude, latitude) == 0 &&
+                Double.compare(event.longitude, longitude) == 0 &&
                 year == event.year && eventID.equals(event.eventID) &&
                 associatedUsername.equals(event.associatedUsername) &&
                 country.equals(event.country) && city.equals(event.city) &&

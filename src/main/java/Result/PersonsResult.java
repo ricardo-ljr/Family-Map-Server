@@ -8,14 +8,16 @@ import java.util.ArrayList;
  * This class is responsible on handling the result for all family members of a current user in
  * which the current user is determine from the provided auth token
  */
-public class PersonsResult {
+public class PersonsResult extends ResultBool{
 
     private ArrayList<Person> data;
 
     /**
      * Initializes an empty constructor
      */
-    public PersonsResult() {}
+    public PersonsResult() {
+        success = true;
+    }
 
     /**
      * Constructor for PersonsResult

@@ -3,7 +3,9 @@ package DAO;
 import Model.Person;
 import Model.User;
 
+import javax.xml.crypto.Data;
 import java.sql.*;
+import java.util.ArrayList;
 
 /**
  * This class is used to access a person's information in the database
@@ -89,6 +91,74 @@ public class PersonDao {
             }
         }
         return null;
+    }
+
+    public boolean personExists(String personID) throws DataAccessException {
+        ResultSet rs = null;
+        String sql = "SELECT * FROM Persons WHERE personID = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, personID);
+            rs = stmt.executeQuery();
+
+            if (!rs.next())
+                return false;
+            else
+                return true;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    /**
+     * Gets all people given username
+     *
+     * @param username username
+     * @return
+     * @throws DataAccessException
+     */
+    public ArrayList<Person> getPersonsForUsername(String username) throws DataAccessException {
+        String sql = "SELECT username, FirstName, LastName, Gender, \"mother id\", \"father id\", \"spouse id\", personID " +
+                "FROM persons " +
+                "WHERE \"username\"=\"" + username + "\"";
+
+        ArrayList<Person> result = new ArrayList<Person>();
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next()) {
+                result.add(new Person(rs.getString(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
+                        rs.getString(5),
+                        rs.getString(6),
+                        rs.getString(7),
+                        rs.getString(8)));
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException("Error encountered while looking up all persons");
+        }
+
+        return result;
+    }
+
+    public void clearPersonUsername(String username) throws DataAccessException {
+        try(PreparedStatement statement = connection.prepareStatement("DELETE FROM persons WHERE username = \""+ username + "\";")){
+            statement.execute();
+        } catch (SQLException e) {
+            throw new DataAccessException("Error when trying to clear person given username");
+        }
     }
 
     /**

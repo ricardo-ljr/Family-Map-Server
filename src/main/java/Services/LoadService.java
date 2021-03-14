@@ -1,7 +1,13 @@
 package Services;
 
+import DAO.*;
+import Model.Event;
+import Model.Person;
+import Model.User;
 import Request.LoadRequest;
-import Result.MessageResult;
+import Result.LoadResult;
+
+import java.sql.Connection;
 
 /**
  * This class is responsible for handling loading users, persons
@@ -9,10 +15,19 @@ import Result.MessageResult;
  */
 public class LoadService {
 
+    private Database db;
+    private Connection connection;
+
     /**
      * Initialize empty constructor
      */
-    public LoadService() {}
+    public LoadService() {
+        db = new Database();
+    }
+
+    public LoadService(Connection connection) {
+        this.connection = connection;
+    }
 
     /**
      * This method will take the array of users, persons
@@ -23,7 +38,52 @@ public class LoadService {
      * @return Null for now, it will return a message if the operation
      * was successful or not
      */
-    public MessageResult load(LoadRequest request) {
-        return null;
+    public LoadResult load(LoadRequest request) {
+
+        LoadResult response = new LoadResult();
+
+        int users = 0;
+        int persons = 0;
+        int events = 0;
+
+        try {
+            db.openConnection();
+
+            UserDao uDao = new UserDao(db.getConnection());
+            PersonDao pDao = new PersonDao(db.getConnection());
+            EventDao eDao = new EventDao(db.getConnection());
+
+            for (User u : request.getUsers()) {
+                uDao.registerUser(u);
+                users++;
+            }
+            for (Person p : request.getPersons()) {
+                pDao.addPerson(p);
+                persons++;
+            }
+            for (Event e : request.getEvents()) {
+                eDao.addEvent(e);
+                events++;
+            }
+
+            response.setMessage("Successfully added " + users + " users, " + persons + " persons, and " + events + " events - Load Service");
+
+            response.setSuccess(true);
+            db.closeConnection(true);
+
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            response.setMessage("Internal server error - Load Service");
+        } finally {
+            try {
+                db.closeConnection(true);
+            } catch (DataAccessException dataAccessException) {
+                dataAccessException.printStackTrace();
+            }
+        }
+
+        return response;
     }
+
 }
+

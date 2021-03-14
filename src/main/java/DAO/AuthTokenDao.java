@@ -1,6 +1,7 @@
 package DAO;
 
 import Model.AuthToken;
+import Model.User;
 
 import java.sql.*;
 
@@ -32,7 +33,9 @@ public class AuthTokenDao {
      * @throws SQLException An exception that provides information on a database access error or other errors
      */
     public void addToken(AuthToken newToken) throws DataAccessException {
-        String sql = "INSERT INTO AuthorizationTokens(authToken, associatedUsername) VALUES(?,?);";
+//        AuthToken token = new AuthToken();
+
+        String sql = "INSERT INTO AuthorizationTokens(authToken,associatedUsername) VALUES(?,?);";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, newToken.getAuthToken());
             stmt.setString(2, newToken.getAssociatedUsername());
@@ -44,26 +47,63 @@ public class AuthTokenDao {
     }
 
     /**
-     * Finds a new token in the database
-     *
-     * @param authToken Finding the authToken through its unique identifier
-     * @return Null for now, but it will return the authToken
-     * @throws SQLException An exception that provides information on a database access error or other errors
+     * Authenticates your token
+     * @param auth
+     * @return
+     * @throws DataAccessException
      */
-    public AuthToken findToken(String authToken) throws DataAccessException {
+    public AuthToken authenticate(String auth) throws DataAccessException {
         AuthToken token;
-        ResultSet rs = null;
         String sql = "SELECT * FROM AuthorizationTokens WHERE authToken = ?;";
+        ResultSet rs = null;
+
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, authToken);
+
+            stmt.setString(1, auth);
             rs = stmt.executeQuery();
+
             if (rs.next()) {
-                token = new AuthToken(rs.getString("authToken"), rs.getString("associatedUsername"));
+                token = new AuthToken(rs.getString("authToken"),
+                        rs.getString("associatedUsername"));
                 return token;
             }
         } catch (SQLException e) {
+            throw new DataAccessException("Error encountered while authenticating your token");
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
+    }
+
+    /**
+     * Function to check whether toke exists or not, return a boolean value
+     *
+     * @param auth
+     * @return
+     * @throws DataAccessException
+     */
+    public boolean authTokenExists(String auth) throws DataAccessException {
+        ResultSet rs = null;
+        String sql = "SELECT * FROM AuthorizationTokens WHERE authToken = ?;";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, auth);
+            rs = stmt.executeQuery();
+
+            if (!rs.next()) {
+                return false;
+            } else {
+                return true;
+            }
+        } catch (SQLException e) {
             e.printStackTrace();
-            throw new DataAccessException("Error encountered when finding auth token");
+            return false;
         } finally {
             if (rs != null) {
                 try {
@@ -73,7 +113,29 @@ public class AuthTokenDao {
                 }
             }
         }
-        return null;
+    }
+
+    /**
+     * Find username given auth token
+     *
+     * @param authtoken Authorization token to give
+     * @return
+     * @throws DataAccessException Exception throws
+     */
+    public String getUsernameForAuthtoken(String authtoken) throws DataAccessException {
+        String sql = "SELECT username " +
+                "FROM authtokens " +
+                "WHERE token=\'" + authtoken + "\'";
+
+        String result;
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            ResultSet rs = stmt.executeQuery();
+            result = rs.getString(1);
+        } catch (SQLException e) {
+            throw new DataAccessException("Error encountered while querying in the database");
+        }
+        return result;
     }
 
     /**
