@@ -26,9 +26,7 @@ public class LoginResult extends ResultBool{
         this.username = username;
     }
 
-    public LoginResult() {
-
-    }
+    public LoginResult() { }
 
 
     public String getAuthToken() {
