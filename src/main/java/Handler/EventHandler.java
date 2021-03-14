@@ -2,7 +2,7 @@ package Handler;
 
 import Result.ResultBool;
 import Services.EventsByIdService;
-import Services.EventsResult;
+import Services.EventsService;
 
 public class EventHandler extends DefaultHandler{
 
@@ -21,7 +21,7 @@ public class EventHandler extends DefaultHandler{
         String[] commands = requestURI.split("/");
 
         EventsByIdService serviceById = new EventsByIdService();
-        EventsResult serviceAllEvents = new EventsResult();
+        EventsService serviceAllEvents = new EventsService();
         if (commands.length>2)
             return serviceById.getEventById(commands[2], authToken);
         else

@@ -91,6 +91,41 @@ public class UserDao {
     }
 
     /**
+     * Function that returns a boolean value to whether a user exists or not
+     *
+     * @param userName
+     * @return
+     * @throws DataAccessException
+     */
+    public boolean userExists(String userName) throws DataAccessException {
+
+        ResultSet rs = null;
+        String sql = "SELECT * FROM User WHERE username = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, userName);
+            rs = stmt.executeQuery();
+
+            if (!rs.next())
+                return false;
+            else
+                return true;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    /**
      * Clears all data from a user in the database
      *
      * @throws SQLException An exception that provides information on a database access error or other errors

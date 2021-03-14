@@ -1,4 +1,4 @@
-package Model;
+package JSONReader;
 
 /**
  * This class keeps track of locations to mimic a location in the file

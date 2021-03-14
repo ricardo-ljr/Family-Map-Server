@@ -80,6 +80,33 @@ public class AuthTokenDao {
         }
     }
 
+    public boolean authTokenExists(String auth) throws DataAccessException {
+        ResultSet rs = null;
+        String sql = "SELECT * FROM AuthorizationToken WHERE authToken = ?;";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, auth);
+            rs = stmt.executeQuery();
+
+            if (!rs.next()) {
+                return false;
+            } else {
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
     /**
      * Find username given auth token
      *

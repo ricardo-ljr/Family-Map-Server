@@ -25,6 +25,7 @@ public class EventDao {
         this.connection = connection;
     }
 
+
     /**
      * Creates a new event in the database
      *
@@ -95,6 +96,13 @@ public class EventDao {
         return null;
     }
 
+    /**
+     * Function that locates all the events give a username
+     *
+     * @param userName
+     * @return
+     * @throws DataAccessException
+     */
     public ArrayList<Event> findAllEvents(String userName) throws DataAccessException {
         Event event;
         ArrayList<Event> events = new ArrayList<>();
@@ -128,6 +136,53 @@ public class EventDao {
                     e.printStackTrace();
                 }
             }
+        }
+    }
+
+    /**
+     * Function that returns a boolean to check whether an event given its id exists!
+     *
+     * @param eventID
+     * @return
+     * @throws DataAccessException
+     */
+    public boolean eventExists(String eventID) throws DataAccessException {
+
+        ResultSet rs = null;
+        String sql = "SELECT * FROM Events WHERE eventID = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, eventID);
+            rs = stmt.executeQuery();
+
+            if (!rs.next())
+                return false;
+            else
+                return true;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public void deleteAllEvents(String userName) throws DataAccessException {
+        String sql = "DELETE FROM Events WHERE associatedUsername = ?;";
+
+        try(PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, userName);
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new DataAccessException("Error while delete events from a specific user in database");
         }
     }
 

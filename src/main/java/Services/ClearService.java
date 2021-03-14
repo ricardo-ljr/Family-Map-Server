@@ -1,21 +1,24 @@
 package Services;
 
 import DAO.*;
-import Result.ResultBool;
+import Result.ClearResult;
 
 import java.sql.*;
 
 /**
  * This class is responsible for deleting data from the database
  */
-public class ClearService extends Service {
+public class ClearService {
 
     private Connection connection;
+    private Database db;
 
     /**
      * Initializes an empty constructor for the class
      */
-    public ClearService() {}
+    public ClearService() {
+        db = new Database();
+    }
 
     /**
      * Initializing constructor for class with a connection argument
@@ -29,38 +32,31 @@ public class ClearService extends Service {
     /**
      * Clears database and returns message if successful
      */
-    public ResultBool clearResult() {
-        setUp();
+    public ClearResult clearResult() {
+
+        ClearResult response = new ClearResult();
 
         try {
-            AuthTokenDao tDao= new AuthTokenDao(connection);
-            tDao.clearAuthToken();
-            db.closeConnection(true);
-            connection = db.openConnection();
-            EventDao eventDAO = new EventDao(connection);
-            eventDAO.clearEvent();
-            db.closeConnection(true);
-            connection = db.openConnection();
-            PersonDao personDAO = new PersonDao(connection);
-            personDAO.clearPerson();
-            db.closeConnection(true);
-            connection = db.openConnection();
-            UserDao userDAO = new UserDao(connection);
-            userDAO.clearUser();
+            db.openConnection();
+            db.clearTables();
 
-            return new SuccessMessageResult("clear succeeded");
-        } catch (DataAccessException e) {
+            response.setMessage("Clearing tables successfully!");
+            response.setSuccess(true);
 
-            e.printStackTrace();
-            return new ErrorMessageResult("failed to clear");
-        } finally {
+            db.closeConnection(true);
+
+        } catch(DataAccessException e) {
+            response.setMessage("Internal server error - ClearService");
+            response.setSuccess(false);
 
             try {
-                db.closeConnection(true);
-            } catch (DataAccessException e) {
-                e.printStackTrace();
+                db.closeConnection(false);
+            } catch(DataAccessException f) {
+                f.printStackTrace();
             }
         }
+
+        return response;
     }
 }
 

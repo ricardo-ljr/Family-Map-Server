@@ -1,29 +1,59 @@
 package Handler;
 
+import JSONReader.Deserializer;
+import JSONReader.ReadWrite;
+import JSONReader.Serializer;
 import Request.RegisterRequest;
+import Result.RegisterResult;
 import Result.ResultBool;
 import Services.RegisterService;
 import com.google.gson.Gson;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
 
-public class RegisterHandler extends DefaultHandler{
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
 
-    /**
-     * Type of HTTP request
-     */
-    public RegisterHandler() {
-        getOrPost = "post";
-        authenticate = false;
-    }
+public class RegisterHandler implements HttpHandler {
 
     @Override
-    protected ResultBool workWithService(String requestURI, String reqData) {
-        System.out.println(reqData);
+    public void handle(HttpExchange exchange) throws IOException {
+        try {
+            if (exchange.getRequestMethod().toUpperCase().equals("POST")) {
 
-        Gson gson = new Gson();
-        RegisterRequest request = gson.fromJson(reqData, RegisterRequest.class);
-        RegisterService service = new RegisterService();
+                RegisterService registerService = new RegisterService();
+                RegisterResult response = new RegisterResult();
 
-        return service.register(request);
+                InputStream reqBody = exchange.getRequestBody();
+                String reqData = ReadWrite.readString(reqBody);
+
+
+                RegisterRequest registerRequest = Deserializer.deserialize(reqData, RegisterRequest.class);
+                response = registerService.register(registerRequest);
+
+
+                if (response.isSuccess()) {
+                    exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+                } else {
+                    exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
+                }
+
+                String json = Serializer.serialize(response);
+                OutputStream os = exchange.getResponseBody();
+                ReadWrite.writeString(json, os);
+
+            } else {
+                exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
+            }
+
+            exchange.getResponseBody().close();
+        } catch (IOException e) {
+            exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
+            exchange.getResponseBody().close();
+            e.printStackTrace();
+        }
     }
 
 }

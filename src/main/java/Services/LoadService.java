@@ -1,25 +1,29 @@
 package Services;
 
-import DAO.DataAccessException;
-import DAO.EventDao;
-import DAO.PersonDao;
-import DAO.UserDao;
+import DAO.*;
 import Model.Event;
 import Model.Person;
 import Model.User;
 import Request.LoadRequest;
-import Result.ResultBool;
+import Result.LoadResult;
+
+import java.sql.Connection;
 
 /**
  * This class is responsible for handling loading users, persons
  * and events through a post method to the database
  */
-public class LoadService extends Service {
+public class LoadService {
+
+    private Database db;
+    private Connection connection;
 
     /**
      * Initialize empty constructor
      */
-    public LoadService() {}
+    public LoadService() {
+        db = new Database();
+    }
 
     /**
      * This method will take the array of users, persons
@@ -30,12 +34,15 @@ public class LoadService extends Service {
      * @return Null for now, it will return a message if the operation
      * was successful or not
      */
-    public ResultBool load(LoadRequest request) {
+    public LoadResult load(LoadRequest request) {
+
+        LoadResult response = new LoadResult();
+
         try {
             db.clearTables();
         } catch (DataAccessException e) {
             e.printStackTrace();
-            return new ErrorMessageResult("Error clearing tables for load.");
+            response.setMessage("Error clearing tables for load.");
         }
 
         int users = 0;
@@ -60,9 +67,14 @@ public class LoadService extends Service {
                 events++;
             }
 
+            response.setMessage("Successfully added " + users + " users, " + persons + " persons, and " + events + " events");
+
+            response.setSuccess(true);
+            db.closeConnection(true);
+
         } catch (DataAccessException e) {
             e.printStackTrace();
-            return new ErrorMessageResult("Error inserting user, person, or event.");
+            response.setMessage("Internal server error - Load Service");
         } finally {
             try {
                 db.closeConnection(true);
@@ -71,7 +83,7 @@ public class LoadService extends Service {
             }
         }
 
-        return new SuccessMessageResult("Successfully added " + users + " users, " + persons + " persons, and " + events + " events");
+        return response;
     }
 
 }

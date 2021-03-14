@@ -27,7 +27,7 @@ public class ResultBool {
         return message;
     }
 
-    public void setMessage() {
+    public void setMessage(String s) {
         this.message = message;
     }
 

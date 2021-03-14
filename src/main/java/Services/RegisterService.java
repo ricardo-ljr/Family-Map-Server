@@ -1,18 +1,31 @@
 package Services;
 
+import DAO.AuthTokenDao;
+import DAO.DataAccessException;
+import DAO.Database;
+import DAO.UserDao;
+import Model.AuthToken;
+import Model.User;
+import Request.RegisterRequest;
+import Result.RegisterResult;
+
 import java.sql.*;
+import java.util.UUID;
 
 /**
  * This class is responsible for registering a new user to the database
  */
-public class RegisterService extends Service {
+public class RegisterService {
 
     private Connection connection;
+    private Database db;
 
     /**
      * Initializes an empty constructor for the class
      */
-    public RegisterService() {}
+    public RegisterService() {
+        db = new Database();
+    }
 
     /**
      * Initializing constructor for class with a connection argument
@@ -29,37 +42,79 @@ public class RegisterService extends Service {
      * @param request Takes in the request to create a new user
      * @return Null for now, but it will return new user
      */
-//    public ResultBool register(RegisterRequest request) {
-//        setUp();
-//
-//        if (connection == null)
-//            return new ErrorMessageResult("Error registering the user - Connection Error");
-//
-//        String id = UUID.randomUUID().toString();
-//        User newUser = new User(request.getUserName(), request.getPassword(), request.getEmail(),
-//                request.getFirstName(), request.getLastName(), request.getGender(), id);
-//        try {
-//            UserDao uDao = new UserDao(connection);
-//            uDao.registerUser(newUser);
-//
-//            return new RegisterResultSuccess(new AuthTokenDao(connection).addToken(newUser).getAuthToken(), newUser.getUserName(), id);
-//        } catch (DataAccessException e) {
-//            e.printStackTrace();
-//            return new ErrorMessageResult("Error registering the user - Service Error");
-//        } finally {
-//            try {
-//                db.closeConnection(true);
-//
-//                FillService fill = new FillService();
-//                fill.fill(newUser.getUserName(), 4);
-//
-//            } catch (DataAccessException dataAccessException) {
-//                dataAccessException.printStackTrace();
-//            }
-//        }
-//
-//    }
+    public RegisterResult register(RegisterRequest request) {
 
+        RegisterResult response = new RegisterResult();
+        UserDao uDao = new UserDao(connection);
+        AuthTokenDao tDao = new AuthTokenDao(connection);
+
+        try {
+            db.openConnection();
+
+            boolean validUsername = !request.getUserName().isEmpty();
+            boolean validPassword = !request.getPassword().isEmpty();
+            boolean validEmail = !request.getEmail().isEmpty();
+            boolean validFirstName = !request.getFirstName().isEmpty();
+            boolean validLastName = !request.getLastName().isEmpty();
+            boolean validGender = (request.getGender().equals("m") || request.getGender().equals("f"));
+
+
+            if(validUsername && validPassword && validEmail && validFirstName && validLastName && validGender) {
+                if(!uDao.userExists(request.getUserName())) {
+
+                    String newPersonID = UUID.randomUUID().toString();
+
+                    User user = new User(
+                            request.getUserName(),
+                            request.getPassword(),
+                            request.getEmail(),
+                            request.getFirstName(),
+                            request.getLastName(),
+                            request.getGender(),
+                            newPersonID);
+
+                    uDao.registerUser(user);
+//                    db.getPersonDao().generateRoot(user, newPersonID, 4, db.getEventDao());
+
+
+                    String newAuthID = UUID.randomUUID().toString();
+                    AuthToken authToken = new AuthToken(newAuthID, user.getUserName());
+                    tDao.addToken(authToken);
+
+
+                    response.setAuthToken(newAuthID);
+                    response.setUsername(user.getUserName());
+                    response.setPersonID(user.getPersonID());
+
+                    response.setSuccess(true);
+                    db.closeConnection(true);
+
+                } else {
+                    response.setSuccess(false);
+                    response.setMessage("Error username already exists - Register Service");
+                    db.closeConnection(false);
+                }
+            } else {
+                response.setSuccess(false);
+                response.setMessage("Error request missing properties - Register Service");
+                db.closeConnection(false);
+            }
+
+        } catch(DataAccessException e) {
+            response.setSuccess(false);
+            response.setMessage("Internal server error - Register Service");
+
+            try {
+                db.closeConnection(false);
+            } catch(DataAccessException f) {
+                f.printStackTrace();
+            }
+        }
+
+        return response;
+    }
 }
+
+
 
 
