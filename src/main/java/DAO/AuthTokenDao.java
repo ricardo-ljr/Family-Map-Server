@@ -82,7 +82,7 @@ public class AuthTokenDao {
 
     public boolean authTokenExists(String auth) throws DataAccessException {
         ResultSet rs = null;
-        String sql = "SELECT * FROM AuthorizationToken WHERE authToken = ?;";
+        String sql = "SELECT * FROM AuthorizationTokens WHERE authToken = ?;";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, auth);

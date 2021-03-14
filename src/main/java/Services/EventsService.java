@@ -36,10 +36,11 @@ public class EventsService {
     public EventsResult getAllEvents(String authtoken) {
 
         EventsResult response = new EventsResult();
-        AuthTokenDao tDao = new AuthTokenDao(connection);
+
 
         try {
             db.openConnection();
+            AuthTokenDao tDao = new AuthTokenDao(db.getConnection());
 
             if(tDao.authTokenExists(authtoken)) {
 

@@ -1,24 +1,34 @@
 package Services;
 
 import DAO.DataAccessException;
-import DAO.Database;
-import DAO.UserDao;
+import Model.Event;
 import Model.User;
 import Request.RegisterRequest;
+import Result.EventByIdResult;
+import Result.EventsResult;
+import Result.FillResult;
 import Result.RegisterResult;
-import Result.ResultBool;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-class RegisterServiceTest {
+class EventsByIdServiceTest {
 
+    private EventsByIdService eventIDService;
+    private EventsService eventAllService;
+    private FillService fillService;
     private RegisterService registerService;
 
     @BeforeEach
     public void setUp() {
+        fillService = new FillService();
+        eventIDService = new EventsByIdService();
+        eventAllService = new EventsService();
         registerService = new RegisterService();
     }
 
@@ -29,7 +39,7 @@ class RegisterServiceTest {
     }
 
     @Test
-    void register() throws DataAccessException {
+    void getEventById() throws DataAccessException {
 
         User newUser = new User(
                 "patrick",
@@ -41,7 +51,6 @@ class RegisterServiceTest {
                 "12345");
 
         RegisterRequest request = new RegisterRequest();
-
         request.setUserName(newUser.getUserName());
         request.setPassword(newUser.getPassword());
         request.setEmail(newUser.getEmail());
@@ -50,33 +59,17 @@ class RegisterServiceTest {
         request.setGender(newUser.getGender());
 
         RegisterResult response = registerService.register(request);
+        String authID = response.getAuthToken();
 
-        assertEquals(response.getUsername(), newUser.getUserName());
-    }
+        EventsResult responseAll = eventAllService.getAllEvents(authID);
 
-    @Test
-    void registerFails() throws DataAccessException{
-        User newUser = new User(
-                "patrick",
-                "spencer",
-                "patrick@spencer.com",
-                "",
-                "Spencer",
-                "m",
-                "12345");
+        ArrayList<Event> events = responseAll.getEvents();
 
-        RegisterRequest request = new RegisterRequest();
+        Random num = new Random();
+        String randomID = events.get(num.nextInt(30)).getEventID();
 
-        request.setUserName(newUser.getUserName());
-        request.setPassword(newUser.getPassword());
-        request.setEmail(newUser.getEmail());
-        request.setFirstName(newUser.getFirstName());
-        request.setLastName(newUser.getLastName());
-        request.setGender(newUser.getGender());
+        EventByIdResult responseID = eventIDService.getEventById(randomID, authID);
 
-        RegisterResult response = registerService.register(request);
-
-        assertEquals(response.getMessage(), "Error request missing properties - Register Service");
-
+        assertEquals(responseID.getEventID(), randomID);
     }
 }
