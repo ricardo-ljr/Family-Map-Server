@@ -7,8 +7,6 @@ import java.util.Objects;
  */
 public class LoginResult extends ResultBool{
 
-    private String message;
-
     private String authToken;
 
     private String personID;
@@ -26,16 +24,8 @@ public class LoginResult extends ResultBool{
         this.authToken = authToken;
         this.personID = personID;
         this.username = username;
-        this.success = true;
     }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
 
     public String getAuthToken() {
         return authToken;
@@ -59,14 +49,6 @@ public class LoginResult extends ResultBool{
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        LoginResult that = (LoginResult) o;
-        return message.equals(that.message) && authToken.equals(that.authToken) && personID.equals(that.personID) && username.equals(that.username);
     }
 
 }

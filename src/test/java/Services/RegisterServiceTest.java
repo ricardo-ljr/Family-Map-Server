@@ -5,7 +5,7 @@ import DAO.Database;
 import DAO.UserDao;
 import Model.User;
 import Request.RegisterRequest;
-import Result.RegisterResultSuccess;
+import Result.RegisterResult;
 import Result.ResultBool;
 import org.junit.jupiter.api.Test;
 
@@ -30,7 +30,7 @@ class RegisterServiceTest {
         ResultBool response = service.register(request);
         assertTrue(response.isSuccess());
         if (response.isSuccess()) {
-            RegisterResultSuccess realResponse = (RegisterResultSuccess) response;
+            RegisterResult realResponse = (RegisterResult) response;
             User correctUser = new User(
                     "patrick",
                     "spencer",

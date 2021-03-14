@@ -76,7 +76,6 @@ public class EventByIdResult extends ResultBool {
         this.city = city;
         this.eventType = eventType;
         this.year = year;
-        success = true;
     }
 
     public EventByIdResult() {

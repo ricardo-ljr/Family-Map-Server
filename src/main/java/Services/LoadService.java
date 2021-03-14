@@ -8,9 +8,7 @@ import Model.Event;
 import Model.Person;
 import Model.User;
 import Request.LoadRequest;
-import Result.ErrorMessageResult;
 import Result.ResultBool;
-import Result.SuccessMessageResult;
 
 /**
  * This class is responsible for handling loading users, persons

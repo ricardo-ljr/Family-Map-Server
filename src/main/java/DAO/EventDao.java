@@ -35,6 +35,7 @@ public class EventDao {
         String sql = "INSERT INTO Events (eventID, associatedUsername, personID, latitude, longitude, " +
                 "country, city, eventType, year) VALUES(?,?,?,?,?,?,?,?,?);";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+
             stmt.setString(1, newEvent.getEventID());
             stmt.setString(2, newEvent.getAssociatedUsername());
             stmt.setString(3, newEvent.getPersonID());

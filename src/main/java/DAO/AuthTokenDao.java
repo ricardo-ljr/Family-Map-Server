@@ -32,18 +32,17 @@ public class AuthTokenDao {
      * @param newToken Token that is going to be added
      * @throws SQLException An exception that provides information on a database access error or other errors
      */
-    public AuthToken addToken(User newToken) throws DataAccessException {
-        AuthToken token = new AuthToken();
+    public void addToken(AuthToken newToken) throws DataAccessException {
+//        AuthToken token = new AuthToken();
         String sql = "INSERT INTO AuthorizationTokens(authToken,associatedUsername) VALUES(?,?);";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, token.getAuthToken());
-            stmt.setString(2, newToken.getUserName());
+            stmt.setString(1, newToken.getAuthToken());
+            stmt.setString(2, newToken.getAssociatedUsername());
 
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new DataAccessException("Error when adding new token");
         }
-        return token;
     }
 
     /**
@@ -52,20 +51,33 @@ public class AuthTokenDao {
      * @return
      * @throws DataAccessException
      */
-    public boolean authenticate(AuthToken auth) throws DataAccessException {
-        String sql = "SELECT authToken " +
-                "FROM AuthorizationTokens " +
-                "WHERE authToken=\'" + auth.getAuthToken() + "\'";
+    public AuthToken authenticate(String auth) throws DataAccessException {
+        AuthToken token;
+        String sql = "SELECT * FROM AuthorizationTokens WHERE authToken = ?;";
+        ResultSet rs = null;
 
-        boolean result = false;
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
 
-            ResultSet rs = stmt.executeQuery();
-            result = rs.next();
+            stmt.setString(1, auth);
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                token = new AuthToken(rs.getString("authToken"),
+                        rs.getString("associatedUsername"));
+                return token;
+            }
         } catch (SQLException e) {
             throw new DataAccessException("Error encountered while authenticating your token");
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
         }
-        return result;
     }
 
     /**

@@ -1,16 +1,9 @@
 package Handler;
 
 import Request.RegisterRequest;
-import Result.RegisterResultSuccess;
 import Result.ResultBool;
 import Services.RegisterService;
 import com.google.gson.Gson;
-import com.sun.net.httpserver.HttpExchange;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
 
 public class RegisterHandler extends DefaultHandler{
 

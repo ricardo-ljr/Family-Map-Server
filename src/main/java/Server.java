@@ -7,14 +7,18 @@ import java.net.InetSocketAddress;
 
 public class Server {
 
-    private static final int MAX_WAITING_CONNECTIONS = 12;
     private HttpServer server;
+
+    /**
+     * Initialize empty constructor for Server
+     */
+    public Server () {}
 
     private void run(String portNumber) {
         try {
             server = HttpServer.create(
                     new InetSocketAddress(Integer.parseInt(portNumber)),
-                    MAX_WAITING_CONNECTIONS);
+                    12);
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -37,6 +41,11 @@ public class Server {
         System.out.println("Server running on port 8000!");
     }
 
+    /**
+     * Main function to run server!
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         String portNumber = args[0];
         new Server().run(portNumber);

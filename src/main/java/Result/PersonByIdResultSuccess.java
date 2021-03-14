@@ -73,7 +73,6 @@ public class PersonByIdResultSuccess extends ResultBool {
         this.fatherID = fatherID;
         this.motherID = motherID;
         this.spouseID = spouseID;
-        success = true;
     }
 
 

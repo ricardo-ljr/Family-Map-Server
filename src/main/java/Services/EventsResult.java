@@ -4,7 +4,6 @@ import DAO.AuthTokenDao;
 import DAO.DataAccessException;
 import DAO.EventDao;
 import Model.Event;
-import Result.ErrorMessageResult;
 import Result.ResultBool;
 
 import java.util.ArrayList;

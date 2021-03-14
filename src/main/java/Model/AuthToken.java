@@ -21,18 +21,10 @@ public class AuthToken {
      */
     private String associatedUsername;
 
-    /**
-     * Empty constructor for AuthToken
-     */
-    public AuthToken() {
-        this.authToken = generateNewToken();
-    }
-
-    private static String generateNewToken() {
-        byte[] randomBytes = new byte[24];
-        secureRandom.nextBytes(randomBytes);
-        return base64Encoder.encodeToString(randomBytes);
-    }
+   public AuthToken(String authToken, String associatedUsername) {
+       this.authToken = authToken;
+       this.associatedUsername = associatedUsername;
+   }
 
     /**
      * Constructor to return token for specific user
