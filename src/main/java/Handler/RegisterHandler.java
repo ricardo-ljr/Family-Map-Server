@@ -51,10 +51,12 @@ public class RegisterHandler implements HttpHandler {
                 exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
             }
 
-            exchange.getResponseBody().close();
+            exchange.getResponseBody().close(); // never getting closed - should be good now
         } catch (IOException | DataAccessException e) {
             exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
             exchange.getResponseBody().close();
+            e.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

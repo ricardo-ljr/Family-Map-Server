@@ -52,6 +52,7 @@ class RegisterServiceTest {
         RegisterResult response = registerService.register(request);
 
         assertEquals(response.getUsername(), newUser.getUserName());
+
     }
 
     @Test

@@ -5,7 +5,7 @@ package Result;
  */
 public class RegisterResult extends ResultBool {
 
-    private String message;
+//    private String message;
 
     private String authToken;
 
@@ -18,9 +18,9 @@ public class RegisterResult extends ResultBool {
      */
     public RegisterResult() {}
 
-    public RegisterResult(String message) {
-        this.message = message;
-    }
+//    public RegisterResult(String message) {
+//        this.message = message;
+//    }
 
     /**
      * Sends the result back after registering a new user
@@ -37,13 +37,13 @@ public class RegisterResult extends ResultBool {
     }
 
 
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
+//    public String getMessage() {
+//        return message;
+//    }
+//
+//    public void setMessage(String message) {
+//        this.message = message;
+//    }
 
     public String getAuthToken() {
         return authToken;

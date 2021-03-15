@@ -10,6 +10,7 @@ public class ResultBool {
      * @return
      */
     public boolean isSuccess() {
+
         return success;
     }
 
@@ -24,10 +25,12 @@ public class ResultBool {
     }
 
     public String getMessage() {
+
         return message;
     }
 
     public void setMessage(String s) {
+
         this.message = message;
     }
 
