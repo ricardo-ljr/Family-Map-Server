@@ -1,6 +1,7 @@
 package Services;
 
 import DAO.*;
+import JSONReader.LocationData;
 import Model.*;
 import Result.FillResult;
 import java.sql.*;
@@ -13,6 +14,7 @@ public class FillService {
 
     private Connection connection;
     private Database db;
+    private LocationData locations;
 
     /**
      * Initializes an empty constructor for the class
@@ -31,7 +33,7 @@ public class FillService {
     }
 
     /**
-     * Fill methos to fill database with username and generations
+     * Fill methods to fill database with username and generations
      *
      * @param username
      * @param generations
@@ -45,6 +47,7 @@ public class FillService {
         try {
 
             db.openConnection();
+
             UserDao uDao = new UserDao(db.getConnection());
             EventDao eDao = new EventDao(db.getConnection());
             PersonDao pDao = new PersonDao(db.getConnection());
@@ -60,12 +63,16 @@ public class FillService {
 
                 response.setSuccess(true);
                 db.closeConnection(true);
+
             } else {
+
                 response.setSuccess(false);
-                response.setMessage("Error invalid userName or generations parameter - Fill Service");
+                response.setMessage("Error invalid username or generations - Fill Service");
                 db.closeConnection(false);
+
             }
         } catch(DataAccessException e) {
+
             response.setSuccess(false);
             response.setMessage("Internal server error - Fill Service");
 
@@ -78,4 +85,8 @@ public class FillService {
 
         return response;
     }
+
+    // Generate data to populate the database
+
+//    private Event generateEvent() {}
 }
