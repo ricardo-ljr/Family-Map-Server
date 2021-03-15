@@ -1,16 +1,27 @@
 package DAO;
 
+import JSONReader.Deserializer;
+import JSONReader.NamesData;
 import Model.Person;
 import Model.User;
 
 import javax.xml.crypto.Data;
+import java.io.File;
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Random;
+import java.util.UUID;
 
 /**
  * This class is used to access a person's information in the database
  */
 public class PersonDao {
+
+    private ArrayList<String> maleNames;
+    private ArrayList<String> femaleNames;
+    private ArrayList<String> lastNames;
 
     private Connection connection;
 
@@ -26,6 +37,19 @@ public class PersonDao {
      */
     public PersonDao(Connection connection) {
         this.connection = connection;
+
+        try {
+            NamesData f = Deserializer.deserializeNameList(new File("json/fnames.json"));
+            NamesData m = Deserializer.deserializeNameList(new File("json/mname.json"));
+            NamesData s = Deserializer.deserializeNameList(new File("json/snames.json"));
+
+            maleNames = new ArrayList<String>(Arrays.asList(m.getName()));
+            femaleNames = new ArrayList<String>(Arrays.asList(f.getName()));
+            lastNames = new ArrayList<String>(Arrays.asList(s.getName()));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -174,4 +198,72 @@ public class PersonDao {
             throw new DataAccessException("SQL Error encountered while clearing tables");
         }
     }
+
+    /**
+     * Public function that will take the current user, and generate a family tree
+     *
+     * @param currentUser
+     * @param personID
+     * @param numGenerations
+     * @param eventDAO
+     */
+   public void generateTree(User currentUser, String personID, int numGenerations, EventDao eventDAO) throws DataAccessException {
+
+       int year = 2021;
+
+       Person userPerson = new Person(personID, currentUser.getUserName(),
+               currentUser.getFirstName(), currentUser.getLastName(),
+               currentUser.getGender(), null, null, null);
+
+       addPerson(userPerson);
+//       eventDAO.generateRandomEvent(currentUser.getUserName(), personID, (year - 20));
+
+       if(numGenerations > 0) {
+           generateParents(currentUser.getUserName(), personID, (year - 20), (numGenerations - 1), eventDAO, currentUser.getLastName());
+       }
+   }
+
+//   public void insertFatherID(String userID, String fatherID) throws DataAccessException {
+//       String sql =
+//   }
+//
+//    public void insertMotherID(String userID, String fatherID) throws DataAccessException {
+//        String sql =
+//    }
+    /**
+     * Public function to generate fake parents for user
+     *
+     * @param userName
+     * @param childID
+     * @param childBirthYear
+     * @param numGenerations
+     * @param eDao
+     * @param fatherLastName
+     */
+   public void generateParents(String userName, String childID, int childBirthYear, int  numGenerations, EventDao eDao, String fatherLastName) throws DataAccessException {
+
+       String fatherID = UUID.randomUUID().toString(); // Random ID's for parents
+       String motherID = UUID.randomUUID().toString();
+
+       String fatherName = maleNames.get(new Random().nextInt(maleNames.size()));
+       String motherName = femaleNames.get(new Random().nextInt(femaleNames.size()));
+       String motherLastName = lastNames.get(new Random().nextInt(femaleNames.size()));
+
+       Person father = new Person(fatherID, userName, fatherName, fatherLastName, "m",
+               null, null, motherID);
+
+       Person mother = new Person(motherID, userName, motherName, motherLastName, "f",
+               null, null, fatherID);
+
+       addPerson(father);
+       addPerson(mother);
+       // Generate and insert events for parents
+
+
+
+//       if(numGenerations > 0) {
+//           generateParents(userName, fatherID, (childBirthYear - 20), (numGenerations - 1), eDao, fatherLastName);
+//           generateParents(userName, motherID, (childBirthYear - 20), (numGenerations - 1), eDao, motherLastName);
+//       }
+   }
 }

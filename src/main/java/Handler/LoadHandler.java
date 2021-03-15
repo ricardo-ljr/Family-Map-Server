@@ -55,6 +55,8 @@ public class LoadHandler implements HttpHandler {
             exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
             exchange.getResponseBody().close();
             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

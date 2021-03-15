@@ -10,6 +10,12 @@ public class Location {
     private float longitude;
 
     /**
+     * Initializes empty constructor
+     *
+     */
+    public Location() {}
+
+    /**
      * Constructor for Location Class
      *
      * @param country Country
@@ -32,11 +38,11 @@ public class Location {
         return city;
     }
 
-    public double getLatitude() {
+    public float getLatitude() {
         return latitude;
     }
 
-    public double getLongitude() {
+    public float getLongitude() {
         return longitude;
     }
 }

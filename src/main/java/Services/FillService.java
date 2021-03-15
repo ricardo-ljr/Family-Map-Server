@@ -15,6 +15,7 @@ public class FillService {
     private Connection connection;
     private Database db;
     private LocationData locations;
+    private PersonDao pDao;
 
     /**
      * Initializes an empty constructor for the class
@@ -88,6 +89,4 @@ public class FillService {
 
     // Generate data to populate the database
 
-//    private Event generateEvent() {}
-    // UsersPerson
 }

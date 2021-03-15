@@ -1,8 +1,16 @@
 package DAO;
 
+import JSONReader.Deserializer;
+import JSONReader.Location;
+import JSONReader.LocationData;
 import Model.Event;
+
+import java.io.File;
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.UUID;
 
 /**
  * This class is used to access an event's information in the database and its related user
@@ -10,6 +18,7 @@ import java.util.ArrayList;
 public class EventDao {
 
     private Connection connection;
+    private LocationData locations;
 
     /**
      * Initializing empty constructor for class
@@ -23,6 +32,12 @@ public class EventDao {
      */
     public EventDao(Connection connection) {
         this.connection = connection;
+
+        try {
+            locations = Deserializer.deserializeLocations(new File("json/location.json"));
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -172,6 +187,19 @@ public class EventDao {
                 }
             }
         }
+    }
+
+    public Event generateRandomEvent(String username, String personID, EventDao eDao, String eventType, int year) throws DataAccessException {
+        Location location = locations.getLocations()[new Random().nextInt(977)];
+
+        return new Event (UUID.randomUUID().toString(), username, personID,
+                location.getLatitude(),
+                location.getLongitude(),
+                location.getCountry(),
+                location.getCity(),
+                eventType,
+                year);
+
     }
 
     /**
