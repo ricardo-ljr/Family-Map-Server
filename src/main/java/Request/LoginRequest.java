@@ -20,7 +20,7 @@ public class LoginRequest {
     public LoginRequest() {}
 
     /**
-     * Contrusctor that handles the request to login an existing user
+     * Constructor that handles the request to login an existing user
      *
      * @param username Username of user requesting login access
      * @param password Password of user requesting login access

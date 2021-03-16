@@ -1,10 +1,13 @@
 package Result;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * This class handle the register request result, sends a message and data
  */
 public class RegisterResult extends ResultBool {
 
+    @SerializedName("authtoken")
     private String authToken;
 
     private String personID;
