@@ -37,7 +37,8 @@ public class AuthToken {
     }
 
     public void setAssociatedUsername(String associatedUsername) {
-        this.associatedUsername = associatedUsername;
+
+       this.associatedUsername = associatedUsername;
     }
 
     @Override

@@ -54,11 +54,14 @@ public class AuthTokenDao {
      */
     public AuthToken authenticate(String auth) throws DataAccessException {
         AuthToken token;
-        String sql = "SELECT * FROM AuthorizationTokens WHERE authToken = ?;";
         ResultSet rs = null;
+
+        String sql = "SELECT * FROM AuthorizationTokens WHERE authToken = ?;";
+
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
 
             stmt.setString(1, auth);
+
             rs = stmt.executeQuery();
             if (rs.next()) {
                 token = new AuthToken(
@@ -77,8 +80,9 @@ public class AuthTokenDao {
                     e.printStackTrace();
                 }
             }
-            return null;
+
         }
+        return null;
     }
 
     /**

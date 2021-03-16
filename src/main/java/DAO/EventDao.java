@@ -33,7 +33,6 @@ public class EventDao {
      */
     public EventDao(Connection connection) {
         this.connection = connection;
-
         try {
             locations = Deserializer.deserializeLocations(new File("json/locations.json"));
         } catch(IOException e) {
@@ -128,10 +127,11 @@ public class EventDao {
      * @throws DataAccessException
      */
     public Event[] findAllEvents(String userName) throws DataAccessException {
-        ArrayList<Event> events = new ArrayList<>();
+        ArrayList<Event> events = new ArrayList<Event>();
 
         ResultSet rs = null;
         String sql = "SELECT * FROM Events WHERE associatedUsername = ?;";
+
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, userName);
             rs = stmt.executeQuery();

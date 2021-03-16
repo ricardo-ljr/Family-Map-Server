@@ -90,8 +90,6 @@ public class EventsByIdService {
                 db.closeConnection(false);
             } catch (DataAccessException f) {
                 f.printStackTrace();
-            } catch (Exception g) {
-                g.printStackTrace();
             }
         }
 

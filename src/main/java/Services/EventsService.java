@@ -44,7 +44,7 @@ public class EventsService {
 
             if(tDao.authTokenExists(authtoken)) {
 
-                String userName = tDao.authenticate(authtoken).getAssociatedUsername();
+                String userName = tDao.authenticate(authtoken).getAssociatedUsername(); // get username for associated event
                 response.setEvents(eDao.findAllEvents(userName));
 
                 response.setSuccess(true);
@@ -63,8 +63,6 @@ public class EventsService {
                 db.closeConnection(false);
             } catch (DataAccessException f) {
                 f.printStackTrace();
-            } catch (Exception g) {
-                g.printStackTrace();
             }
         }
 
