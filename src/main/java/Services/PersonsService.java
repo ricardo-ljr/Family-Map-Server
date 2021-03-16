@@ -41,7 +41,7 @@ public class PersonsService {
 
             if(tDao.authTokenExists(authToken)) {
 
-                String userName = tDao.getUsernameForAuthtoken(authToken);
+                String userName = tDao.authenticate(authToken).getAssociatedUsername();
                 response.setPerson(pDao.getPersonsForUsername(userName));
 
                 response.setSuccess(true);

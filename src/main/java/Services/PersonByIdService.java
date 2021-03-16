@@ -41,7 +41,7 @@ public class PersonByIdService {
 
             if(tDao.authTokenExists(authtoken)) {
 
-                String userName = tDao.getUsernameForAuthtoken(authtoken);
+                String userName = tDao.authenticate(authtoken).getAssociatedUsername();
 
                 if(pDao.personExists(personID)) {
 

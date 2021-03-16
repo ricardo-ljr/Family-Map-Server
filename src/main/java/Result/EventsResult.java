@@ -9,7 +9,7 @@ import java.util.ArrayList;
  */
 public class EventsResult extends ResultBool {
 
-    private ArrayList<Event> data;
+    private Event[] data;
 
     /**
      * Initializes empty constructor
@@ -24,15 +24,15 @@ public class EventsResult extends ResultBool {
      * @param events
      */
 
-    public EventsResult(ArrayList<Event> events) {
+    public EventsResult(Event[] events) {
         this.data = events;
     }
 
-    public ArrayList<Event> getEvents() {
+    public Event[] getEvents() {
         return data;
     }
 
-    public void setEvents(ArrayList<Event> events) {
+    public void setEvents(Event[] events) {
 
         this.data = events;
     }

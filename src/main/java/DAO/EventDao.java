@@ -127,8 +127,7 @@ public class EventDao {
      * @return
      * @throws DataAccessException
      */
-    public ArrayList<Event> findAllEvents(String userName) throws DataAccessException {
-        Event event;
+    public Event[] findAllEvents(String userName) throws DataAccessException {
         ArrayList<Event> events = new ArrayList<>();
         ResultSet rs = null;
         String sql = "SELECT * FROM Events WHERE associatedUsername = ?;";
@@ -136,7 +135,7 @@ public class EventDao {
             stmt.setString(1, userName);
             rs = stmt.executeQuery();
             while (rs.next()) {
-                event = new Event(rs.getString("eventID"),
+                Event event = new Event(rs.getString("eventID"),
                         rs.getString("associatedUsername"),
                         rs.getString("personID"),
                         rs.getFloat("latitude"),
@@ -148,7 +147,6 @@ public class EventDao {
 
                 events.add(event);
             }
-            return events;
         } catch (SQLException e) {
             e.printStackTrace();
             throw new DataAccessException("Error encountered when finding all events for a person");
@@ -161,6 +159,9 @@ public class EventDao {
                 }
             }
         }
+
+        Event[] list = events.toArray(new Event[events.size()]);
+        return list;
     }
 
     /**

@@ -46,7 +46,7 @@ public class EventsByIdService {
 
             if(tDao.authTokenExists(authToken)) {
 
-                String userName = tDao.getUsernameForAuthtoken(authToken);
+                String userName = tDao.authenticate(authToken).getAssociatedUsername();
 
                 if(eDao.eventExists(eventID)) {
 
