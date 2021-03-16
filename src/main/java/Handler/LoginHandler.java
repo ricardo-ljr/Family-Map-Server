@@ -30,10 +30,8 @@ public class LoginHandler implements HttpHandler {
                 InputStream reqBody = exchange.getRequestBody();
                 String reqData = ReadWrite.readString(reqBody);
 
-
                 LoginRequest loginRequest = Deserializer.deserialize(reqData, LoginRequest.class);
                 response = loginService.login(loginRequest);
-
 
                 if (response.isSuccess()) {
                     exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
@@ -49,7 +47,7 @@ public class LoginHandler implements HttpHandler {
                 exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
             }
 
-            exchange.getResponseBody().close();
+            exchange.getResponseBody().close(); // closing exchange here
         } catch(IOException | DataAccessException e) {
             exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
             exchange.getResponseBody().close();
