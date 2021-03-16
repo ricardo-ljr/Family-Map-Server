@@ -52,16 +52,16 @@ public class LoadService {
             PersonDao pDao = new PersonDao(db.getConnection());
             EventDao eDao = new EventDao(db.getConnection());
 
-            for (int i = 0; i < request.getUsers().length; i++) {
-                uDao.registerUser(request.getUsers()[i]);
+            for (User user : request.getUsers()) {
+                uDao.registerUser(user);
                 users++;
             }
-            for (int i = 0; i < request.getPersons().length; i++) {
-                pDao.addPerson(request.getPersons()[i]);
+            for (Person person : request.getPersons()) {
+                pDao.addPerson(person);
                 persons++;
             }
-            for (int i = 0; i < request.getPersons().length; i++) {
-                eDao.addEvent(request.getEvents()[i]);
+            for (Event event : request.getEvents()) {
+                eDao.addEvent(event);
                 events++;
             }
 
@@ -80,7 +80,6 @@ public class LoadService {
                 f.printStackTrace();
             }
         }
-
         return response;
     }
 }

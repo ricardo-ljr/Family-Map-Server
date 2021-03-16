@@ -22,20 +22,6 @@ public class LoadRequest {
      */
     public LoadRequest() {}
 
-    /**
-     * This constructor will handle a request to load the data of users, persons
-     * and events into the database
-     *
-     * @param users List of users
-     * @param persons List of persons
-     * @param events List of events
-     */
-    public LoadRequest(User[] users, Person[] persons, Event[] events) {
-        this.users = users;
-        this.persons = persons;
-        this.events = events;
-    }
-
     public User[] getUsers() {
         return users;
     }
