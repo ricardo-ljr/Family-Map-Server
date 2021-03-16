@@ -49,19 +49,19 @@ public class EventDao {
      * @throws DataAccessException An exception that provides information on a database access error or other errors
      */
     public void addEvent(Event newEvent) throws DataAccessException{
-        String sql = "INSERT INTO Events (eventID, associatedUsername, personID, latitude, longitude, " +
-                "country, city, eventType, year) VALUES(?,?,?,?,?,?,?,?,?);";
+        String sql = "INSERT INTO Events (eventID, associatedUsername, latitude, longitude, " +
+                "country, city, eventType, year, personID) VALUES(?,?,?,?,?,?,?,?,?);";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
 
             stmt.setString(1, newEvent.getEventID());
             stmt.setString(2, newEvent.getAssociatedUsername());
-            stmt.setString(3, newEvent.getPersonID());
-            stmt.setFloat(4, newEvent.getLatitude());
-            stmt.setFloat(5, newEvent.getLongitude());
-            stmt.setString(6, newEvent.getCountry());
-            stmt.setString(7, newEvent.getCity());
-            stmt.setString(8, newEvent.getEventType());
-            stmt.setInt(9, newEvent.getYear());
+            stmt.setFloat(3, newEvent.getLatitude());
+            stmt.setFloat(4, newEvent.getLongitude());
+            stmt.setString(5, newEvent.getCountry());
+            stmt.setString(6, newEvent.getCity());
+            stmt.setString(7, newEvent.getEventType());
+            stmt.setInt(8, newEvent.getYear());
+            stmt.setString(9, newEvent.getPersonID());
 
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -95,13 +95,13 @@ public class EventDao {
             if (rs.next()) {
                 event = new Event(rs.getString("eventID"),
                         rs.getString("associatedUsername"),
-                        rs.getString("personID"),
                         rs.getFloat("latitude"),
                         rs.getFloat("longitude"),
                         rs.getString("country"),
                         rs.getString("city"),
                         rs.getString("eventType"),
-                        rs.getInt("year"));
+                        rs.getInt("year"),
+                        rs.getString("personID"));
                 return event;
             }
         } catch (SQLException e) {
@@ -129,6 +129,7 @@ public class EventDao {
      */
     public Event[] findAllEvents(String userName) throws DataAccessException {
         ArrayList<Event> events = new ArrayList<>();
+
         ResultSet rs = null;
         String sql = "SELECT * FROM Events WHERE associatedUsername = ?;";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -137,13 +138,13 @@ public class EventDao {
             while (rs.next()) {
                 Event event = new Event(rs.getString("eventID"),
                         rs.getString("associatedUsername"),
-                        rs.getString("personID"),
                         rs.getFloat("latitude"),
                         rs.getFloat("longitude"),
                         rs.getString("country"),
                         rs.getString("city"),
                         rs.getString("eventType"),
-                        rs.getInt("year"));
+                        rs.getInt("year"),
+                        rs.getString("personID"));
 
                 events.add(event);
             }
@@ -213,13 +214,14 @@ public class EventDao {
     public Event generateRandomEvent(String username, String personID, EventDao eDao, String eventType, int year) throws DataAccessException {
         Location location = locations.getLocations()[new Random().nextInt(977)];
 
-        return new Event (UUID.randomUUID().toString(), username, personID,
+        return new Event (UUID.randomUUID().toString(), username,
                 location.getLatitude(),
                 location.getLongitude(),
                 location.getCountry(),
                 location.getCity(),
                 eventType,
-                year);
+                year,
+                personID);
 
     }
 
@@ -236,13 +238,14 @@ public class EventDao {
         Location location = locations.getLocations()[new Random().nextInt(977)];
         Event birth = new Event(UUID.randomUUID().toString(),
                 username,
-                personID,
                 location.getLatitude(),
                 location.getLongitude(),
                 location.getCountry(),
                 location.getCity(),
                 "birth",
-                childBirthYear);
+                childBirthYear,
+                personID);
+
         addEvent(birth);
     }
 
@@ -260,22 +263,23 @@ public class EventDao {
 
         Event fathersMarriage = new Event(UUID.randomUUID().toString(),
                 username,
-                fatherID,
                 location.getLatitude(),
                 location.getLongitude(),
                 location.getCountry(),
                 location.getCity(),
                 "marriage",
-                (childBirthYear - 5));
+                (childBirthYear - 5),
+                fatherID);
+
         Event mothersMarriage = new Event(UUID.randomUUID().toString(),
                 username,
-                motherID,
                 location.getLatitude(),
                 location.getLongitude(),
                 location.getCountry(),
                 location.getCity(),
                 "marriage",
-                (childBirthYear - 5));
+                (childBirthYear - 5),
+                motherID);
 
         addEvent(fathersMarriage);
         addEvent(mothersMarriage);
@@ -293,13 +297,14 @@ public class EventDao {
         Location location = locations.getLocations()[new Random().nextInt(977)];
 
         Event death = new Event(UUID.randomUUID().toString(),
-                username, personID,
+                username,
                 location.getLatitude(),
                 location.getLongitude(),
                 location.getCountry(),
                 location.getCity(),
                 "death",
-                (childBirthYear + 65));
+                (childBirthYear + 65),
+                personID);
 
         addEvent(death);
     }

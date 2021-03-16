@@ -26,25 +26,25 @@ class EventDaoTest {
 
         event = new Event("12345",
                 "ricardol",
-                "12345",
                 23.5505f,
                 46.6333f,
                 "Brazil",
                 "Sao Paulo",
                 "birth",
-                1995
+                1995,
+                "12345"
                 );
 
 
         event2 = new Event("12346",
                 "ricardol",
-                "12345",
                 33.3528f,
                 111.7890f,
                 "United States of America",
                 "Gilbert",
                 "marriage",
-                2016
+                2016,
+                "12345"
                 );
 
         Connection connection = db.openConnection();

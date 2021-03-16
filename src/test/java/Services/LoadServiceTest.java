@@ -49,13 +49,13 @@ class LoadServiceTest {
 
         Event newEvent = new Event("event1",
                 "patrick",
-                "12345",
                 10.0f,
                 20.0f,
                 "USA",
                 "Lehi",
                 "birth",
-                2000);
+                2000,
+                "12345");
 
         User[] userParam = new User[1];
         Person[] personParam = new Person[1];

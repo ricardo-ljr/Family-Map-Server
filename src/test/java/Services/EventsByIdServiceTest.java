@@ -66,10 +66,11 @@ class EventsByIdServiceTest {
         Event[] events = responseAll.getEvents();
 
         Random num = new Random();
-//        String randomID = events.get(num.nextInt(30)).getEventID();
 
-//        EventByIdResult responseID = eventIDService.getEventById(randomID, authID);
-//
-//        assertEquals(responseID.getEventID(), randomID);
+        String randomID = events[num.nextInt(30)].getEventID();
+
+        EventByIdResult responseID = eventIDService.getEventById(randomID, authID);
+
+        assertEquals(responseID.getEventID(), randomID);
     }
 }

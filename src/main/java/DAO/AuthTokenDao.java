@@ -56,15 +56,15 @@ public class AuthTokenDao {
         AuthToken token;
         String sql = "SELECT * FROM AuthorizationTokens WHERE authToken = ?;";
         ResultSet rs = null;
-
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
 
             stmt.setString(1, auth);
             rs = stmt.executeQuery();
-
             if (rs.next()) {
-                token = new AuthToken(rs.getString("authToken"),
+                token = new AuthToken(
+                        rs.getString("authToken"),
                         rs.getString("associatedUsername"));
+
                 return token;
             }
         } catch (SQLException e) {
