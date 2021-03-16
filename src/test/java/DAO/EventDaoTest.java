@@ -105,7 +105,7 @@ class EventDaoTest {
 
     @Test
     void findAllEvents() throws DataAccessException {
-        ArrayList<Event> eventsList = null;
+        Event[] eventsList = null;
         eDao.addEvent(event);
         eDao.addEvent(event2);
 
@@ -113,14 +113,14 @@ class EventDaoTest {
 
         assertNotNull(eventsList);
 
-        assertEquals(eventsList.size(), 2);
+        assertEquals(eventsList.length, 2);
     }
 
     @Test
     void findAllEventsFail() throws DataAccessException {
-        ArrayList<Event> eventsList = null;
+        Event[] eventsList = null;
         eventsList = eDao.findAllEvents(event.getAssociatedUsername());
-        assertEquals(eventsList.size(), 0);
+        assertEquals(eventsList.length, 0);
     }
 
     @Test

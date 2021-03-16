@@ -15,7 +15,6 @@ public class FillService {
     private Connection connection;
     private Database db;
     private LocationData locations;
-    private PersonDao pDao;
 
     /**
      * Initializes an empty constructor for the class
@@ -24,14 +23,14 @@ public class FillService {
         db = new Database();
     }
 
-    /**
-     * Initializing constructor for class with a connection argument
-     *
-     * @param connection Links connection with database
-     */
-    public FillService(Connection connection) {
-        this.connection = connection;
-    }
+//    /**
+//     * Initializing constructor for class with a connection argument
+//     *
+//     * @param connection Links connection with database
+//     */
+//    public FillService(Connection connection) {
+//        this.connection = connection;
+//    }
 
     /**
      * Fill methods to fill database with username and generations
@@ -43,9 +42,9 @@ public class FillService {
     public FillResult fill(String username, int generations){
 
         FillResult response = new FillResult();
-        try {
 
-            db.openConnection();
+        try {
+            db.openConnection(); // open connection
 
             UserDao uDao = new UserDao(db.getConnection());
             EventDao eDao = new EventDao(db.getConnection());
@@ -55,8 +54,8 @@ public class FillService {
 
                 User user = uDao.findUser(username);
 
-                pDao.clearPersonUsername(username);
-                eDao.deleteAllEvents(username);
+                pDao.clearPersonUsername(username); // clear all persons for user
+                eDao.deleteAllEvents(username); // clear all events for user
 
                 if(generations == 99) { // default generation lives here
                     pDao.generateTree(

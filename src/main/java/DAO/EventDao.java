@@ -232,9 +232,11 @@ public class EventDao {
      * @throws DataAccessException
      */
     public void generateBirth(String username, String personID, int childBirthYear) throws DataAccessException {
+
         Location location = locations.getLocations()[new Random().nextInt(977)];
         Event birth = new Event(UUID.randomUUID().toString(),
-                username, personID,
+                username,
+                personID,
                 location.getLatitude(),
                 location.getLongitude(),
                 location.getCountry(),
@@ -305,14 +307,14 @@ public class EventDao {
     /**
      * Function to delete event giver username
      *
-     * @param userName
+     * @param username
      * @throws DataAccessException
      */
-    public void deleteAllEvents(String userName) throws DataAccessException {
+    public void deleteAllEvents(String username) throws DataAccessException {
         String sql = "DELETE FROM Events WHERE associatedUsername = ?;";
 
         try(PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, userName);
+            stmt.setString(1, username);
 
             stmt.executeUpdate();
         } catch (SQLException e) {

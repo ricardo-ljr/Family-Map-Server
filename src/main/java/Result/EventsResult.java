@@ -11,19 +11,13 @@ public class EventsResult extends ResultBool {
 
     private Event[] data;
 
-    /**
-     * Initializes empty constructor
-     */
-    public EventsResult() {
-        success = true;
-    };
+    public EventsResult() {}
 
     /**
      * Constructor for result of event's data
      *
      * @param events
      */
-
     public EventsResult(Event[] events) {
         this.data = events;
     }

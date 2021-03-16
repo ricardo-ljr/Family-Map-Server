@@ -155,30 +155,43 @@ public class PersonDao {
      * @return
      * @throws DataAccessException
      */
-    public ArrayList<Person> getPersonsForUsername(String username) throws DataAccessException {
-        String sql = "SELECT username, FirstName, LastName, Gender, \"mother id\", \"father id\", \"spouse id\", personID " +
-                "FROM persons " +
-                "WHERE \"username\"=\"" + username + "\"";
+    public Person[] getPersonsForUsername(String username) throws DataAccessException {
+        ArrayList<Person> persons = new ArrayList<Person>();
 
-        ArrayList<Person> result = new ArrayList<Person>();
+        ResultSet rs = null;
+        String sql = "SELECT * FROM Persons WHERE associatedUsername = ?;";
+
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, username);
+            rs = stmt.executeQuery();
 
-            ResultSet rs = stmt.executeQuery();
-            while(rs.next()) {
-                result.add(new Person(rs.getString(1),
-                        rs.getString(2),
-                        rs.getString(3),
-                        rs.getString(4),
-                        rs.getString(5),
-                        rs.getString(6),
-                        rs.getString(7),
-                        rs.getString(8)));
+            while (rs.next()) {
+                Person person = new Person(rs.getString("personID"),
+                        rs.getString("associatedUsername"),
+                        rs.getString("firstName"),
+                        rs.getString("lastName"),
+                        rs.getString("gender"),
+                        rs.getString("fatherID"),
+                        rs.getString("motherID"),
+                        rs.getString("spouseID"));
+
+                persons.add(person);
             }
         } catch (SQLException e) {
-            throw new DataAccessException("Error encountered while looking up all persons");
+            e.printStackTrace();
+            throw new DataAccessException("Error encountered while finding persons for the username given");
+        } finally {
+            if(rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
-        return result;
+        Person[] list = persons.toArray(new Person[persons.size()]);
+        return list;
     }
 
     /**
@@ -188,7 +201,7 @@ public class PersonDao {
      * @throws DataAccessException
      */
     public void clearPersonUsername(String username) throws DataAccessException {
-        String sql = "DELETE FROM PersonTable WHERE userName = ?;";
+        String sql = "DELETE FROM Persons WHERE associatedUsername = ?;";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, username);
 
@@ -224,9 +237,15 @@ public class PersonDao {
 
        int year = 2021;
 
-       Person userPerson = new Person(personID, currentUser.getUserName(),
-               currentUser.getFirstName(), currentUser.getLastName(),
-               currentUser.getGender(), null, null, null);
+       Person userPerson = new Person(
+               personID,
+               currentUser.getUserName(), // associated username
+               currentUser.getFirstName(),
+               currentUser.getLastName(),
+               currentUser.getGender(),
+               null,
+               null,
+               null);
 
        addPerson(userPerson);
        // User is born
@@ -245,7 +264,7 @@ public class PersonDao {
      * @throws DataAccessException
      */
    public void insertFatherID(String userID, String fatherID) throws DataAccessException {
-       String sql = "UPDATED Persons SET fatherID = ? WHERE personID = ?;";
+       String sql = "UPDATE Persons SET fatherID = ? WHERE personID = ?;";
 
        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
            stmt.setString(1, fatherID);
@@ -266,7 +285,7 @@ public class PersonDao {
      * @throws DataAccessException
      */
     public void insertMotherID(String userID, String motherID) throws DataAccessException {
-        String sql = "UPDATED Persons SET motherID = ? WHERE personID = ?;";
+        String sql = "UPDATE Persons SET motherID = ? WHERE personID = ?;";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, motherID);

@@ -48,9 +48,11 @@ class FillServiceTest {
         request.setLastName(newUser.getLastName());
         request.setGender(newUser.getGender());
 
-        FillResult response1 = fillService.fill(newUser.getUserName(), 99);
+        RegisterResult response = registerService.register(request); // send a register request
 
-        assertEquals(response1.getMessage(), "Successfully added 31 persons and 91 events to the database.");
+        FillResult response1 = fillService.fill(newUser.getUserName(), 0);
+
+        assertEquals(response1.getMessage(), "Successfully added 1 persons and 1 events to the database!");
     }
 
     @Test

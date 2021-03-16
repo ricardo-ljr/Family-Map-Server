@@ -15,6 +15,9 @@ public class NamesData {
 //        return data.get(rand.nextInt(data.size()));
 //    }
 
+    public NamesData() {
+        data = new String[152];
+    }
     public String[] getName() {
         return data;
     }

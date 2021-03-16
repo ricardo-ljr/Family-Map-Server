@@ -27,10 +27,6 @@ public class Serializer {
         return (new Gson()).toJson(returnType);
     }
 
-    public static String serialize(LoginRequest returnType) {
-        return (new Gson()).toJson(returnType);
-    }
-
     public static String serialize(LoginResult returnType) {
         return (new Gson()).toJson(returnType);
     }
@@ -40,10 +36,6 @@ public class Serializer {
     }
 
     public static String serialize(PersonsResult returnType) {
-        return (new Gson()).toJson(returnType);
-    }
-
-    public static String serialize(RegisterRequest returnType) {
         return (new Gson()).toJson(returnType);
     }
 
