@@ -24,6 +24,7 @@ public class PersonDao {
     private ArrayList<String> lastNames;
 
     private Connection connection;
+    private int numOfPersons;
 
     /**
      * Initializing empty constructor for class
@@ -37,7 +38,7 @@ public class PersonDao {
      */
     public PersonDao(Connection connection) {
         this.connection = connection;
-
+        numOfPersons = 0;
         try {
             NamesData f = Deserializer.deserializeNameList(new File("json/fnames.json"));
             NamesData m = Deserializer.deserializeNameList(new File("json/mname.json"));
@@ -75,6 +76,7 @@ public class PersonDao {
         } catch(SQLException e) {
             throw new DataAccessException("Error encountered while inserting person into database");
         }
+        numOfPersons++;
     }
 
     /**
@@ -205,9 +207,9 @@ public class PersonDao {
      * @param currentUser
      * @param personID
      * @param numGenerations
-     * @param eventDAO
+     * @param eDao
      */
-   public void generateTree(User currentUser, String personID, int numGenerations, EventDao eventDAO) throws DataAccessException {
+   public void generateTree(User currentUser, String personID, int numGenerations, EventDao eDao) throws DataAccessException {
 
        int year = 2021;
 
@@ -216,10 +218,11 @@ public class PersonDao {
                currentUser.getGender(), null, null, null);
 
        addPerson(userPerson);
-//       eventDAO.generateRandomEvent(currentUser.getUserName(), personID, (year - 20));
+       // User is born
+       eDao.generateBirth(currentUser.getUserName(), personID, (year - 26));
 
        if(numGenerations > 0) {
-           generateParents(currentUser.getUserName(), personID, (year - 20), (numGenerations - 1), eventDAO, currentUser.getLastName());
+           generateParents(currentUser.getUserName(), personID, (year - 20), (numGenerations - 1), eDao, currentUser.getLastName());
        }
    }
 
