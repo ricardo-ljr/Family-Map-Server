@@ -79,6 +79,8 @@ public class PersonDao {
         numOfPersons++;
     }
 
+    public int getNumOfPersons() { return numOfPersons; }
+
     /**
      * Finds a new person in the database
      *
