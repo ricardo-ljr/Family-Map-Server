@@ -233,14 +233,14 @@ public class PersonDao {
     /**
      * Public function to generate fake parents for user
      *
-     * @param userName
+     * @param username
      * @param childID
      * @param childBirthYear
      * @param numGenerations
      * @param eDao
      * @param fatherLastName
      */
-   public void generateParents(String userName, String childID, int childBirthYear, int  numGenerations, EventDao eDao, String fatherLastName) throws DataAccessException {
+   public void generateParents(String username, String childID, int childBirthYear, int  numGenerations, EventDao eDao, String fatherLastName) throws DataAccessException {
 
        String fatherID = UUID.randomUUID().toString(); // Random ID's for parents
        String motherID = UUID.randomUUID().toString();
@@ -249,21 +249,38 @@ public class PersonDao {
        String motherName = femaleNames.get(new Random().nextInt(femaleNames.size()));
        String motherLastName = lastNames.get(new Random().nextInt(femaleNames.size()));
 
-       Person father = new Person(fatherID, userName, fatherName, fatherLastName, "m",
-               null, null, motherID);
+       Person father = new Person(fatherID,
+               username, fatherName,
+               fatherLastName,
+               "m",
+               null,
+               null,
+               motherID);
 
-       Person mother = new Person(motherID, userName, motherName, motherLastName, "f",
-               null, null, fatherID);
+       Person mother = new Person(motherID,
+               username,
+               motherName,
+               motherLastName,
+               "f",
+               null,
+               null,
+               fatherID);
 
        addPerson(father);
        addPerson(mother);
        // Generate and insert events for parents
 
 
+       // Birth for User and attaching to parents
+       eDao.generateBirth(username, fatherID, (childBirthYear - 26));
+       eDao.generateBirth(username, motherID, (childBirthYear - 26));
+       //Marrying parents
+       eDao.generateMarriage(username, fatherID, motherID, (childBirthYear - 5));
+       // Maybe generate death
 
-//       if(numGenerations > 0) {
-//           generateParents(userName, fatherID, (childBirthYear - 20), (numGenerations - 1), eDao, fatherLastName);
-//           generateParents(userName, motherID, (childBirthYear - 20), (numGenerations - 1), eDao, motherLastName);
-//       }
+       if(numGenerations > 0) {
+           generateParents(username, fatherID, (childBirthYear - 26), (numGenerations - 1), eDao, fatherLastName);
+           generateParents(username, motherID, (childBirthYear - 26), (numGenerations - 1), eDao, motherLastName);
+       }
    }
 }

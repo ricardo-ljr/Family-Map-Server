@@ -76,7 +76,7 @@ public class EventDao {
      *
      * @return
      */
-    public int getNumOfEvents() { return numOfEvents};
+    public int getNumOfEvents() { return numOfEvents; }
 
     /**
      * Finds a new event in the database
