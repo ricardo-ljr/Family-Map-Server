@@ -41,29 +41,30 @@ public class EventsByIdService {
         try {
 
             db.openConnection();
+
             AuthTokenDao tDao = new AuthTokenDao(db.getConnection());
             EventDao eDao = new EventDao(db.getConnection());
 
             if(tDao.authTokenExists(authToken)) {
 
-                String userName = tDao.authenticate(authToken).getAssociatedUsername();
+                String userName = tDao.authenticate(authToken).getAssociatedUsername(); // get associated username for Event
 
-                if(eDao.eventExists(eventID)) {
+                if(eDao.eventExists(eventID)) { // check if event exists by its ID
 
-                    Event event = eDao.findEvent(eventID);
-                    String eventUsername = event.getAssociatedUsername();
+                    Event event = eDao.findEvent(eventID); // find event by ID
+                    String eventUsername = event.getAssociatedUsername(); // user associated with event
 
-                    if(userName.equals(eventUsername)) {
+                    if(userName.equals(eventUsername)) { // if logged user is the owner of the new event
 
                         response.setEventID(event.getEventID());
                         response.setAssociatedUsername(event.getAssociatedUsername());
-                        response.setPersonID(event.getPersonID());
                         response.setLatitude(event.getLatitude());
                         response.setLongitude(event.getLongitude());
                         response.setCountry(event.getCountry());
                         response.setCity(event.getCity());
                         response.setEventType(event.getEventType());
                         response.setYear(event.getYear());
+                        response.setPersonID(event.getPersonID());
 
                         response.setSuccess(true);
                         db.closeConnection(true);
