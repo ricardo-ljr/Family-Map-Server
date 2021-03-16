@@ -138,4 +138,5 @@ public class UserDao {
             throw new DataAccessException("SQL Error encountered while clearing tables");
         }
     }
+
 }

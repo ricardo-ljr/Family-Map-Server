@@ -214,4 +214,5 @@ public class AuthTokenDao {
             throw new DataAccessException("Error encountered when clearing authorization tokens table");
         }
     }
+
 }

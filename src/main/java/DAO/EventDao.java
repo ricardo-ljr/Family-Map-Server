@@ -340,5 +340,6 @@ public class EventDao {
                 throw new DataAccessException("Error encountered when clearing tables for events");
             }
         }
+
 }
 

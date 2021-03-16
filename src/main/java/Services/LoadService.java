@@ -65,7 +65,7 @@ public class LoadService {
                 events++;
             }
 
-            response.setMessage("Successfully added " + users + " users, " + persons + " persons, and " + events + " events - Load Service");
+            response.setMessage("Successfully added " + users + " users, " + persons + " persons, and " + events + " events to the database - Load Service");
 
             response.setSuccess(true);
             db.closeConnection(true);
@@ -83,6 +83,5 @@ public class LoadService {
 
         return response;
     }
-
 }
 
