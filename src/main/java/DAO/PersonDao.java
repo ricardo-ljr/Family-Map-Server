@@ -228,13 +228,47 @@ public class PersonDao {
        }
    }
 
-//   public void insertFatherID(String userID, String fatherID) throws DataAccessException {
-//       String sql =
-//   }
-//
-//    public void insertMotherID(String userID, String fatherID) throws DataAccessException {
-//        String sql =
-//    }
+    /**
+     * This function serves the purpose of updating the user's father ID
+     *
+     * @param userID Current user ID
+     * @param fatherID Unique identifier for father
+     * @throws DataAccessException
+     */
+   public void insertFatherID(String userID, String fatherID) throws DataAccessException {
+       String sql = "UPDATED Persons SET fatherID = ? WHERE personID = ?;";
+
+       try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+           stmt.setString(1, fatherID);
+           stmt.setString(2, userID);
+
+           stmt.executeUpdate();
+       } catch (SQLException e) {
+           e.printStackTrace();
+           throw new DataAccessException("Error encountered while updating user's fatherID");
+       }
+   }
+
+    /**
+     * This function server the purpose of updating the user's mother ID
+     *
+     * @param userID Current user ID
+     * @param motherID Unique identifier for father
+     * @throws DataAccessException
+     */
+    public void insertMotherID(String userID, String motherID) throws DataAccessException {
+        String sql = "UPDATED Persons SET motherID = ? WHERE personID = ?;";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, motherID);
+            stmt.setString(2, userID);
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DataAccessException("Error encountered while updating user's motherID");
+        }
+    }
     /**
      * Public function to generate fake parents for user
      *
