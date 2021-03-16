@@ -36,12 +36,13 @@ public class EventsByIdService {
     public EventByIdResult getEventById(String eventID, String authToken) {
 
         EventByIdResult response = new EventByIdResult();
-        AuthTokenDao tDao = new AuthTokenDao(connection);
-        EventDao eDao = new EventDao(connection);
+
 
         try {
 
             db.openConnection();
+            AuthTokenDao tDao = new AuthTokenDao(db.getConnection());
+            EventDao eDao = new EventDao(db.getConnection());
 
             if(tDao.authTokenExists(authToken)) {
 
@@ -89,6 +90,8 @@ public class EventsByIdService {
                 db.closeConnection(false);
             } catch (DataAccessException f) {
                 f.printStackTrace();
+            } catch (Exception g) {
+                g.printStackTrace();
             }
         }
 

@@ -55,12 +55,16 @@ public class LoginService {
             String password = request.getPassword();
 
 
-            if (uDao.userExists(userName)) {
+            if (uDao.userExists(userName) && password.equals(uDao.findUser(userName).getPassword())) {
 
                 String newAuthID = UUID.randomUUID().toString();
 
-                AuthToken newAuthToken = new AuthToken(newAuthID, userName);
-                tDao.addToken(newAuthToken);
+                if(tDao.userExists(userName)) {
+                    tDao.updateAuthToken(newAuthID, userName);
+                } else {
+                    AuthToken newToken = new AuthToken(newAuthID, userName);
+                    tDao.addToken(newToken);
+                }
 
                 response.setAuthToken(newAuthID);
                 response.setUsername(userName);

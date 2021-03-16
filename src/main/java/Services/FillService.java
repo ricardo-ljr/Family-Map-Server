@@ -64,7 +64,7 @@ public class FillService {
                             user.getPersonID(),
                             4,
                             eDao);
-                } else {
+                } else { // any other number of generations lives here
                     pDao.generateTree(
                             user,
                             user.getPersonID(),

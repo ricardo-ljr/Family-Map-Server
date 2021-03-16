@@ -138,6 +138,36 @@ public class AuthTokenDao {
         return result;
     }
 
+    public boolean userExists(String username) throws DataAccessException {
+
+        ResultSet rs = null;
+        String sql = "SELECT * FROM AuthorizationTokens WHERE associatedUsername = ?";
+
+        try(PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, username);
+
+            rs = stmt.executeQuery();
+
+            if (!rs.next()) {
+                return false;
+            } else {
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+    }
+
     /**
      * Clears all data from an authToken in the database
      *

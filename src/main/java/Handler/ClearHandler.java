@@ -23,7 +23,6 @@ public class ClearHandler implements HttpHandler {
                 ClearService clearService = new ClearService();
                 ClearResult response = clearService.clearResult();
 
-
                 if(response.isSuccess()) {
                     exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
                 } else {
@@ -38,7 +37,7 @@ public class ClearHandler implements HttpHandler {
                 exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
             }
 
-            exchange.getResponseBody().close();
+            exchange.getResponseBody().close(); // closing exchange
         } catch (IOException e) {
             exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
             exchange.getResponseBody().close();

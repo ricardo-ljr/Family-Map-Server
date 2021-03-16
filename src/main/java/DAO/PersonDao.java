@@ -233,7 +233,7 @@ public class PersonDao {
        eDao.generateBirth(currentUser.getUserName(), personID, (year - 26));
 
        if(numGenerations > 0) {
-           generateParents(currentUser.getUserName(), personID, (year - 20), (numGenerations - 1), eDao, currentUser.getLastName());
+           generateParents(currentUser.getUserName(), personID, (year - 26), (numGenerations - 1), eDao, currentUser.getLastName());
        }
    }
 
@@ -280,7 +280,7 @@ public class PersonDao {
     }
 
     /**
-     * Public function to generate fake parents for user
+     * Public recursive function to generate fake generations for user given number of generations
      *
      * @param username
      * @param childID
@@ -299,7 +299,8 @@ public class PersonDao {
        String motherLastName = lastNames.get(new Random().nextInt(femaleNames.size()));
 
        Person father = new Person(fatherID,
-               username, fatherName,
+               username,
+               fatherName,
                fatherLastName,
                "m",
                null,
@@ -320,7 +321,6 @@ public class PersonDao {
        addPerson(father);
        addPerson(mother);
        // Generate and insert events for parents
-
 
        // Birth for User and attaching to parents
        eDao.generateBirth(username, fatherID, (childBirthYear - 26));
