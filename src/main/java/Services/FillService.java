@@ -60,7 +60,23 @@ public class FillService {
                 pDao.clearPersonUsername(username);
                 eDao.deleteAllEvents(username);
 
-                response.setMessage("Successfully added persons and events to the database!");
+                if(generations == 101) {
+                    pDao.generateTree(user,
+                            user.getPersonID(),
+                            4,
+                            eDao);
+                } else {
+                    pDao.generateTree(user,
+                            user.getPersonID(),
+                            generations,
+                            eDao);
+                }
+
+                int numOfPersons = pDao.getNumOfPersons();
+                int numOfEvents = eDao.getNumOfEvents();
+
+                // Response message
+                response.setMessage("Successfully added " + numOfPersons + " persons and " + numOfEvents + " events to the database!");
 
                 response.setSuccess(true);
                 db.closeConnection(true);
