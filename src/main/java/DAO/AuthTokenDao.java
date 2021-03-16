@@ -138,6 +138,35 @@ public class AuthTokenDao {
         return result;
     }
 
+    /**
+     * This function is here to update user's token
+     *
+     * @param newToken
+     * @param username
+     * @throws DataAccessException
+     */
+    public void updateToken(String newToken, String username) throws DataAccessException {
+        String sql = "UPDATE AuthorizationTokens SET authToken = ? WHERE associatedUsername = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, newToken);
+            stmt.setString(2, username);
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DataAccessException("Error encountered while updating Auth Token");
+        }
+    }
+
+    /**
+     * This function is here to simply make sure that the user exists in the Authorization Token table and match its token with its
+     * associated username
+     *
+     * @param username
+     * @return
+     * @throws DataAccessException
+     */
     public boolean userExists(String username) throws DataAccessException {
 
         ResultSet rs = null;
