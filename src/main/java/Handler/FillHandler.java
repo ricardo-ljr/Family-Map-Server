@@ -36,9 +36,7 @@ public class FillHandler implements HttpHandler {
                     numGenerations = Integer.parseInt(path[2]);
                 }
 
-
                 response = fillService.fill(username, numGenerations);
-
 
                 if(response.isSuccess()) {
                     exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
@@ -54,7 +52,7 @@ public class FillHandler implements HttpHandler {
                 exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
             }
 
-            exchange.getResponseBody().close();
+            exchange.getResponseBody().close(); // closing response
         } catch(IOException e) {
             exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
             exchange.getResponseBody().close();

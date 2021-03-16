@@ -43,8 +43,6 @@ public class FillService {
     public FillResult fill(String username, int generations){
 
         FillResult response = new FillResult();
-
-
         try {
 
             db.openConnection();
@@ -60,13 +58,15 @@ public class FillService {
                 pDao.clearPersonUsername(username);
                 eDao.deleteAllEvents(username);
 
-                if(generations == 101) {
-                    pDao.generateTree(user,
+                if(generations == 99) { // default generation lives here
+                    pDao.generateTree(
+                            user,
                             user.getPersonID(),
                             4,
                             eDao);
                 } else {
-                    pDao.generateTree(user,
+                    pDao.generateTree(
+                            user,
                             user.getPersonID(),
                             generations,
                             eDao);
@@ -97,6 +97,8 @@ public class FillService {
                 db.closeConnection(false);
             } catch(DataAccessException f) {
                 f.printStackTrace();
+            } catch (Exception j) {
+                j.printStackTrace();
             }
         }
 

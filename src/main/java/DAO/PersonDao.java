@@ -181,9 +181,18 @@ public class PersonDao {
         return result;
     }
 
+    /**
+     * This function is here to clear the tree for the user - used in testing fill service
+     *
+     * @param username
+     * @throws DataAccessException
+     */
     public void clearPersonUsername(String username) throws DataAccessException {
-        try(PreparedStatement statement = connection.prepareStatement("DELETE FROM persons WHERE username = \""+ username + "\";")){
-            statement.execute();
+        String sql = "DELETE FROM PersonTable WHERE userName = ?;";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, username);
+
+            stmt.executeUpdate();
         } catch (SQLException e) {
             throw new DataAccessException("Error when trying to clear person given username");
         }
@@ -306,6 +315,8 @@ public class PersonDao {
                null,
                fatherID);
 
+       insertFatherID(childID, fatherID);
+       insertMotherID(childID, motherID);
        addPerson(father);
        addPerson(mother);
        // Generate and insert events for parents
@@ -317,6 +328,8 @@ public class PersonDao {
        //Marrying parents
        eDao.generateMarriage(username, fatherID, motherID, (childBirthYear - 5));
        // Maybe generate death
+       eDao.generateDeath(username, fatherID, (childBirthYear + 10));
+       eDao.generateDeath(username, motherID, (childBirthYear + 8));
 
        if(numGenerations > 0) {
            generateParents(username, fatherID, (childBirthYear - 26), (numGenerations - 1), eDao, fatherLastName);
