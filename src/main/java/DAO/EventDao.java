@@ -189,6 +189,17 @@ public class EventDao {
         }
     }
 
+    /**
+     * This function is in charge of generating a random event and retrieving a random location
+     *
+     * @param username Current user logged in
+     * @param personID Unique person Identifier
+     * @param eDao Event Data Access Object
+     * @param eventType Type of event, aka marriage, birth, death, baptism, etc...
+     * @param year Year event happened
+     * @return
+     * @throws DataAccessException
+     */
     public Event generateRandomEvent(String username, String personID, EventDao eDao, String eventType, int year) throws DataAccessException {
         Location location = locations.getLocations()[new Random().nextInt(977)];
 
@@ -200,6 +211,85 @@ public class EventDao {
                 eventType,
                 year);
 
+    }
+
+    /**
+     * This function takes care of generating a birth event for the user
+     *
+     * @param username User logged in
+     * @param personID Unique person Identifier
+     * @param childBirthYear Birth year
+     * @throws DataAccessException
+     */
+    public void generateBirth(String username, String personID, int childBirthYear) throws DataAccessException {
+        Location location = locations.getLocations()[new Random().nextInt(977)];
+        Event birth = new Event(UUID.randomUUID().toString(),
+                username, personID,
+                location.getLatitude(),
+                location.getLongitude(),
+                location.getCountry(),
+                location.getCity(),
+                "birth",
+                childBirthYear);
+        addEvent(birth);
+    }
+
+    /**
+     * This function generates a marriage for the parents user
+     *
+     * @param username user logged in
+     * @param fatherID Unique identifier for the user's father
+     * @param motherID Unique identifier for the user's mother
+     * @param childBirthYear Year child was born
+     * @throws DataAccessException
+     */
+    public void generateMarriage(String username, String fatherID, String motherID, int childBirthYear) throws DataAccessException {
+        Location location = locations.getLocations()[new Random().nextInt(977)];
+
+        Event fathersMarriage = new Event(UUID.randomUUID().toString(),
+                username,
+                fatherID,
+                location.getLatitude(),
+                location.getLongitude(),
+                location.getCountry(),
+                location.getCity(),
+                "marriage",
+                (childBirthYear - 5));
+        Event mothersMarriage = new Event(UUID.randomUUID().toString(),
+                username,
+                motherID,
+                location.getLatitude(),
+                location.getLongitude(),
+                location.getCountry(),
+                location.getCity(),
+                "marriage",
+                (childBirthYear - 5));
+
+        addEvent(fathersMarriage);
+        addEvent(mothersMarriage);
+    }
+
+    /**
+     * This function takes care of generating a death event
+     *
+     * @param username User logged in
+     * @param personID Unique person identifier
+     * @param childBirthYear Year child was born
+     * @throws DataAccessException
+     */
+    public void generateDeath(String username, String personID, int childBirthYear) throws DataAccessException {
+        Location location = locations.getLocations()[new Random().nextInt(977)];
+
+        Event death = new Event(UUID.randomUUID().toString(),
+                username, personID,
+                location.getLatitude(),
+                location.getLongitude(),
+                location.getCountry(),
+                location.getCity(),
+                "death",
+                (childBirthYear + 65));
+
+        addEvent(death);
     }
 
     /**
