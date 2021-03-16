@@ -6,13 +6,11 @@ import Model.User;
 import Request.RegisterRequest;
 import Result.EventByIdResult;
 import Result.EventsResult;
-import Result.FillResult;
 import Result.RegisterResult;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -51,7 +49,7 @@ class EventsByIdServiceTest {
                 "12345");
 
         RegisterRequest request = new RegisterRequest();
-        request.setUserName(newUser.getUserName());
+        request.setUserName(newUser.getUsername());
         request.setPassword(newUser.getPassword());
         request.setEmail(newUser.getEmail());
         request.setFirstName(newUser.getFirstName());

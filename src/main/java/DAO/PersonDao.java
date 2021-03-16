@@ -5,7 +5,6 @@ import JSONReader.NamesData;
 import Model.Person;
 import Model.User;
 
-import javax.xml.crypto.Data;
 import java.io.File;
 import java.io.IOException;
 import java.sql.*;
@@ -239,7 +238,7 @@ public class PersonDao {
 
        Person userPerson = new Person(
                personID,
-               currentUser.getUserName(), // associated username
+               currentUser.getUsername(), // associated username
                currentUser.getFirstName(),
                currentUser.getLastName(),
                currentUser.getGender(),
@@ -249,10 +248,10 @@ public class PersonDao {
 
        addPerson(userPerson);
        // User is born
-       eDao.generateBirth(currentUser.getUserName(), personID, (year - 26));
+       eDao.generateBirth(currentUser.getUsername(), personID, (year - 26));
 
        if(numGenerations > 0) {
-           generateParents(currentUser.getUserName(), personID, (year - 26), (numGenerations - 1), eDao, currentUser.getLastName());
+           generateParents(currentUser.getUsername(), personID, (year - 26), (numGenerations - 1), eDao, currentUser.getLastName());
        }
    }
 

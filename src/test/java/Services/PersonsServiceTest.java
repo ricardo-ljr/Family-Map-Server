@@ -5,14 +5,11 @@ import Model.Person;
 import Model.User;
 import Request.RegisterRequest;
 import Result.FillResult;
-import Result.PersonByIdResult;
 import Result.PersonsResult;
 import Result.RegisterResult;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -51,7 +48,7 @@ class PersonsServiceTest {
                 "12345");
 
         RegisterRequest request = new RegisterRequest();
-        request.setUserName(newUser.getUserName());
+        request.setUserName(newUser.getUsername());
         request.setPassword(newUser.getPassword());
         request.setEmail(newUser.getEmail());
         request.setFirstName(newUser.getFirstName());
@@ -61,7 +58,7 @@ class PersonsServiceTest {
         RegisterResult response = registerService.register(request);
         String authToken = response.getAuthToken();
 
-        FillResult response1 = fillService.fill(newUser.getUserName(), 4);
+        FillResult response1 = fillService.fill(newUser.getUsername(), 4);
 
         PersonsResult responsePersons = personsService.getPersons(authToken);
 

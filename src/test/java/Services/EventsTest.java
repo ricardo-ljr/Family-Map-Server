@@ -44,7 +44,7 @@ class EventsTest {
                 "12345");
 
         RegisterRequest request = new RegisterRequest();
-        request.setUserName(newUser.getUserName());
+        request.setUserName(newUser.getUsername());
         request.setPassword(newUser.getPassword());
         request.setEmail(newUser.getEmail());
         request.setFirstName(newUser.getFirstName());
@@ -54,7 +54,7 @@ class EventsTest {
         RegisterResult response = registerService.register(request);
         String authToken = response.getAuthToken();
 
-        FillResult response1 = fillService.fill(newUser.getUserName(), 0);
+        FillResult response1 = fillService.fill(newUser.getUsername(), 0);
 
         EventsResult responseAll = eventAllService.getAllEvents(authToken);
 

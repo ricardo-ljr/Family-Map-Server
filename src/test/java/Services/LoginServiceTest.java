@@ -6,7 +6,6 @@ import Request.LoginRequest;
 import Request.RegisterRequest;
 import Result.LoginResult;
 import Result.RegisterResult;
-import jdk.jfr.MemoryAddress;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,7 +44,7 @@ class LoginServiceTest {
 
         RegisterRequest request = new RegisterRequest();
 
-        request.setUserName(newUser.getUserName());
+        request.setUserName(newUser.getUsername());
         request.setPassword(newUser.getPassword());
         request.setEmail(newUser.getEmail());
         request.setFirstName(newUser.getFirstName());
@@ -53,7 +52,7 @@ class LoginServiceTest {
         request.setGender(newUser.getGender());
 
         LoginRequest request1 = new LoginRequest();
-        request1.setUserName(newUser.getUserName());
+        request1.setUserName(newUser.getUsername());
         request1.setPassword(newUser.getPassword());
 
         RegisterResult response = registerService.register(request);
@@ -77,7 +76,7 @@ class LoginServiceTest {
                 "12345");
 
         LoginRequest request = new LoginRequest();
-        request.setUserName(newUser.getUserName());
+        request.setUserName(newUser.getUsername());
         request.setPassword(newUser.getPassword());
 
         LoginResult response = loginService.login(request);

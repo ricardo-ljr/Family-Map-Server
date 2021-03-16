@@ -41,7 +41,7 @@ class FillServiceTest {
 
         RegisterRequest request = new RegisterRequest();
 
-        request.setUserName(newUser.getUserName());
+        request.setUserName(newUser.getUsername());
         request.setPassword(newUser.getPassword());
         request.setEmail(newUser.getEmail());
         request.setFirstName(newUser.getFirstName());
@@ -50,7 +50,7 @@ class FillServiceTest {
 
         RegisterResult response = registerService.register(request); // send a register request
 
-        FillResult response1 = fillService.fill(newUser.getUserName(), 0);
+        FillResult response1 = fillService.fill(newUser.getUsername(), 0);
 
         assertEquals(response1.getMessage(), "Successfully added 1 persons and 1 events to the database!");
     }
@@ -69,14 +69,14 @@ class FillServiceTest {
 
         RegisterRequest request = new RegisterRequest();
 
-        request.setUserName(newUser.getUserName());
+        request.setUserName(newUser.getUsername());
         request.setPassword(newUser.getPassword());
         request.setEmail(newUser.getEmail());
         request.setFirstName(newUser.getFirstName());
         request.setLastName(newUser.getLastName());
         request.setGender(newUser.getGender());
 
-        FillResult response1 = fillService.fill(newUser.getUserName(), 0);
+        FillResult response1 = fillService.fill(newUser.getUsername(), 0);
 
         assertEquals(response1.getMessage(), "Error invalid username or generations - Fill Service");
 

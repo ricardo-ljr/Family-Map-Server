@@ -36,7 +36,7 @@ public class UserDao {
         String sql = "INSERT INTO User(username, password, email, firstName, lastName, gender, personID) VALUES(?,?,?,?,?,?,?)";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, newUser.getUserName());
+            stmt.setString(1, newUser.getUsername());
             stmt.setString(2, newUser.getPassword());
             stmt.setString(3, newUser.getEmail());
             stmt.setString(4, newUser.getFirstName());
@@ -45,7 +45,7 @@ public class UserDao {
             stmt.setString(7, newUser.getPersonID());
 
             stmt.executeUpdate();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw new DataAccessException("Error encountered while inserting into database");
         }
     }

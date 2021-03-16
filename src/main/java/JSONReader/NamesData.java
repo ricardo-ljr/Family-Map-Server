@@ -18,6 +18,7 @@ public class NamesData {
     public NamesData() {
         data = new String[152];
     }
+
     public String[] getName() {
         return data;
     }

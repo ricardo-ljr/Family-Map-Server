@@ -1,12 +1,9 @@
 package Services;
 
 import DAO.DataAccessException;
-import DAO.Database;
-import DAO.UserDao;
 import Model.User;
 import Request.RegisterRequest;
 import Result.RegisterResult;
-import Result.ResultBool;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,7 +39,7 @@ class RegisterServiceTest {
 
         RegisterRequest request = new RegisterRequest();
 
-        request.setUserName(newUser.getUserName());
+        request.setUserName(newUser.getUsername());
         request.setPassword(newUser.getPassword());
         request.setEmail(newUser.getEmail());
         request.setFirstName(newUser.getFirstName());
@@ -51,7 +48,7 @@ class RegisterServiceTest {
 
         RegisterResult response = registerService.register(request);
 
-        assertEquals(response.getUsername(), newUser.getUserName());
+        assertEquals(response.getUsername(), newUser.getUsername());
 
     }
 
@@ -68,7 +65,7 @@ class RegisterServiceTest {
 
         RegisterRequest request = new RegisterRequest();
 
-        request.setUserName(newUser.getUserName());
+        request.setUserName(newUser.getUsername());
         request.setPassword(newUser.getPassword());
         request.setEmail(newUser.getEmail());
         request.setFirstName(newUser.getFirstName());

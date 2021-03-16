@@ -48,27 +48,29 @@ public class LoadService {
             db.openConnection();
             db.clearTables();
 
-            UserDao uDao = new UserDao(db.getConnection());
-            PersonDao pDao = new PersonDao(db.getConnection());
-            EventDao eDao = new EventDao(db.getConnection());
-
             for (User user : request.getUsers()) {
+                UserDao uDao = new UserDao(db.getConnection());
                 uDao.registerUser(user);
                 users++;
+                db.closeConnection(true);
             }
             for (Person person : request.getPersons()) {
+                PersonDao pDao = new PersonDao(db.getConnection());
                 pDao.addPerson(person);
                 persons++;
+                db.closeConnection(true);
             }
             for (Event event : request.getEvents()) {
+                EventDao eDao = new EventDao(db.getConnection());
                 eDao.addEvent(event);
                 events++;
+                db.closeConnection(true);
             }
 
             response.setMessage("Successfully added " + users + " users, " + persons + " persons, and " + events + " events to the database - Load Service");
 
             response.setSuccess(true);
-            db.closeConnection(true);
+//            db.closeConnection(true);
 
         } catch (DataAccessException e) {
             response.setSuccess(false);
