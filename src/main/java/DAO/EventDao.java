@@ -19,6 +19,7 @@ public class EventDao {
 
     private Connection connection;
     private LocationData locations;
+    private int numOfEvents;
 
     /**
      * Initializing empty constructor for class
@@ -67,7 +68,15 @@ public class EventDao {
             System.out.println(e.getMessage());
             throw new DataAccessException("Error encountered when adding new event");
         }
+        numOfEvents++;
     }
+
+    /**
+     * Function used in fill service to return number of events that are added
+     *
+     * @return
+     */
+    public int getNumOfEvents() { return numOfEvents};
 
     /**
      * Finds a new event in the database
