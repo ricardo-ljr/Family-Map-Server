@@ -56,12 +56,12 @@ public class LoadService {
                 uDao.registerUser(request.getUsers()[i]);
                 users++;
             }
-            for (Person p : request.getPersons()) {
-                pDao.addPerson(p);
+            for (int i = 0; i < request.getPersons().length; i++) {
+                pDao.addPerson(request.getPersons()[i]);
                 persons++;
             }
-            for (Event e : request.getEvents()) {
-                eDao.addEvent(e);
+            for (int i = 0; i < request.getPersons().length; i++) {
+                eDao.addEvent(request.getEvents()[i]);
                 events++;
             }
 

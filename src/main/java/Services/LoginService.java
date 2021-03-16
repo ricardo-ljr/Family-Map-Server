@@ -54,10 +54,10 @@ public class LoginService {
             String username = request.getUserName();
             String password = request.getPassword();
 
-
             if (uDao.userExists(username) && password.equals(uDao.findUser(username).getPassword())) {
 
                 String newAuthID = UUID.randomUUID().toString();
+                String oldID = uDao.findUser(username).getPersonID();
 
                 if(tDao.userExists(username)) {
                     tDao.updateToken(newAuthID, username);
@@ -68,6 +68,7 @@ public class LoginService {
 
                 response.setAuthToken(newAuthID);
                 response.setUsername(username);
+                response.setPersonID(oldID); // making sure I'm adding the ID to the result as required in the test so it is not null
 
                 response.setSuccess(true);
                 db.closeConnection(true);
