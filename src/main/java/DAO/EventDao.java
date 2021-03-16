@@ -35,7 +35,7 @@ public class EventDao {
         this.connection = connection;
 
         try {
-            locations = Deserializer.deserializeLocations(new File("json/location.json"));
+            locations = Deserializer.deserializeLocations(new File("json/locations.json"));
         } catch(IOException e) {
             e.printStackTrace();
         }

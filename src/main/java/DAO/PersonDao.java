@@ -41,7 +41,7 @@ public class PersonDao {
         numOfPersons = 0;
         try {
             NamesData f = Deserializer.deserializeNameList(new File("json/fnames.json"));
-            NamesData m = Deserializer.deserializeNameList(new File("json/mname.json"));
+            NamesData m = Deserializer.deserializeNameList(new File("json/mnames.json"));
             NamesData s = Deserializer.deserializeNameList(new File("json/snames.json"));
 
             maleNames = new ArrayList<String>(Arrays.asList(m.getName()));
