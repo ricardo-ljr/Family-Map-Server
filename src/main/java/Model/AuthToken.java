@@ -9,8 +9,6 @@ import java.util.UUID;
  */
 public class AuthToken {
 
-    private static final SecureRandom secureRandom = new SecureRandom(); //threadsafe
-    private static final Base64.Encoder base64Encoder = Base64.getUrlEncoder(); //threadsafe
     /**
      * AuthToken unique identifier
      */
@@ -26,15 +24,6 @@ public class AuthToken {
        this.associatedUsername = associatedUsername;
    }
 
-    /**
-     * Constructor to return token for specific user
-     *
-     * @param userName
-     */
-    public AuthToken(String userName) {
-        this.authToken = userName;
-    }
-
     public String getAuthToken() {
         return authToken;
     }
@@ -48,7 +37,8 @@ public class AuthToken {
     }
 
     public void setAssociatedUsername(String associatedUsername) {
-        this.associatedUsername = associatedUsername;
+
+       this.associatedUsername = associatedUsername;
     }
 
     @Override

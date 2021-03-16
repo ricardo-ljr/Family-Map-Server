@@ -1,8 +1,16 @@
 package DAO;
 
+import JSONReader.Deserializer;
+import JSONReader.Location;
+import JSONReader.LocationData;
 import Model.Event;
+
+import java.io.File;
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.UUID;
 
 /**
  * This class is used to access an event's information in the database and its related user
@@ -10,6 +18,8 @@ import java.util.ArrayList;
 public class EventDao {
 
     private Connection connection;
+    private LocationData locations;
+    private int numOfEvents;
 
     /**
      * Initializing empty constructor for class
@@ -23,6 +33,11 @@ public class EventDao {
      */
     public EventDao(Connection connection) {
         this.connection = connection;
+        try {
+            locations = Deserializer.deserializeLocations(new File("json/locations.json"));
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -33,26 +48,34 @@ public class EventDao {
      * @throws DataAccessException An exception that provides information on a database access error or other errors
      */
     public void addEvent(Event newEvent) throws DataAccessException{
-        String sql = "INSERT INTO Events (eventID, associatedUsername, personID, latitude, longitude, " +
-                "country, city, eventType, year) VALUES(?,?,?,?,?,?,?,?,?);";
+        String sql = "INSERT INTO Events (eventID, associatedUsername, latitude, longitude, " +
+                "country, city, eventType, year, personID) VALUES(?,?,?,?,?,?,?,?,?);";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
 
             stmt.setString(1, newEvent.getEventID());
             stmt.setString(2, newEvent.getAssociatedUsername());
-            stmt.setString(3, newEvent.getPersonID());
-            stmt.setFloat(4, newEvent.getLatitude());
-            stmt.setFloat(5, newEvent.getLongitude());
-            stmt.setString(6, newEvent.getCountry());
-            stmt.setString(7, newEvent.getCity());
-            stmt.setString(8, newEvent.getEventType());
-            stmt.setInt(9, newEvent.getYear());
+            stmt.setFloat(3, newEvent.getLatitude());
+            stmt.setFloat(4, newEvent.getLongitude());
+            stmt.setString(5, newEvent.getCountry());
+            stmt.setString(6, newEvent.getCity());
+            stmt.setString(7, newEvent.getEventType());
+            stmt.setInt(8, newEvent.getYear());
+            stmt.setString(9, newEvent.getPersonID());
 
             stmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             throw new DataAccessException("Error encountered when adding new event");
         }
+        numOfEvents++;
     }
+
+    /**
+     * Function used in fill service to return number of events that are added
+     *
+     * @return
+     */
+    public int getNumOfEvents() { return numOfEvents; }
 
     /**
      * Finds a new event in the database
@@ -71,13 +94,13 @@ public class EventDao {
             if (rs.next()) {
                 event = new Event(rs.getString("eventID"),
                         rs.getString("associatedUsername"),
-                        rs.getString("personID"),
                         rs.getFloat("latitude"),
                         rs.getFloat("longitude"),
                         rs.getString("country"),
                         rs.getString("city"),
                         rs.getString("eventType"),
-                        rs.getInt("year"));
+                        rs.getInt("year"),
+                        rs.getString("personID"));
                 return event;
             }
         } catch (SQLException e) {
@@ -103,28 +126,28 @@ public class EventDao {
      * @return
      * @throws DataAccessException
      */
-    public ArrayList<Event> findAllEvents(String userName) throws DataAccessException {
-        Event event;
-        ArrayList<Event> events = new ArrayList<>();
+    public Event[] findAllEvents(String userName) throws DataAccessException {
+        ArrayList<Event> events = new ArrayList<Event>();
+
         ResultSet rs = null;
         String sql = "SELECT * FROM Events WHERE associatedUsername = ?;";
+
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, userName);
             rs = stmt.executeQuery();
             while (rs.next()) {
-                event = new Event(rs.getString("eventID"),
+                Event event = new Event(rs.getString("eventID"),
                         rs.getString("associatedUsername"),
-                        rs.getString("personID"),
                         rs.getFloat("latitude"),
                         rs.getFloat("longitude"),
                         rs.getString("country"),
                         rs.getString("city"),
                         rs.getString("eventType"),
-                        rs.getInt("year"));
+                        rs.getInt("year"),
+                        rs.getString("personID"));
 
                 events.add(event);
             }
-            return events;
         } catch (SQLException e) {
             e.printStackTrace();
             throw new DataAccessException("Error encountered when finding all events for a person");
@@ -137,6 +160,9 @@ public class EventDao {
                 }
             }
         }
+
+        Event[] list = events.toArray(new Event[events.size()]);
+        return list;
     }
 
     /**
@@ -175,16 +201,125 @@ public class EventDao {
     }
 
     /**
-     * Function to delete event giver username
+     * This function is in charge of generating a random event and retrieving a random location
      *
-     * @param userName
+     * @param username Current user logged in
+     * @param personID Unique person Identifier
+     * @param eDao Event Data Access Object
+     * @param eventType Type of event, aka marriage, birth, death, baptism, etc...
+     * @param year Year event happened
+     * @return
      * @throws DataAccessException
      */
-    public void deleteAllEvents(String userName) throws DataAccessException {
+    public Event generateRandomEvent(String username, String personID, EventDao eDao, String eventType, int year) throws DataAccessException {
+        Location location = locations.getLocations()[new Random().nextInt(977)];
+
+        return new Event (UUID.randomUUID().toString(), username,
+                location.getLatitude(),
+                location.getLongitude(),
+                location.getCountry(),
+                location.getCity(),
+                eventType,
+                year,
+                personID);
+
+    }
+
+    /**
+     * This function takes care of generating a birth event for the user
+     *
+     * @param username User logged in
+     * @param personID Unique person Identifier
+     * @param childBirthYear Birth year
+     * @throws DataAccessException
+     */
+    public void generateBirth(String username, String personID, int childBirthYear) throws DataAccessException {
+
+        Location location = locations.getLocations()[new Random().nextInt(977)];
+        Event birth = new Event(UUID.randomUUID().toString(),
+                username,
+                location.getLatitude(),
+                location.getLongitude(),
+                location.getCountry(),
+                location.getCity(),
+                "birth",
+                childBirthYear,
+                personID);
+
+        addEvent(birth);
+    }
+
+    /**
+     * This function generates a marriage for the parents user
+     *
+     * @param username user logged in
+     * @param fatherID Unique identifier for the user's father
+     * @param motherID Unique identifier for the user's mother
+     * @param childBirthYear Year child was born
+     * @throws DataAccessException
+     */
+    public void generateMarriage(String username, String fatherID, String motherID, int childBirthYear) throws DataAccessException {
+        Location location = locations.getLocations()[new Random().nextInt(977)];
+
+        Event fathersMarriage = new Event(UUID.randomUUID().toString(),
+                username,
+                location.getLatitude(),
+                location.getLongitude(),
+                location.getCountry(),
+                location.getCity(),
+                "marriage",
+                (childBirthYear - 5),
+                fatherID);
+
+        Event mothersMarriage = new Event(UUID.randomUUID().toString(),
+                username,
+                location.getLatitude(),
+                location.getLongitude(),
+                location.getCountry(),
+                location.getCity(),
+                "marriage",
+                (childBirthYear - 5),
+                motherID);
+
+        addEvent(fathersMarriage);
+        addEvent(mothersMarriage);
+    }
+
+    /**
+     * This function takes care of generating a death event
+     *
+     * @param username User logged in
+     * @param personID Unique person identifier
+     * @param childBirthYear Year child was born
+     * @throws DataAccessException
+     */
+    public void generateDeath(String username, String personID, int childBirthYear) throws DataAccessException {
+        Location location = locations.getLocations()[new Random().nextInt(977)];
+
+        Event death = new Event(UUID.randomUUID().toString(),
+                username,
+                location.getLatitude(),
+                location.getLongitude(),
+                location.getCountry(),
+                location.getCity(),
+                "death",
+                (childBirthYear + 65),
+                personID);
+
+        addEvent(death);
+    }
+
+    /**
+     * Function to delete event giver username
+     *
+     * @param username
+     * @throws DataAccessException
+     */
+    public void deleteAllEvents(String username) throws DataAccessException {
         String sql = "DELETE FROM Events WHERE associatedUsername = ?;";
 
         try(PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, userName);
+            stmt.setString(1, username);
 
             stmt.executeUpdate();
         } catch (SQLException e) {

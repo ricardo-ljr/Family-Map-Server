@@ -10,29 +10,24 @@ import java.util.ArrayList;
  */
 public class PersonsResult extends ResultBool{
 
-    private ArrayList<Person> data;
+    private Person[] data;
 
-    /**
-     * Initializes an empty constructor
-     */
-    public PersonsResult() {
-        success = true;
-    }
+    public PersonsResult() {}
 
     /**
      * Constructor for PersonsResult
      *
      * @param person Parameter to access family members of person
      */
-    public PersonsResult(ArrayList<Person> person) {
+    public PersonsResult(Person[] person) {
         this.data = person;
     }
 
-    public ArrayList<Person> getPerson() {
+    public Person[] getPerson() {
         return data;
     }
 
-    public void setPerson(ArrayList<Person> person) {
+    public void setPerson(Person[] person) {
         this.data = person;
     }
 }

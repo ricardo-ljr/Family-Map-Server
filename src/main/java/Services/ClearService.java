@@ -40,7 +40,7 @@ public class ClearService {
             db.openConnection();
             db.clearTables();
 
-            response.setMessage("Clearing tables successfully!");
+            response.setMessage("clear succeeded");
             response.setSuccess(true);
 
             db.closeConnection(true);

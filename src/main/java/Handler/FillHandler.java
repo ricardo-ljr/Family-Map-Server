@@ -22,23 +22,19 @@ public class FillHandler implements HttpHandler {
                 FillService fillService = new FillService();
                 FillResult response = new FillResult();
 
-
                 String uri = exchange.getRequestURI().toString();
                 StringBuilder url = new StringBuilder(uri);
                 url.deleteCharAt(0);
                 String[] path = url.toString().split("/");
 
-
                 String username = path[1];
-                int numGenerations = 101;
+                int numGenerations = 99;
 
                 if(path.length == 3) {
                     numGenerations = Integer.parseInt(path[2]);
                 }
 
-
                 response = fillService.fill(username, numGenerations);
-
 
                 if(response.isSuccess()) {
                     exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
@@ -54,10 +50,12 @@ public class FillHandler implements HttpHandler {
                 exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
             }
 
-            exchange.getResponseBody().close();
+            exchange.getResponseBody().close(); // closing response
         } catch(IOException e) {
             exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
             exchange.getResponseBody().close();
+            e.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

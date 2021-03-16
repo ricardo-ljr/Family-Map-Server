@@ -1,5 +1,7 @@
 package Result;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Objects;
 
 /**
@@ -7,6 +9,7 @@ import java.util.Objects;
  */
 public class LoginResult extends ResultBool{
 
+    @SerializedName("authtoken")
     private String authToken;
 
     private String personID;

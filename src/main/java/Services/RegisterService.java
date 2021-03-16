@@ -1,9 +1,6 @@
 package Services;
 
-import DAO.AuthTokenDao;
-import DAO.DataAccessException;
-import DAO.Database;
-import DAO.UserDao;
+import DAO.*;
 import Model.AuthToken;
 import Model.User;
 import Request.RegisterRequest;
@@ -51,6 +48,8 @@ public class RegisterService {
             db.openConnection();
             UserDao uDao = new UserDao(db.getConnection());
             AuthTokenDao tDao = new AuthTokenDao(db.getConnection());
+            PersonDao pDao = new PersonDao(db.getConnection());
+            EventDao eDao = new EventDao(db.getConnection());
 
             boolean validUsername = !request.getUserName().isEmpty();
             boolean validPassword = !request.getPassword().isEmpty();
@@ -79,13 +78,11 @@ public class RegisterService {
                             newPersonID);
 
                     uDao.registerUser(user);
-//                    db.getPersonDao().generateRoot(user, newPersonID, 4, db.getEventDao());
-
+                    pDao.generateTree(user, newPersonID, 4, eDao);
 
                     String newAuthID = UUID.randomUUID().toString(); // random authToken
                     AuthToken authToken = new AuthToken(newAuthID, user.getUserName());
                     tDao.addToken(authToken);
-
 
                     response.setAuthToken(newAuthID);
                     response.setUsername(user.getUserName());

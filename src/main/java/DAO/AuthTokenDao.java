@@ -54,17 +54,20 @@ public class AuthTokenDao {
      */
     public AuthToken authenticate(String auth) throws DataAccessException {
         AuthToken token;
-        String sql = "SELECT * FROM AuthorizationTokens WHERE authToken = ?;";
         ResultSet rs = null;
+
+        String sql = "SELECT * FROM AuthorizationTokens WHERE authToken = ?;";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
 
             stmt.setString(1, auth);
-            rs = stmt.executeQuery();
 
+            rs = stmt.executeQuery();
             if (rs.next()) {
-                token = new AuthToken(rs.getString("authToken"),
+                token = new AuthToken(
+                        rs.getString("authToken"),
                         rs.getString("associatedUsername"));
+
                 return token;
             }
         } catch (SQLException e) {
@@ -77,8 +80,9 @@ public class AuthTokenDao {
                     e.printStackTrace();
                 }
             }
-            return null;
+
         }
+        return null;
     }
 
     /**
@@ -136,6 +140,65 @@ public class AuthTokenDao {
             throw new DataAccessException("Error encountered while querying in the database");
         }
         return result;
+    }
+
+    /**
+     * This function is here to update user's token
+     *
+     * @param newToken
+     * @param username
+     * @throws DataAccessException
+     */
+    public void updateToken(String newToken, String username) throws DataAccessException {
+        String sql = "UPDATE AuthorizationTokens SET authToken = ? WHERE associatedUsername = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, newToken);
+            stmt.setString(2, username);
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DataAccessException("Error encountered while updating Auth Token");
+        }
+    }
+
+    /**
+     * This function is here to simply make sure that the user exists in the Authorization Token table and match its token with its
+     * associated username
+     *
+     * @param username
+     * @return
+     * @throws DataAccessException
+     */
+    public boolean userExists(String username) throws DataAccessException {
+
+        ResultSet rs = null;
+        String sql = "SELECT * FROM AuthorizationTokens WHERE associatedUsername = ?";
+
+        try(PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, username);
+
+            rs = stmt.executeQuery();
+
+            if (!rs.next()) {
+                return false;
+            } else {
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
     }
 
     /**

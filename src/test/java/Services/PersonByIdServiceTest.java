@@ -1,45 +1,44 @@
 package Services;
 
 import DAO.DataAccessException;
-import Model.Event;
+import Model.Person;
 import Model.User;
 import Request.RegisterRequest;
-import Result.EventByIdResult;
-import Result.EventsResult;
 import Result.FillResult;
+import Result.PersonByIdResult;
+import Result.PersonsResult;
 import Result.RegisterResult;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class EventsByIdServiceTest {
+class PersonByIdServiceTest {
 
-    private EventsByIdService eventIDService;
-    private EventsService eventAllService;
+    private PersonByIdService personByIdService;
+    private PersonsService personsService;
     private FillService fillService;
     private RegisterService registerService;
 
     @BeforeEach
     public void setUp() {
         fillService = new FillService();
-        eventIDService = new EventsByIdService();
-        eventAllService = new EventsService();
+        personByIdService = new PersonByIdService();
+        personsService = new PersonsService();
         registerService = new RegisterService();
     }
 
     @AfterEach
-    public void tearDown() {
-        ClearService clearService = new ClearService();
-        clearService.clearResult();
+    public void tearDown() throws DataAccessException {
+        ClearService clear = new ClearService();
+        clear.clearResult();
     }
 
     @Test
-    void getEventById() throws DataAccessException {
+    void getPerson() throws DataAccessException {
 
         User newUser = new User(
                 "patrick",
@@ -59,18 +58,18 @@ class EventsByIdServiceTest {
         request.setGender(newUser.getGender());
 
         RegisterResult response = registerService.register(request);
-        String authID = response.getAuthToken();
+        String authToken = response.getAuthToken();
 
-        EventsResult responseAll = eventAllService.getAllEvents(authID);
+        FillResult response1 = fillService.fill(newUser.getUserName(), 4);
 
-        Event[] events = responseAll.getEvents();
+        PersonsResult responsePersons = personsService.getPersons(authToken);
+
+        Person[] persons = responsePersons.getPerson();
 
         Random num = new Random();
+        String randomID = persons[num.nextInt(30)].getPersonID();
+        PersonByIdResult responseID = personByIdService.getPerson(randomID, authToken);
 
-        String randomID = events[num.nextInt(30)].getEventID();
-
-        EventByIdResult responseID = eventIDService.getEventById(randomID, authID);
-
-        assertEquals(responseID.getEventID(), randomID);
+        assertEquals(responseID.getPersonID(), randomID);
     }
 }

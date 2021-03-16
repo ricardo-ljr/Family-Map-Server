@@ -27,14 +27,11 @@ public class LoadHandler implements HttpHandler {
                 LoadService loadService = new LoadService();
                 LoadResult response = new LoadResult();
 
-
                 InputStream reqBody = exchange.getRequestBody();
                 String reqData = ReadWrite.readString(reqBody);
 
-
                 LoadRequest loadRequest = Deserializer.deserialize(reqData, LoadRequest.class);
                 response = loadService.load(loadRequest);
-
 
                 if (response.isSuccess()) {
                     exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
@@ -50,10 +47,12 @@ public class LoadHandler implements HttpHandler {
                 exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
             }
 
-            exchange.getResponseBody().close();
+            exchange.getResponseBody().close(); // closing exchange here
         } catch(IOException e) {
             exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
             exchange.getResponseBody().close();
+            e.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

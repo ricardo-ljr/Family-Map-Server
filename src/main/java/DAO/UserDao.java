@@ -93,17 +93,17 @@ public class UserDao {
     /**
      * Function that returns a boolean value to whether a user exists or not
      *
-     * @param userName
+     * @param username
      * @return
      * @throws DataAccessException
      */
-    public boolean userExists(String userName) throws DataAccessException {
+    public boolean userExists(String username) throws DataAccessException {
 
         ResultSet rs = null;
         String sql = "SELECT * FROM User WHERE username = ?;";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, userName);
+            stmt.setString(1, username);
             rs = stmt.executeQuery();
 
             if (!rs.next())

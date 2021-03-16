@@ -28,15 +28,12 @@ public class EventHandler implements HttpHandler {
                     EventsByIdService eventIDService = new EventsByIdService();
                     EventsService eventAllService = new EventsService();
 
-
                     String authID = exchange.getRequestHeaders().getFirst("Authorization");
-
 
                     String uri = exchange.getRequestURI().toString();
                     StringBuilder url = new StringBuilder(uri);
                     url.deleteCharAt(0);
                     String[] paths = url.toString().split("/");
-
 
                     if(paths.length == 1) {
 
@@ -77,10 +74,12 @@ public class EventHandler implements HttpHandler {
                 exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
             }
 
-            exchange.getResponseBody().close();
+            exchange.getResponseBody().close(); // closing here
         } catch(IOException e) {
             exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
             exchange.getResponseBody().close();
+            e.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

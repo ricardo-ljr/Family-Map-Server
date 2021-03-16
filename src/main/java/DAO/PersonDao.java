@@ -1,18 +1,30 @@
 package DAO;
 
+import JSONReader.Deserializer;
+import JSONReader.NamesData;
 import Model.Person;
 import Model.User;
 
 import javax.xml.crypto.Data;
+import java.io.File;
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Random;
+import java.util.UUID;
 
 /**
  * This class is used to access a person's information in the database
  */
 public class PersonDao {
 
+    private ArrayList<String> maleNames;
+    private ArrayList<String> femaleNames;
+    private ArrayList<String> lastNames;
+
     private Connection connection;
+    private int numOfPersons;
 
     /**
      * Initializing empty constructor for class
@@ -26,6 +38,19 @@ public class PersonDao {
      */
     public PersonDao(Connection connection) {
         this.connection = connection;
+        numOfPersons = 0;
+        try {
+            NamesData f = Deserializer.deserializeNameList(new File("json/fnames.json"));
+            NamesData m = Deserializer.deserializeNameList(new File("json/mnames.json"));
+            NamesData s = Deserializer.deserializeNameList(new File("json/snames.json"));
+
+            maleNames = new ArrayList<String>(Arrays.asList(m.getName()));
+            femaleNames = new ArrayList<String>(Arrays.asList(f.getName()));
+            lastNames = new ArrayList<String>(Arrays.asList(s.getName()));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -51,7 +76,10 @@ public class PersonDao {
         } catch(SQLException e) {
             throw new DataAccessException("Error encountered while inserting person into database");
         }
+        numOfPersons++;
     }
+
+    public int getNumOfPersons() { return numOfPersons; }
 
     /**
      * Finds a new person in the database
@@ -127,35 +155,57 @@ public class PersonDao {
      * @return
      * @throws DataAccessException
      */
-    public ArrayList<Person> getPersonsForUsername(String username) throws DataAccessException {
-        String sql = "SELECT username, FirstName, LastName, Gender, \"mother id\", \"father id\", \"spouse id\", personID " +
-                "FROM persons " +
-                "WHERE \"username\"=\"" + username + "\"";
+    public Person[] getPersonsForUsername(String username) throws DataAccessException {
+        ArrayList<Person> persons = new ArrayList<Person>();
 
-        ArrayList<Person> result = new ArrayList<Person>();
+        ResultSet rs = null;
+        String sql = "SELECT * FROM Persons WHERE associatedUsername = ?;";
+
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, username);
+            rs = stmt.executeQuery();
 
-            ResultSet rs = stmt.executeQuery();
-            while(rs.next()) {
-                result.add(new Person(rs.getString(1),
-                        rs.getString(2),
-                        rs.getString(3),
-                        rs.getString(4),
-                        rs.getString(5),
-                        rs.getString(6),
-                        rs.getString(7),
-                        rs.getString(8)));
+            while (rs.next()) {
+                Person person = new Person(rs.getString("personID"),
+                        rs.getString("associatedUsername"),
+                        rs.getString("firstName"),
+                        rs.getString("lastName"),
+                        rs.getString("gender"),
+                        rs.getString("fatherID"),
+                        rs.getString("motherID"),
+                        rs.getString("spouseID"));
+
+                persons.add(person);
             }
         } catch (SQLException e) {
-            throw new DataAccessException("Error encountered while looking up all persons");
+            e.printStackTrace();
+            throw new DataAccessException("Error encountered while finding persons for the username given");
+        } finally {
+            if(rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
-        return result;
+        Person[] list = persons.toArray(new Person[persons.size()]);
+        return list;
     }
 
+    /**
+     * This function is here to clear the tree for the user - used in testing fill service
+     *
+     * @param username
+     * @throws DataAccessException
+     */
     public void clearPersonUsername(String username) throws DataAccessException {
-        try(PreparedStatement statement = connection.prepareStatement("DELETE FROM persons WHERE username = \""+ username + "\";")){
-            statement.execute();
+        String sql = "DELETE FROM Persons WHERE associatedUsername = ?;";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, username);
+
+            stmt.executeUpdate();
         } catch (SQLException e) {
             throw new DataAccessException("Error when trying to clear person given username");
         }
@@ -174,4 +224,135 @@ public class PersonDao {
             throw new DataAccessException("SQL Error encountered while clearing tables");
         }
     }
+
+    /**
+     * Public function that will take the current user, and generate a family tree
+     *
+     * @param currentUser
+     * @param personID
+     * @param numGenerations
+     * @param eDao
+     */
+   public void generateTree(User currentUser, String personID, int numGenerations, EventDao eDao) throws DataAccessException {
+
+       int year = 2021;
+
+       Person userPerson = new Person(
+               personID,
+               currentUser.getUserName(), // associated username
+               currentUser.getFirstName(),
+               currentUser.getLastName(),
+               currentUser.getGender(),
+               null,
+               null,
+               null);
+
+       addPerson(userPerson);
+       // User is born
+       eDao.generateBirth(currentUser.getUserName(), personID, (year - 26));
+
+       if(numGenerations > 0) {
+           generateParents(currentUser.getUserName(), personID, (year - 26), (numGenerations - 1), eDao, currentUser.getLastName());
+       }
+   }
+
+    /**
+     * This function serves the purpose of updating the user's father ID
+     *
+     * @param userID Current user ID
+     * @param fatherID Unique identifier for father
+     * @throws DataAccessException
+     */
+   public void insertFatherID(String userID, String fatherID) throws DataAccessException {
+       String sql = "UPDATE Persons SET fatherID = ? WHERE personID = ?;";
+
+       try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+           stmt.setString(1, fatherID);
+           stmt.setString(2, userID);
+
+           stmt.executeUpdate();
+       } catch (SQLException e) {
+           e.printStackTrace();
+           throw new DataAccessException("Error encountered while updating user's fatherID");
+       }
+   }
+
+    /**
+     * This function server the purpose of updating the user's mother ID
+     *
+     * @param userID Current user ID
+     * @param motherID Unique identifier for father
+     * @throws DataAccessException
+     */
+    public void insertMotherID(String userID, String motherID) throws DataAccessException {
+        String sql = "UPDATE Persons SET motherID = ? WHERE personID = ?;";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, motherID);
+            stmt.setString(2, userID);
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DataAccessException("Error encountered while updating user's motherID");
+        }
+    }
+
+    /**
+     * Public recursive function to generate fake generations for user given number of generations
+     *
+     * @param username
+     * @param childID
+     * @param childBirthYear
+     * @param numGenerations
+     * @param eDao
+     * @param fatherLastName
+     */
+   public void generateParents(String username, String childID, int childBirthYear, int  numGenerations, EventDao eDao, String fatherLastName) throws DataAccessException {
+
+       String fatherID = UUID.randomUUID().toString(); // Random ID's for parents
+       String motherID = UUID.randomUUID().toString();
+
+       String fatherName = maleNames.get(new Random().nextInt(maleNames.size()));
+       String motherName = femaleNames.get(new Random().nextInt(femaleNames.size()));
+       String motherLastName = lastNames.get(new Random().nextInt(femaleNames.size()));
+
+       Person father = new Person(fatherID,
+               username,
+               fatherName,
+               fatherLastName,
+               "m",
+               null,
+               null,
+               motherID);
+
+       Person mother = new Person(motherID,
+               username,
+               motherName,
+               motherLastName,
+               "f",
+               null,
+               null,
+               fatherID);
+
+       insertFatherID(childID, fatherID);
+       insertMotherID(childID, motherID);
+       addPerson(father);
+       addPerson(mother);
+       // Generate and insert events for parents
+
+       // Birth for User and attaching to parents
+       eDao.generateBirth(username, fatherID, (childBirthYear - 26));
+       eDao.generateBirth(username, motherID, (childBirthYear - 26));
+       //Marrying parents
+       eDao.generateMarriage(username, fatherID, motherID, (childBirthYear - 5));
+       // Maybe generate death
+       eDao.generateDeath(username, fatherID, (childBirthYear + 10));
+       eDao.generateDeath(username, motherID, (childBirthYear + 8));
+
+       if(numGenerations > 0) {
+           generateParents(username, fatherID, (childBirthYear - 26), (numGenerations - 1), eDao, fatherLastName);
+           generateParents(username, motherID, (childBirthYear - 26), (numGenerations - 1), eDao, motherLastName);
+       }
+   }
 }

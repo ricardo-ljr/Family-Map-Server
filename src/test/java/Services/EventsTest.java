@@ -54,11 +54,11 @@ class EventsTest {
         RegisterResult response = registerService.register(request);
         String authToken = response.getAuthToken();
 
-        FillResult response1 = fillService.fill(newUser.getUserName(), 4);
+        FillResult response1 = fillService.fill(newUser.getUserName(), 0);
 
         EventsResult responseAll = eventAllService.getAllEvents(authToken);
 
-        Event[] events = responseAll.getEvents().toArray(new Event[0]);
+        Event[] events = responseAll.getEvents();
 
         assertEquals(events.length, 1);
     }

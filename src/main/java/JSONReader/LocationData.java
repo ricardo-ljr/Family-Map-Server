@@ -7,10 +7,18 @@ import java.util.Random;
  * Array of locations, class for data we're trying to parse
  */
 public class LocationData {
-    ArrayList<Location> data;
+    private Location[] data;
 
-    public Location getRandomLocation(){
-        Random rand = new Random();
-        return data.get(rand.nextInt(data.size()));
+//    public Location getRandomLocation(){
+//        Random rand = new Random();
+//        return data.get(rand.nextInt(data.size()));
+//    }
+
+    public LocationData() {
+        data = new Location[977];
+    }
+
+    public Location[] getLocations() {
+        return data;
     }
 }

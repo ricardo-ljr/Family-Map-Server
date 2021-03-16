@@ -17,7 +17,6 @@ public class EventsService {
 
     private Database db;
     private Connection connection;
-    private EventDao eDao;
 
     /**
      * Empty constructor for class
@@ -41,10 +40,11 @@ public class EventsService {
         try {
             db.openConnection();
             AuthTokenDao tDao = new AuthTokenDao(db.getConnection());
+            EventDao eDao = new EventDao(db.getConnection());
 
             if(tDao.authTokenExists(authtoken)) {
 
-                String userName = tDao.getUsernameForAuthtoken(authtoken);
+                String userName = tDao.authenticate(authtoken).getAssociatedUsername(); // get username for associated event
                 response.setEvents(eDao.findAllEvents(userName));
 
                 response.setSuccess(true);

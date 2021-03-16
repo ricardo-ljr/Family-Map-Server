@@ -28,15 +28,12 @@ public class PersonHandler implements HttpHandler {
                     PersonByIdService personIDService = new PersonByIdService();
                     PersonsService personAllService = new PersonsService();
 
-
                     String authID = exchange.getRequestHeaders().getFirst("Authorization");
-
 
                     String uri = exchange.getRequestURI().toString();
                     StringBuilder url = new StringBuilder(uri);
                     url.deleteCharAt(0);
                     String[] paths = url.toString().split("/");
-
 
                     if(paths.length == 1) {
 
@@ -81,6 +78,8 @@ public class PersonHandler implements HttpHandler {
         } catch(IOException | DataAccessException e) {
             exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
             exchange.getResponseBody().close();
+            e.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

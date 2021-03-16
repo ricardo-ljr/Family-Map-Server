@@ -51,26 +51,31 @@ public class LoginService {
             UserDao uDao = new UserDao(db.getConnection());
             AuthTokenDao tDao = new AuthTokenDao(db.getConnection());
 
-            String userName = request.getUserName();
+            String username = request.getUserName();
             String password = request.getPassword();
 
-
-            if (uDao.userExists(userName)) {
+            if (uDao.userExists(username) && password.equals(uDao.findUser(username).getPassword())) {
 
                 String newAuthID = UUID.randomUUID().toString();
+                String oldID = uDao.findUser(username).getPersonID();
 
-                AuthToken newAuthToken = new AuthToken(newAuthID, userName);
-                tDao.addToken(newAuthToken);
+                if(tDao.userExists(username)) {
+                    tDao.updateToken(newAuthID, username);
+                } else {
+                    AuthToken newToken = new AuthToken(newAuthID, username);
+                    tDao.addToken(newToken);
+                }
 
                 response.setAuthToken(newAuthID);
-                response.setUsername(userName);
+                response.setUsername(username);
+                response.setPersonID(oldID); // making sure I'm adding the ID to the result as required in the test so it is not null
 
                 response.setSuccess(true);
                 db.closeConnection(true);
 
             } else {
                 response.setSuccess(false);
-                response.setMessage("Error: Invalid userName or password");
+                response.setMessage("Error: Invalid username or password");
                 db.closeConnection(false);
             }
         } catch(DataAccessException e) {

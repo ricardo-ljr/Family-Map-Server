@@ -1,12 +1,13 @@
 package Result;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * This class handle the register request result, sends a message and data
  */
 public class RegisterResult extends ResultBool {
 
-    private String message;
-
+    @SerializedName("authtoken")
     private String authToken;
 
     private String personID;
@@ -17,10 +18,6 @@ public class RegisterResult extends ResultBool {
      * Initializes empty constructor
      */
     public RegisterResult() {}
-
-    public RegisterResult(String message) {
-        this.message = message;
-    }
 
     /**
      * Sends the result back after registering a new user
@@ -34,15 +31,6 @@ public class RegisterResult extends ResultBool {
         this.authToken = authToken;
         this.personID = personID;
         this.username = username;
-    }
-
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 
     public String getAuthToken() {
