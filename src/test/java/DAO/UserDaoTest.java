@@ -94,6 +94,20 @@ class UserDaoTest {
     }
 
     @Test
+    void userExistsFails() throws DataAccessException {
+        uDao.registerUser(user);
+        uDao.registerUser(user2);
+
+        assertTrue(uDao.userExists(user.getUsername()));
+        assertTrue(uDao.userExists(user2.getUsername()));
+
+        uDao.clearUser();
+
+        assertFalse(uDao.userExists(user.getUsername()));
+        assertFalse(uDao.userExists(user2.getUsername()));
+    }
+
+    @Test
     void clearUser() throws DataAccessException{
         uDao.registerUser(user);
 

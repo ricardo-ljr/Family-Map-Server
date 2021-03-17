@@ -120,6 +120,13 @@ public class PersonDao {
         return null;
     }
 
+    /**
+     * Function that give a personID checks in the database whether it exists
+     *
+     * @param personID Unique identifier for the person
+     * @return A boolean value
+     * @throws DataAccessException
+     */
     public boolean personExists(String personID) throws DataAccessException {
         ResultSet rs = null;
         String sql = "SELECT * FROM Persons WHERE personID = ?";
@@ -150,8 +157,8 @@ public class PersonDao {
     /**
      * Gets all people given username
      *
-     * @param username username
-     * @return
+     * @param username Username for the user
+     * @return An array of persons for the user
      * @throws DataAccessException
      */
     public Person[] getPersonsForUsername(String username) throws DataAccessException {
