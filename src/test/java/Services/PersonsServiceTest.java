@@ -66,4 +66,36 @@ class PersonsServiceTest {
 
         assertEquals(persons.length, 31);
     }
+
+    @Test
+    void getPersons2() throws DataAccessException { // generating only one person in the tree
+
+        User newUser = new User(
+                "patrick",
+                "spencer",
+                "patrick@spencer.com",
+                "Patrick",
+                "Spencer",
+                "m",
+                "12345");
+
+        RegisterRequest request = new RegisterRequest();
+        request.setUserName(newUser.getUsername());
+        request.setPassword(newUser.getPassword());
+        request.setEmail(newUser.getEmail());
+        request.setFirstName(newUser.getFirstName());
+        request.setLastName(newUser.getLastName());
+        request.setGender(newUser.getGender());
+
+        RegisterResult response = registerService.register(request);
+        String authToken = response.getAuthToken();
+
+        FillResult response1 = fillService.fill(newUser.getUsername(), 0);
+
+        PersonsResult responsePersons = personsService.getPersons(authToken);
+
+        Person[] persons = responsePersons.getPerson();
+
+        assertEquals(persons.length, 1);
+    }
 }

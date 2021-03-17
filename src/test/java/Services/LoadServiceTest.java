@@ -78,4 +78,54 @@ class LoadServiceTest {
 
         assertEquals(response.isSuccess(), compareTest.isSuccess());
     }
+
+    @Test
+    void loadFail() { // This is the same error that I had for two days before figuring it out, my username was null because
+                      // I had written userName instead of username *facepalm*
+
+        User newUser = new User(
+                null , // here is null, so no value would load
+                "spencer",
+                "patrick@spencer.com",
+                "Patrick",
+                "Spencer",
+                "m",
+                "12345"); // User
+
+        Person newPerson = new Person("12345",
+                "patrick",
+                "Patrick", "Spencer", "m",
+                "father_1", "mother_1", "spouse_1");
+
+        Event newEvent = new Event("event1",
+                "patrick",
+                10.0f,
+                20.0f,
+                "USA",
+                "Lehi",
+                "birth",
+                2000,
+                "12345");
+
+        User[] userParam = new User[1];
+        Person[] personParam = new Person[1];
+        Event[] eventParam = new Event[1];
+
+        userParam[0] = newUser;
+        personParam[0] = newPerson;
+        eventParam[0] = newEvent;
+
+        LoadRequest loadRequest = new LoadRequest();
+        loadRequest.setUsers(userParam);
+        loadRequest.setPersons(personParam);
+        loadRequest.setEvents(eventParam);
+
+        LoadResult response = new LoadResult();
+        response = loadService.load(loadRequest);
+
+        LoadResult compareTest = new LoadResult();
+        compareTest.setSuccess(true);
+
+        assertEquals(response.getMessage(), "Internal server error - Load Service");
+    }
 }
