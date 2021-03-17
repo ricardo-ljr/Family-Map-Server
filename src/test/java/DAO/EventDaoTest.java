@@ -47,6 +47,8 @@ class EventDaoTest {
                 "12345"
                 );
 
+
+
         Connection connection = db.openConnection();
 
         db.clearTables();
@@ -121,6 +123,42 @@ class EventDaoTest {
         Event[] eventsList = null;
         eventsList = eDao.findAllEvents(event.getAssociatedUsername());
         assertEquals(eventsList.length, 0);
+    }
+
+    @Test
+    void eventExists() throws DataAccessException {
+        eDao.addEvent(event);
+
+        assertTrue(eDao.eventExists(event.getEventID()));
+    }
+
+    @Test
+    void eventExistsFail() throws DataAccessException {
+        eDao.addEvent(event);
+        assertTrue(eDao.eventExists(event.getEventID()));
+
+        eDao.clearEvent();
+        assertFalse(eDao.eventExists(event.getEventID()));
+    }
+
+    @Test
+    void generateBirth() throws DataAccessException {
+
+        eDao.generateBirth("ricardol", "12345", 1995);
+        assertEquals(eDao.findAllEvents("ricardol").length, 1);
+    }
+
+    @Test
+    void generateMarriage() throws DataAccessException {
+
+        eDao.generateMarriage("ricardol", "1234", "123", 1995);
+        assertEquals(eDao.findAllEvents("ricardol").length, 2);
+    }
+
+    @Test
+    void generateDeath() throws DataAccessException {
+        eDao.generateDeath("ricardol", "12345", 1995);
+        assertEquals(eDao.findAllEvents("ricardol").length, 1);
     }
 
     @Test
