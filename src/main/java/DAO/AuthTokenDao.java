@@ -120,33 +120,10 @@ public class AuthTokenDao {
     }
 
     /**
-     * Find username given auth token
-     *
-     * @param authtoken Authorization token to give
-     * @return
-     * @throws DataAccessException Exception throws
-     */
-    public String getUsernameForAuthtoken(String authtoken) throws DataAccessException {
-        String sql = "SELECT username " +
-                "FROM authtokens " +
-                "WHERE token=\'" + authtoken + "\'";
-
-        String result;
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-
-            ResultSet rs = stmt.executeQuery();
-            result = rs.getString(1);
-        } catch (SQLException e) {
-            throw new DataAccessException("Error encountered while querying in the database");
-        }
-        return result;
-    }
-
-    /**
      * This function is here to update user's token
      *
-     * @param newToken
-     * @param username
+     * @param newToken Token to be added
+     * @param username Associated username
      * @throws DataAccessException
      */
     public void updateToken(String newToken, String username) throws DataAccessException {
