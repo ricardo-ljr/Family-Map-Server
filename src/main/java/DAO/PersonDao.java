@@ -5,7 +5,6 @@ import JSONReader.NamesData;
 import Model.Person;
 import Model.User;
 
-import javax.xml.crypto.Data;
 import java.io.File;
 import java.io.IOException;
 import java.sql.*;
@@ -121,6 +120,13 @@ public class PersonDao {
         return null;
     }
 
+    /**
+     * Function that give a personID checks in the database whether it exists
+     *
+     * @param personID Unique identifier for the person
+     * @return A boolean value
+     * @throws DataAccessException
+     */
     public boolean personExists(String personID) throws DataAccessException {
         ResultSet rs = null;
         String sql = "SELECT * FROM Persons WHERE personID = ?";
@@ -151,8 +157,8 @@ public class PersonDao {
     /**
      * Gets all people given username
      *
-     * @param username username
-     * @return
+     * @param username Username for the user
+     * @return An array of persons for the user
      * @throws DataAccessException
      */
     public Person[] getPersonsForUsername(String username) throws DataAccessException {
@@ -239,7 +245,7 @@ public class PersonDao {
 
        Person userPerson = new Person(
                personID,
-               currentUser.getUserName(), // associated username
+               currentUser.getUsername(), // associated username
                currentUser.getFirstName(),
                currentUser.getLastName(),
                currentUser.getGender(),
@@ -249,10 +255,10 @@ public class PersonDao {
 
        addPerson(userPerson);
        // User is born
-       eDao.generateBirth(currentUser.getUserName(), personID, (year - 26));
+       eDao.generateBirth(currentUser.getUsername(), personID, (year - 26));
 
        if(numGenerations > 0) {
-           generateParents(currentUser.getUserName(), personID, (year - 26), (numGenerations - 1), eDao, currentUser.getLastName());
+           generateParents(currentUser.getUsername(), personID, (year - 26), (numGenerations - 1), eDao, currentUser.getLastName());
        }
    }
 
@@ -355,4 +361,5 @@ public class PersonDao {
            generateParents(username, motherID, (childBirthYear - 26), (numGenerations - 1), eDao, motherLastName);
        }
    }
+
 }

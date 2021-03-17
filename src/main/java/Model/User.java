@@ -1,21 +1,14 @@
 package Model;
 
-import java.util.UUID;
-
 /**
  * A user
  */
 public class User {
 
     /**
-     * The user's unique ID
-     */
-    private String userID;
-
-    /**
      * The user's unique username
      */
-    private String userName;
+    private String username;
 
     /**
      * The user's password
@@ -55,7 +48,7 @@ public class User {
     /**
      * Creates a user
      *
-     * @param userName User's unique username
+     * @param username User's unique username
      * @param password User's password
      * @param email User's email
      * @param firstName User's first name
@@ -63,8 +56,8 @@ public class User {
      * @param gender User's gender
      * @param personID User's unique personID associated with
      */
-    public User(String userName, String password, String email, String firstName, String lastName, String gender, String personID) {
-        this.userName = userName;
+    public User(String username, String password, String email, String firstName, String lastName, String gender, String personID) {
+        this.username = username;
         this.password = password;
         this.email = email;
         this.firstName = firstName;
@@ -73,12 +66,12 @@ public class User {
         this.personID = personID;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
@@ -134,7 +127,7 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return userName.equals(user.userName) && password.equals(user.password) && email.equals(user.email) && firstName.equals(user.firstName) && lastName.equals(user.lastName) && gender.equals(user.gender) && personID.equals(user.personID);
+        return username.equals(user.username) && password.equals(user.password) && email.equals(user.email) && firstName.equals(user.firstName) && lastName.equals(user.lastName) && gender.equals(user.gender) && personID.equals(user.personID);
     }
 
 }

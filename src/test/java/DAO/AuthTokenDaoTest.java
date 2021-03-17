@@ -48,6 +48,28 @@ class AuthTokenDaoTest {
     }
 
     @Test
+    void addTokenFail() throws DataAccessException {
+        tDao.addToken(newToken);
+        assertThrows(DataAccessException.class, ()-> tDao.addToken(newToken));
+    }
+
+    @Test
+    void authenticate() throws DataAccessException {
+        tDao.addToken(newToken);
+
+        AuthToken compareTest = tDao.authenticate(newToken.getAuthToken());
+
+        assertNotNull(compareTest);
+        assertEquals(newToken, compareTest);
+
+    }
+
+    @Test
+    void authenticateFail() throws DataAccessException {
+        assertNull(tDao.authenticate(newToken.getAuthToken()));
+    }
+
+    @Test
     void tokenExists() throws DataAccessException {
         tDao.addToken(newToken);
 
@@ -55,10 +77,14 @@ class AuthTokenDaoTest {
     }
 
     @Test
-    void addTokenFail() throws DataAccessException {
+    void tokenExistsFail() throws DataAccessException {
         tDao.addToken(newToken);
-        assertThrows(DataAccessException.class, ()-> tDao.addToken(newToken));
+
+        assertTrue(tDao.authTokenExists(newToken.getAuthToken()));
+        tDao.clearAuthToken();
+        assertFalse(tDao.authTokenExists(newToken.getAuthToken()));
     }
+
 
     @Test
     void clearAuthToken() throws DataAccessException {

@@ -5,7 +5,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.xml.crypto.Data;
 import java.sql.Connection;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -45,7 +44,7 @@ class UserDaoTest {
 
         uDao.registerUser(user);
 
-        User compareTest = uDao.findUser(user.getUserName());
+        User compareTest = uDao.findUser(user.getUsername());
 
         assertNotNull(compareTest);
 
@@ -72,7 +71,7 @@ class UserDaoTest {
     void findUser() throws DataAccessException{
         uDao.registerUser(user);
 
-        User compareTest = uDao.findUser(user.getUserName());
+        User compareTest = uDao.findUser(user.getUsername());
 
         assertNotNull(compareTest);
 
@@ -81,7 +80,7 @@ class UserDaoTest {
 
     @Test
     void findUserFail() throws DataAccessException {
-        User compareTest = uDao.findUser(user.getUserName());
+        User compareTest = uDao.findUser(user.getUsername());
         assertNull(compareTest);
     }
 
@@ -90,18 +89,32 @@ class UserDaoTest {
         uDao.registerUser(user);
         uDao.registerUser(user2);
 
-        assertTrue(uDao.userExists(user.getUserName()));
-        assertTrue(uDao.userExists(user2.getUserName()));
+        assertTrue(uDao.userExists(user.getUsername()));
+        assertTrue(uDao.userExists(user2.getUsername()));
+    }
+
+    @Test
+    void userExistsFails() throws DataAccessException {
+        uDao.registerUser(user);
+        uDao.registerUser(user2);
+
+        assertTrue(uDao.userExists(user.getUsername()));
+        assertTrue(uDao.userExists(user2.getUsername()));
+
+        uDao.clearUser();
+
+        assertFalse(uDao.userExists(user.getUsername()));
+        assertFalse(uDao.userExists(user2.getUsername()));
     }
 
     @Test
     void clearUser() throws DataAccessException{
         uDao.registerUser(user);
 
-        User find = uDao.findUser(user.getUserName());
+        User find = uDao.findUser(user.getUsername());
         uDao.clearUser();
 
-        User clear = uDao.findUser(user.getUserName());
+        User clear = uDao.findUser(user.getUsername());
 
         assertNotNull(find);
         assertNull(clear);

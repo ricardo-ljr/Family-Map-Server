@@ -1,5 +1,7 @@
 package DAO;
 
+import Model.Event;
+
 import javax.xml.crypto.Data;
 import java.sql.*;
 
@@ -7,6 +9,11 @@ import java.sql.*;
  * This class connects to the Database
  */
 public class Database {
+
+    private AuthTokenDao authTokenDao;
+    private EventDao eventDao;
+    private PersonDao personDao;
+    private UserDao userDao;
 
     private Connection conn;
 
@@ -84,6 +91,7 @@ public class Database {
             throw new DataAccessException("Unable to close database connection");
         }
     }
+
 
     /**
      * This method clears the tables in the database

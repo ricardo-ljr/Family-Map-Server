@@ -81,11 +81,11 @@ public class RegisterService {
                     pDao.generateTree(user, newPersonID, 4, eDao);
 
                     String newAuthID = UUID.randomUUID().toString(); // random authToken
-                    AuthToken authToken = new AuthToken(newAuthID, user.getUserName());
+                    AuthToken authToken = new AuthToken(newAuthID, user.getUsername());
                     tDao.addToken(authToken);
 
                     response.setAuthToken(newAuthID);
-                    response.setUsername(user.getUserName());
+                    response.setUsername(user.getUsername());
                     response.setPersonID(user.getPersonID());
 
                     response.setSuccess(true);

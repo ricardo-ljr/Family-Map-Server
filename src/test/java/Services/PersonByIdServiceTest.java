@@ -50,7 +50,7 @@ class PersonByIdServiceTest {
                 "12345");
 
         RegisterRequest request = new RegisterRequest();
-        request.setUserName(newUser.getUserName());
+        request.setUserName(newUser.getUsername());
         request.setPassword(newUser.getPassword());
         request.setEmail(newUser.getEmail());
         request.setFirstName(newUser.getFirstName());
@@ -60,7 +60,7 @@ class PersonByIdServiceTest {
         RegisterResult response = registerService.register(request);
         String authToken = response.getAuthToken();
 
-        FillResult response1 = fillService.fill(newUser.getUserName(), 4);
+        FillResult response1 = fillService.fill(newUser.getUsername(), 4);
 
         PersonsResult responsePersons = personsService.getPersons(authToken);
 
@@ -71,5 +71,35 @@ class PersonByIdServiceTest {
         PersonByIdResult responseID = personByIdService.getPerson(randomID, authToken);
 
         assertEquals(responseID.getPersonID(), randomID);
+    }
+
+    @Test
+    void getPersonFail() throws DataAccessException { // Another error I had, I forgot to pass personId to the response, so it was always null
+
+        User newUser = new User(
+                "patrick",
+                "spencer",
+                "patrick@spencer.com",
+                "Patrick",
+                "Spencer",
+                "m",
+                "12345");
+
+        RegisterRequest request = new RegisterRequest();
+        request.setUserName(newUser.getUsername());
+        request.setPassword(newUser.getPassword());
+        request.setEmail(newUser.getEmail());
+        request.setFirstName(newUser.getFirstName());
+        request.setLastName(newUser.getLastName());
+        request.setGender(newUser.getGender());
+
+        RegisterResult response = registerService.register(request);
+        String authToken = response.getAuthToken();
+
+        FillResult response1 = fillService.fill(newUser.getUsername(), 0);
+
+        PersonByIdResult resID = personByIdService.getPerson(newUser.getPersonID(), authToken);
+
+        assertNull(resID.getPersonID());
     }
 }
